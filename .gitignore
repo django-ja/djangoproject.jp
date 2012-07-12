@@ -1,4 +1,9 @@
 *.log
 *.pot
 *.pyc
+*.db
+*~
+
 local_settings.py
+environments.json
+whoosh_index/
