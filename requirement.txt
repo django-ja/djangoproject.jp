@@ -9,3 +9,4 @@ PIL==1.1.7
 django-sphinxdoc==1.1
 django-haystack==1.2.7
 Whoosh==2.4.1
+docutils==0.9.1
