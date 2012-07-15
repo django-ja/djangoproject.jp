@@ -59,7 +59,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-MEDIA_ROOT = BASE.child('djangoja_website').child('media')
+MEDIA_ROOT = BASE.child('media')
 TEMPLATE_DIRS = BASE.child('djangoja_website').child('templates')
 
 TEMPLATE_LOADERS = (
