@@ -25,7 +25,7 @@ LANGUAGE_CODE = 'ja'
 if PRODUCTION:
     DEBUG = False
     MEDIA_URL = "https://www.djangoproject.jp/m/"
-    ADMIN_MEDIA_PREFIX = "https://www.djangoproject.jp/m/admin/"
+    ADMIN_MEDIA_PREFIX = "https://djangoproject.jp/m/admin/"
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -39,8 +39,7 @@ if PRODUCTION:
 
 else:
     DEBUG = True
-    MEDIA_URL = "/media/"
-    ADMIN_MEDIA_PREFIX = '/admin_media/'
+    MEDIA_URL = "/m/admin/"
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     DATABASES = {
