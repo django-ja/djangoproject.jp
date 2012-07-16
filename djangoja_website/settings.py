@@ -107,6 +107,8 @@ HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = BASE.child('whoosh_index')
 
 ZINNIA_MARKUP_LANGUAGE = 'restructuredtext'
+ZINNIA_SPAM_CHECKER_BACKENDS = ('zinnia.spam_checker.backends.automattic',)
+AKISMET_SECRET_API_KEY = ENVS['akismet_api_key']
 
 LOGGING = {
     'version': 1,

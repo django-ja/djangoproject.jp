@@ -4,6 +4,7 @@ Unipath==0.2.1
 #Weblog
 django-blog-zinnia==0.11.1
 PIL==1.1.7
+akismet==0.2.0
 
 #Document
 django-sphinxdoc==1.1
