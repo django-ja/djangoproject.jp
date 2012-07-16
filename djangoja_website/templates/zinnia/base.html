@@ -26,9 +26,9 @@
   <h3>{% trans "Search" %}</h3>
   {% include "zinnia/tags/search_form.html" %}
 </div>
-<div id="widget-archives" class="widget">
-  <h3>{% trans "Archives" %}</h3>
-  {% get_archives_entries_tree %}
+<div id="widget-recents" class="widget">
+  <h3>{% trans "Recent entries" %}</h3>
+  {% get_recent_entries %}
 </div>
 {% if user.is_authenticated %}
 <div id="widget-tools" class="widget">
