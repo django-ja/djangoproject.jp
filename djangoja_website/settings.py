@@ -93,17 +93,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'sphinxdoc',
-    'haystack',
     'django.contrib.comments',
     'tagging',
     'mptt',
     'zinnia',
 )
-
-HAYSTACK_SITECONF = 'djangoja_website'
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = BASE.child('whoosh_index')
 
 ZINNIA_MARKUP_LANGUAGE = 'restructuredtext'
 ZINNIA_PAGINATION = 5
