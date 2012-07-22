@@ -2,7 +2,7 @@
 {% load zinnia_tags i18n %}
 {% load url from future %}
 {% get_tags as entry_tags %}
-
+{% block meta-keywords %}Python, Django, framework, open-source, Japanese, 日本語, {{ entry_tags|join:", "}}{% endblock %}
 {% block style %}
 <link rel="stylesheet" type="text/css" media="screen, projection" href="{{ STATIC_URL }}zinnia/css/screen.css" />
 <link rel="stylesheet" type="text/css" media="print" href="{{ STATIC_URL }}zinnia/css/print.css" />
