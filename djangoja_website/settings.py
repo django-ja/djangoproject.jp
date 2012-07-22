@@ -102,6 +102,7 @@ INSTALLED_APPS = (
 ZINNIA_MARKUP_LANGUAGE = 'restructuredtext'
 ZINNIA_PAGINATION = 5
 ZINNIA_SPAM_CHECKER_BACKENDS = ('zinnia.spam_checker.backends.automattic',)
+ZINNIA_COPYRIGHT = 'djangoproject.jp'
 AKISMET_SECRET_API_KEY = ENVS['akismet_api_key']
 
 LOGGING = {
