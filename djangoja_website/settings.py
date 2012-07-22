@@ -39,7 +39,7 @@ if PRODUCTION:
 
 else:
     DEBUG = True
-    MEDIA_URL = "/m/admin/"
+    MEDIA_URL = "/m/"
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
     DATABASES = {
