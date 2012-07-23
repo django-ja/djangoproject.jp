@@ -26,6 +26,8 @@ if PRODUCTION:
     DEBUG = False
     MEDIA_URL = "https://www.djangoproject.jp/m/"
     ADMIN_MEDIA_PREFIX = "https://djangoproject.jp/m/admin/"
+    ZINNIA_SPAM_CHECKER_BACKENDS = ('zinnia.spam_checker.backends.automattic',)
+    AKISMET_SECRET_API_KEY = ENVS['akismet_api_key']
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -101,9 +103,7 @@ INSTALLED_APPS = (
 
 ZINNIA_MARKUP_LANGUAGE = 'restructuredtext'
 ZINNIA_PAGINATION = 5
-ZINNIA_SPAM_CHECKER_BACKENDS = ('zinnia.spam_checker.backends.automattic',)
 ZINNIA_COPYRIGHT = 'djangoproject.jp'
-AKISMET_SECRET_API_KEY = ENVS['akismet_api_key']
 
 LOGGING = {
     'version': 1,
