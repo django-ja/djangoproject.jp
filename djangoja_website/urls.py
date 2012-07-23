@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 from django.contrib import admin
 admin.autodiscover()
@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', TemplateView.as_view(template_name='home.html')),
     url(r'^weblog/', include('zinnia.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
+    url(r'^doc/$', RedirectView.as_view(url='/doc/ja/1.0/')),
 
     url(r'^admin/', include(admin.site.urls)),
 )
