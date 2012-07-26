@@ -1,4 +1,4 @@
-Django==1.4
+Django==1.4.1
 Unipath==0.2.1
 
 #Weblog
