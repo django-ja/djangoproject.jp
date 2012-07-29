@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'tagging',
     'mptt',
     'zinnia',
+    'gunicorn',
 )
 
 ZINNIA_MARKUP_LANGUAGE = 'restructuredtext'
