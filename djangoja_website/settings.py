@@ -24,7 +24,7 @@ LANGUAGE_CODE = 'ja'
 
 if PRODUCTION:
     DEBUG = False
-    MEDIA_URL = "https://www.djangoproject.jp/m/"
+    MEDIA_URL = "http://djangoproject.jp/m/"
     ADMIN_MEDIA_PREFIX = "https://djangoproject.jp/m/admin/"
     ZINNIA_SPAM_CHECKER_BACKENDS = ('zinnia.spam_checker.backends.automattic',)
     AKISMET_SECRET_API_KEY = ENVS['akismet_api_key']
