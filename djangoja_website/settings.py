@@ -25,7 +25,6 @@ LANGUAGE_CODE = 'ja'
 if PRODUCTION:
     DEBUG = False
     MEDIA_URL = "/m/"
-    ADMIN_MEDIA_PREFIX = "/m/admin/"
     ZINNIA_SPAM_CHECKER_BACKENDS = ('zinnia.spam_checker.backends.automattic',)
     AKISMET_SECRET_API_KEY = ENVS['akismet_api_key']
     DATABASES = {
@@ -59,6 +58,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+STATIC_ROOT = BASE.child('static')
 STATIC_URL = '/static/'
 MEDIA_ROOT = BASE.child('media')
 TEMPLATE_DIRS = [BASE.child('djangoja_website').child('templates')]
@@ -74,6 +74,18 @@ TEMPLATE_CONTEXT_PROCESSORS = (
   'django.core.context_processors.request',
   'django.core.context_processors.media',
   'django.core.context_processors.static',)
+
+import zinnia
+zinnia_path = Path(zinnia.__file__)
+
+STATICFILES_DIRS = (
+    zinnia_path.parent.child('static'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
