@@ -21,7 +21,16 @@
         <ul class="nav pull-right">
           <li{% if request.path == '/' %} class="active"{% endif %}><a href="/">ホーム</a></li>
           <li><a href="/weblog/">新着情報</a></li>
-          <li><a href="/doc/">ドキュメント</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/doc/">
+              ドキュメント
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li><a href="/doc/">1.0</a></li>
+              <li><a href="http://docs.djangoproject.jp/ja/latest/">1.4(翻訳中)</a></li>
+            </ul>
+          </li>
           {% get_flatpages as flatpases %}
           {% for page in flatpases %}
               {% with page_url='/pages'|add:page.url %}
@@ -57,5 +66,6 @@
 ================================================== -->
 <script src="{{ MEDIA_URL }}/js/jquery.js"></script>
 <script src="{{ MEDIA_URL }}/js/bootstrap-collapse.js"></script>
+<script src="{{ MEDIA_URL }}/js/bootstrap-dropdown.js"></script>
 <!-- Placed at the end of the document so the pages load faster -->
 {% endblock %}
