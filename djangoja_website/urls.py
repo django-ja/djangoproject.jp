@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', TemplateView.as_view(template_name='home.html')),
     url(r'^weblog/', include('zinnia.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
+    url(r'^pages/', include('django.contrib.flatpages.urls')),
     url(r'^doc/$', RedirectView.as_view(url='/doc/ja/1.0/')),
 
     url(r'^admin/', include(admin.site.urls)),

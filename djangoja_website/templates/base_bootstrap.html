@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load flatpages %}
+
 {% block style %}
 <link href="{{ MEDIA_URL }}/css/bootstrap.css" rel="stylesheet">
 <link href="{{ MEDIA_URL }}/css/bootstrap-responsive.css" rel="stylesheet">
@@ -17,9 +19,15 @@
       <a href="http://djangoproject.jp/" class="brand" href="#">djangoproject.jp</a>
       <div class="nav-collapse">
         <ul class="nav pull-right">
-          <li class="active"><a href="#">ホーム</a></li>
+          <li{% if request.path == '/' %} class="active"{% endif %}><a href="/">ホーム</a></li>
           <li><a href="/weblog/">新着情報</a></li>
           <li><a href="/doc/">ドキュメント</a></li>
+          {% get_flatpages as flatpases %}
+          {% for page in flatpases %}
+              {% with page_url='/pages'|add:page.url %}
+              <li{% if request.path == page_url %} class="active"{% endif %}><a href="{{ page_url }}">{{ page.title }}</a></li>
+              {% endwith %}
+          {% endfor %}
         </ul>
       </div><!--/.nav-collapse -->
     </div>
