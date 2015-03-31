@@ -1,10 +1,10 @@
-*.log
-*.pot
 *.pyc
+*.pyo
 *.db
-*~
-
+.DS_Store
+.coverage
+dev.db
+dev.db.*
 local_settings.py
-environments.json
-
-static/
+/static
+.idea/
