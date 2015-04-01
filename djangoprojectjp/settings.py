@@ -256,6 +256,8 @@ INSTALLED_APPS = (
     "mezzanine.pages",
     "mezzanine.galleries",
 
+    'raven.contrib.django.raven_compat',
+
     "djangoja",
     #"mezzanine.accounts",
     #"mezzanine.mobile",
@@ -304,6 +306,21 @@ MIDDLEWARE_CLASSES = (
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+    },
+    'root': {
+        'handlers': ['sentry'],
+        'level': 'WARNING',
+    },
+
+}
 
 #########################
 # OPTIONAL APPLICATIONS #
