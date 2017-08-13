@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>クロスサイトリクエストフォージェリ (CSRF) 対策 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="databrowse" href="databrowse.html" />
+    <link rel="prev" title="contenttypes フレームワーク" href="contenttypes.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="contenttypes.html" title="contenttypes フレームワーク">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="databrowse.html" title="databrowse">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-csrf">
+            
+  
+  <div class="section" id="s-module-django.contrib.csrf">
+<span id="s-ref-contrib-csrf"></span><h1>クロスサイトリクエストフォージェリ (CSRF) 対策<a class="headerlink" href="#module-django.contrib.csrf" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>CsrfMiddleware クラスは、簡単に使える <a class="reference external" href="http://www.squarefree.com/securitytips/web-developers.html#CSRF">クロスサイトリクエストフォージェリ</a>
+対策を提供しています。このタイプの攻撃は、悪意あるウェブサイトが、あなたの
+ウェブサイトに対して、ログイン済みユーザの権限で何らかの操作を行うように作
+られたリンクやフォームボタンを自分のサイトに設置しておき、ログイン済みのユー
+ザがユーザが自分のブラウザを使ってボタンやリンクをクリックするように仕向け
+ることで起こります。</p>
+<p>CSRF 攻撃に対する第一の防御は、 GET リクエストから副作用を取り除くというも
+のです。 POST リクエストに対する防御は、このミドルウェアをインストール済み
+ミドルウェアリストに追加して実現できます。</p>
+<div class="section" id="s-id2">
+<span id="s-how-to-use-it"></span><h2>使い方<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">'django.contrib.csrf.middleware.CsrfMiddleware'</span></tt> ミドルウェアを
+<a class="reference external" href="../settings.html#setting-MIDDLEWARE_CLASSES"><tt class="xref docutils literal"><span class="pre">MIDDLEWARE_CLASSES</span></tt></a> に追加してください。このミドルウェアは
+SessionMiddleware よりも後にレスポンスを処理せねばならないので、リスト中の
+SessionMiddleware よりも前に配置します。また、圧縮のような操作が入る前のレ
+スポンスを処理せねばならないので、 GZipMiddleware よりも後に配置します。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-how-it-works"></span><h2>仕組み<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>CsrfMiddleware は以下のような処理を行います:</p>
+<ol class="arabic simple">
+<li>CsrfMiddleware は、サーバから出てゆくレスポンス内の &#8216;POST&#8217; フォーム全て
+に対して &#8216;csrfmiddlewaretoken&#8217; という名前の隠しフィールドを追加します。
+このフィールドの値はセッション ID とシークレット文字列の和をハッシュした
+ものになります。セッション ID が設定されていない場合、レスポンスに対する
+変更は行いません。このため、セッションをともなわないリクエストに対しては
+非常にわずかなパフォーマンスペナルティしかもたらしません。</li>
+<li>セッションクッキーのセットされた全ての POST リクエストに対し、
+&#8216;csrfmiddlewaretoken&#8217; がセットされていて、かつ正しい値になっているか調べ
+ます。正しい値でなければ、 403 エラーを返します。</li>
+</ol>
+<p>これらの処理により、あなたのウェブサイト由来のフォームだけが POST を送り返
+せるようになります。</p>
+<p>このミドルウェアは、 HTTP POST リクエスト (と POST フォーム) だけを対象にし
+ています。 GET リクエストには危険な副作用を持たないはず
+(<a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">RFC 2616: HTTP 1.1 の 9.1.1 節、「安全なメソッド」</a> を参照) なので、
+GET リクエストを使った CSRF 攻撃は威力を持たないのです。</p>
+<p>セッションクッキーを伴わない POST リクエストは保護されませんが、セッション
+クッキーを伴わないようなフォームに対しては、攻撃側のウェブサイトはリクエス
+トをどのようにでも作れてしまうので、そもそも保護する意味はありません。</p>
+<p>CsrfMiddleware はレスポンスを変更する前に Content-Type をチェックし、
+&#8216;text/html&#8217; または &#8216;application/xml+xhtml&#8217; のページだけを変更します。</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-limitations"></span><h2>制限<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>CsrfMiddleware を動作させるには、 Django のセッションフレームワークが必要で
+す。手動でクッキーを設定するカスタムの認証システムなどを使っている場合には
+うまく動作しません。</p>
+<p>アプリケーションで HTML ページやフォームを普通とは違うやり方で生成している
+場合 (JavaScript の document.write 文などで HTML フラグメントを送信するよう
+な場合)、フォームの隠しフィールドを追加するフィルタを回避してしまうかもしれ
+ません。そのような場合、フォームの提出は常に失敗してしまいます。ただし、
+CSRF 対策トークンを取得し、提出されるフォームに必ずトークンが入るようにすれ
+ば、このミドルウェアを使う余地はあるでしょう。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">クロスサイトリクエストフォージェリ (CSRF) 対策</a><ul>
+<li><a class="reference external" href="#id2">使い方</a></li>
+<li><a class="reference external" href="#id3">仕組み</a></li>
+<li><a class="reference external" href="#id4">制限</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="contenttypes.html">contenttypes フレームワーク</a></li>
+    
+    
+      <li>次: <a href="databrowse.html">databrowse</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>クロスサイトリクエストフォージェリ (CSRF) 対策</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/csrf.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="contenttypes.html" title="contenttypes フレームワーク">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="databrowse.html" title="databrowse">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

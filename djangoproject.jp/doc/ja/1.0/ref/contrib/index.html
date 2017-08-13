@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&#8220;django.contrib&#8221; 下のアドオン &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="API リファレンス" href="../index.html" />
+    <link rel="next" title="Django admin サイト" href="admin.html" />
+    <link rel="prev" title="API リファレンス" href="../index.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="../index.html" title="API リファレンス">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="admin.html" title="Django admin サイト">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-index">
+            
+  
+  <div class="section" id="s-django-contrib">
+<span id="s-ref-contrib-index"></span><h1>&#8220;django.contrib&#8221; 下のアドオン<a class="headerlink" href="#django-contrib" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django は Python の <a class="reference external" href="http://python.jp/doc/release/tut/node12.html#batteries-included">&#8220;batteries included&#8221; 哲学</a> を目指しています。 Django
+には Web 開発における課題を解くための様々な外部オプションツールがついてきま
+す。</p>
+<p>これらのコードは Django 配布物中の <tt class="docutils literal"><span class="pre">django/contrib</span></tt> にあります。このドキュ
+メントでは、 <tt class="docutils literal"><span class="pre">contrib</span></tt> 下のパッケージをざっと解説し、パッケージを利用する
+ときに必要な依存関係について説明します。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">これらのアドオンの大半、特にモデルやテンプレートタグの定義が入っている
+アドオンを使うには、パッケージ名 (例えば <tt class="docutils literal"><span class="pre">'django.contrib.admin'</span></tt>) を
+<tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> 設定に追加して、 <tt class="docutils literal"><span class="pre">manage.py</span> <span class="pre">syncdb</span></tt> を再度実行する
+必要があります。</p>
+</div>
+<ul>
+<li><a class="reference external" href="admin.html">Django admin サイト</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="auth.html"><tt class="docutils literal"><span class="pre">django.contrib.auth</span></tt></a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="comments/index.html">コメントフレームワーク</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="contenttypes.html">contenttypes フレームワーク</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="csrf.html">クロスサイトリクエストフォージェリ (CSRF) 対策</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="databrowse.html">databrowse</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="flatpages.html">flatpages アプリケーション</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="formtools/index.html">django.contrib.formtools</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="humanize.html">django.contrib.humanize</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="localflavor.html">localflavor アドオン</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="redirects.html">redirects アプリケーション</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="sitemaps.html">sitemaps フレームワーク</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="sites.html">&#8220;sites&#8221; フレームワーク</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="syndication.html">配信フィードフレームワーク</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="webdesign.html">django.contrib.webdesign</a></li>
+</ul>
+<div class="section" id="s-admin">
+<h2>admin<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h2>
+<p>Django の自動化管理インタフェースです。詳しくは
+<a class="reference external" href="../../intro/tutorial02.html#intro-tutorial02"><em>チュートリアルその 2</em></a> と
+<a class="reference external" href="admin.html#ref-contrib-admin"><em>admin のドキュメント</em></a> を参照してください。</p>
+<p><a class="reference internal" href="#auth">auth</a> および <a class="reference internal" href="#contenttypes">contenttypes</a> パッケージをインストールしておく必要があります。</p>
+</div>
+<div class="section" id="s-auth">
+<h2>auth<a class="headerlink" href="#auth" title="Permalink to this headline">¶</a></h2>
+<p>Django の認証フレームワークです。詳しくは <a class="reference external" href="../../topics/auth.html#topics-auth"><em>Django でのユーザ認証</em></a> を参照して下さ
+い。</p>
+</div>
+<div class="section" id="s-comments">
+<h2>comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h2>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました:</span> comments アプリケーションは書き直されました。アップグレード方法は
+<a class="reference external" href="comments/upgrade.html#ref-contrib-comments-upgrade"><em>Django の以前のコメントシステムからの移行</em></a> を参照してください。</div>
+<p><a class="reference external" href="comments/index.html#ref-contrib-comments-index"><em>コメントフレームワーク</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-contenttypes">
+<h2>contenttypes<a class="headerlink" href="#contenttypes" title="Permalink to this headline">¶</a></h2>
+<p>コンテンツの「タイプ」をフックしするための軽量フレームワークです。
+コンテンツタイプは、インストールされている Django の個々のモデルを指します。</p>
+<p><a class="reference external" href="contenttypes.html#ref-contrib-contenttypes"><em>contenttypes のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-csrf">
+<h2>csrf<a class="headerlink" href="#csrf" title="Permalink to this headline">¶</a></h2>
+<p>クロスサイトリクエストフォージェリ (Cross Site Request Forgeries) を阻止す
+るためのミドルウェアです。</p>
+<p><a class="reference external" href="csrf.html#ref-contrib-csrf"><em>csrf のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-flatpages">
+<h2>flatpages<a class="headerlink" href="#flatpages" title="Permalink to this headline">¶</a></h2>
+<p>「フラット (flat) な」 HTML コンテンツをデータベースで扱うためのフレームワー
+クです。</p>
+<p><a class="reference external" href="flatpages.html#ref-contrib-flatpages"><em>flatpages のドキュメント</em></a> を参照してください。</p>
+<p><a class="reference internal" href="#sites">sites</a> パッケージもインストールしておく必要があります。</p>
+</div>
+<div class="section" id="s-formtools">
+<h2>formtools<a class="headerlink" href="#formtools" title="Permalink to this headline">¶</a></h2>
+<p>Django の新しいフォーム (django.forms) に対する高水準の抽象化インタフェー
+スです。</p>
+<div class="section" id="s-django-contrib-formtools-preview">
+<h3>django.contrib.formtools.preview<a class="headerlink" href="#django-contrib-formtools-preview" title="Permalink to this headline">¶</a></h3>
+<p>「 HTML フォームを表示し、必ずプレビューを行ってからフォームデータを提出す
+る」というワークフローを抽象化したものです。</p>
+<p><a class="reference external" href="formtools/form-preview.html#ref-contrib-formtools-form-preview"><em>フォームプレビューのドキュメント</em></a>
+を参照してください。</p>
+</div>
+<div class="section" id="s-django-contrib-formtools-wizard">
+<h3>django.contrib.formtools.wizard<a class="headerlink" href="#django-contrib-formtools-wizard" title="Permalink to this headline">¶</a></h3>
+<p>フォームを複数の Web ページにわたるように分割します。</p>
+<p><a class="reference external" href="formtools/form-wizard.html#ref-contrib-formtools-form-wizard"><em>フォームウィザードのドキュメント</em></a>
+を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-humanize">
+<h2>humanize<a class="headerlink" href="#humanize" title="Permalink to this headline">¶</a></h2>
+<p>データに「人間くささ (human touch)」を与えるための Django テンプレートフィ
+ルタです。</p>
+<p>これらのフィルタを有効にするには、 <a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> 設定に
+<tt class="docutils literal"><span class="pre">'django.contrib.humanize'</span></tt> を加えます。インストール後、テンプレート上で
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">load</span> <span class="pre">humanize</span> <span class="pre">%}</span></tt> を呼び出せば、以下のフィルタを利用できるようになり
+ます:</p>
+<p><a class="reference external" href="humanize.html#ref-contrib-humanize"><em>humanize のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-localflavor">
+<h2>localflavor<a class="headerlink" href="#localflavor" title="Permalink to this headline">¶</a></h2>
+<p>特定の国や文化でのみ有用な Django の短いコード (snippet) を集めたものです。
+例えば、 <tt class="docutils literal"><span class="pre">django.contrib.localflavor.us.forms</span></tt> には、米国の郵便番号
+(U.S. zip code) を検証するための <tt class="docutils literal"><span class="pre">USZipCodeField</span></tt> が入っています。</p>
+<p><a class="reference external" href="localflavor.html#ref-contrib-localflavor"><em>localflavor のドキュメント</em></a> を参照してくだ
+さい。</p>
+</div>
+<div class="section" id="s-markup">
+<span id="s-ref-contrib-markup"></span><h2>markup<a class="headerlink" href="#markup" title="Permalink to this headline">¶</a></h2>
+<p>テンプレートフィルタのコレクションです。以下の 3 つのマークアップ言語に対す
+るフィルタを実装しています:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">textile</span></tt> &#8211; <a class="reference external" href="http://en.wikipedia.org/wiki/Textile_%28markup_language%29">Textile</a> 用の実装です</li>
+<li><tt class="docutils literal"><span class="pre">markdown</span></tt>  &#8211; <a class="reference external" href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> 用の実装です</li>
+<li><tt class="docutils literal"><span class="pre">restructuredtext</span></tt> &#8211; <a class="reference external" href="http://en.wikipedia.org/wiki/ReStructuredText">ReST (ReStructured Text)</a> 用の実装です</li>
+</ul>
+<p>どのフィルタも、各マークアップ言語で書かれたテキストの入った文字列を引数に
+とり、マークアップ処理済みのテキストの入った文字列を返します。例えば、
+<tt class="docutils literal"><span class="pre">textile</span></tt> フィルタは Textile フォーマットで書かれたテキストを HTML に変換
+します。</p>
+<p>フィルタを有効にするには、 <tt class="docutils literal"><span class="pre">'django.contrib.markup'</span></tt> を
+<a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> 設定に追加します。その上で <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">load</span> <span class="pre">markup</span> <span class="pre">%}</span></tt>
+をテンプレートに追加すれば、フィルタを使えるようになります。詳細は
+<tt class="docutils literal"><span class="pre">django/contrib/markup/templatetags/markup.py</span></tt> のソースコードを参
+照してください。</p>
+</div>
+<div class="section" id="s-redirects">
+<h2>redirects<a class="headerlink" href="#redirects" title="Permalink to this headline">¶</a></h2>
+<p>リダイレクトを管理するためのフレームワークです。</p>
+<p><a class="reference external" href="redirects.html#ref-contrib-redirects"><em>redirects のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-sessions">
+<h2>sessions<a class="headerlink" href="#sessions" title="Permalink to this headline">¶</a></h2>
+<p>セッション管理のためのフレームワークです。</p>
+<p><a class="reference external" href="../../topics/http/sessions.html#topics-http-sessions"><em>セッションのドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-sites">
+<h2>sites<a class="headerlink" href="#sites" title="Permalink to this headline">¶</a></h2>
+<p>一つのデータベースと Django を使って複数のウェブサイトを操作できるようにす
+るための軽量フレームワークです。このフレームワークを使うと、オブジェクトを
+特定の (一つまたは複数の) サイトに関連づけできます。</p>
+<p><a class="reference external" href="sites.html#ref-contrib-sites"><em>sites のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-sitemaps">
+<h2>sitemaps<a class="headerlink" href="#sitemaps" title="Permalink to this headline">¶</a></h2>
+<p>Google サイトマップ XML ファイルを生成するためのフレームワークです。</p>
+<p><a class="reference external" href="sitemaps.html#ref-contrib-sitemaps"><em>sitemaps のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-syndication">
+<h2>syndication<a class="headerlink" href="#syndication" title="Permalink to this headline">¶</a></h2>
+<p>RSS および Atom 形式の配信フィード (syndication feed) をごく簡単に生成する
+ためのフレームワークです。</p>
+<p><a class="reference external" href="syndication.html#ref-contrib-syndication"><em>配信フィードフレームワークのドキュメント</em></a>
+を参照してください。</p>
+</div>
+<div class="section" id="s-webdesign">
+<h2>webdesign<a class="headerlink" href="#webdesign" title="Permalink to this headline">¶</a></h2>
+<p>Web の <em>開発者</em> ではなく <em>デザイナ</em> のためのヘルパやユーティリティです。</p>
+<p><a class="reference external" href="webdesign.html#ref-contrib-webdesign"><em>webdesign のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-id1">
+<h2>その他のアドオン<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">contrib</span></tt> に入れたらよいと思う機能について何かアイデアがあるなら、是非教
+えて下さい! コードを書いて、 <a class="reference external" href="http://groups.google.com/group/django-users">django-users mailing list</a> に送って下さい。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">&#8220;django.contrib&#8221; 下のアドオン</a><ul>
+<li><a class="reference external" href="#admin">admin</a></li>
+<li><a class="reference external" href="#auth">auth</a></li>
+<li><a class="reference external" href="#comments">comments</a></li>
+<li><a class="reference external" href="#contenttypes">contenttypes</a></li>
+<li><a class="reference external" href="#csrf">csrf</a></li>
+<li><a class="reference external" href="#flatpages">flatpages</a></li>
+<li><a class="reference external" href="#formtools">formtools</a><ul>
+<li><a class="reference external" href="#django-contrib-formtools-preview">django.contrib.formtools.preview</a></li>
+<li><a class="reference external" href="#django-contrib-formtools-wizard">django.contrib.formtools.wizard</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#humanize">humanize</a></li>
+<li><a class="reference external" href="#localflavor">localflavor</a></li>
+<li><a class="reference external" href="#markup">markup</a></li>
+<li><a class="reference external" href="#redirects">redirects</a></li>
+<li><a class="reference external" href="#sessions">sessions</a></li>
+<li><a class="reference external" href="#sites">sites</a></li>
+<li><a class="reference external" href="#sitemaps">sitemaps</a></li>
+<li><a class="reference external" href="#syndication">syndication</a></li>
+<li><a class="reference external" href="#webdesign">webdesign</a></li>
+<li><a class="reference external" href="#id1">その他のアドオン</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="../index.html">API リファレンス</a></li>
+    
+    
+      <li>次: <a href="admin.html">Django admin サイト</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+        <ul><li>&#8220;django.contrib&#8221; 下のアドオン</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/index.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="../index.html" title="API リファレンス">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="admin.html" title="Django admin サイト">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

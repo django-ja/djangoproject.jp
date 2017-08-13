@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django バージョン 0.95 リリースノート &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="リリースノート" href="index.html" />
+    <link rel="next" title="Django バージョン 0.96 リリースノート" href="0.96.html" />
+    <link rel="prev" title="リリースノート" href="index.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="リリースノート">前へ</a> 
+     |
+    <a href="index.html" title="リリースノート" accesskey="U">上へ</a>
+   |
+    <a href="0.96.html" title="Django バージョン 0.96 リリースノート">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="releases-0.95">
+            
+  
+  <div class="section" id="s-django-0-95">
+<h1>Django バージョン 0.95 リリースノート<a class="headerlink" href="#django-0-95" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django 0.95 リリースへようこそ。</p>
+<p>Django 0.95 は、 2006 年 1 月の 0.91 リリース以来の素晴らしい改良の数々でいっ
+ぱいのリリースです。このリリースに盛り込まれた変更をここですべて挙げるのは
+大変なので、簡単にまとめたものを以下に示すことにします。</p>
+<div class="section" id="s-api">
+<span id="s-suitability-and-api-stability"></span><h2>適合性と API の安定性<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>このリリースは、 Django を使ったプロダクションレベルのアプリケーションに取
+り組みたい開発者への、安定したリファレンスポイントの提供を目的としています。</p>
+<p>とはいえ、このリリースは 1.0 ではないので、 1.0 になるまでにはいくつか変更
+を採り入れる予定でいます。フレームワークのどの部分が変更されるのか (そして
+どの部分が変更 <em>されない</em> のか) を知りたければ、配布物の docs/ ディレクトリ
+にある api-stability.txt (<a class="reference external" href="../api_stability/">../api_stability/</a>) を参照してください。</p>
+<p>このドキュメントで「API 変更の対象」と書かれた機能を使う必要がでてくるかも
+知れませんが、今の機能に問題がなくて、将来 API が変更されるかも知れないと分
+かっているのなら、使っていただいてかまいません。</p>
+<p>好運なことに、 Django のコア API のほとんどは 1.0 まで変更しない予定です。
+0.95 から 1.0 にかけての変更は、 0.91 から 0.95 にかけての変更ほど大がかり
+ではないはずです。</p>
+</div>
+<div class="section" id="s-id1">
+<span id="s-changes-and-new-features"></span><h2>変更点と新たな機能<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>このリリースの主な変更点 (とりわけ現在 0.91 リリースを使っている開発者にとっ
+て重要な変更点) は、 &#8216;magic-removal&#8217; 開発ブランチからマージされた内容に基づ
+く変更です。このブランチは、オープンソースになる前の初期の Django で決めら
+れた設計によって課されていた、 Django コードの書き方に対するいくつもの制約
+を取り払っています。その結果、より自然でかつ Pythonic な、期待通りに動作す
+るコードを書けるようになり、背後で起きている「黒魔術」を減らせました。</p>
+<p>その他に、このリリースのもうひとつのメインテーマとして、劇的なユーザビリティ
+の向上があります。このリリースではエラーメッセージやドキュメントなどに数え
+切れない程の変更が施され、開発者の QOL を向上させています。</p>
+<p>0.95 に採り入れられた新たな機能と変更は以下の通りです:</p>
+<ul class="simple">
+<li>データベースからオブジェクトを取り出すのに、より一貫性のある、自然な
+フィルタインタフェースを使うようになりました。</li>
+<li>ユーザ定義モデル、関数、および定数が、それらを定義しているモジュール
+の名前空間で参照できるようになりました。(以前のバージョンでは、全てが
+django.models.* という名前空間から黒魔術的に提供されていました。)</li>
+<li>FlatPage, Sites, Redirects といったオプションのアプリケーションをコア
+システムから脱カップリングして、 django.contrib に移しました。これら
+のアプリケーションを使いたくない場合、アプリケーションのデータベース
+テーブルをインストールしなくてすむようになりました。</li>
+<li>データベースのトランザクション管理をサポートするようになりました。</li>
+<li>認証やユーザ識別バックエンドを自作できるようにし、 LDAP のような別の
+システムをつかってユーザ認証を行えるようになりました。</li>
+<li>新たな「マネジャ」API を介して、モデルに簡単に自作のテーブルレベル関
+数を追加できるようにしました。</li>
+<li>データベースなしで Django を使えるようになりました。簡単に言えば、動
+的ページを生成させたいだけなら、データベースを稼働させなくてもフレー
+ムワークを使えるということです。換言すれば、 URLconf とビューだけの構
+成で利用できるということです。以前のバージョンでは、実際にデータベー
+スを使うかどうかに関わらず、設定を行わねばなりませんでした。</li>
+<li>モデルの save() や delete() をより明示的かつ自然な方法でオーバライド
+できるようになり、 pre_save() や post_save() メソッドフックを使わなく
+てもよくなりました。</li>
+<li>環境変数を設定しなくても、フレームワークの個々の部分に対する設定を行
+えるようになりました。これにより、例えば Django テンプレートシステム
+だけを他のアプリケーションで使ったりできるようになりました。</li>
+<li>国際化 (i18n) サポートの範囲を広げ、フレームワークの各部を一層国際化
+させました。Django のコードベースはテンプレートも含めて翻訳され、31
+の言語で少なくとも部分的に翻訳されています。新たにアラブ語、中国語、
+ハンガリー語、ウェールズ語で Django admin サイトを使えるようになりま
+した。</li>
+</ul>
+<p>0.91 互換のコードを 0.95 コードベースに移植する際に必要な変更は、場合によっ
+てはかなりの量になります。とはいえ、そのほとんどは合理的な作業であり、一度
+だけやれば済むようなものです。変更に必要な作業は Wiki の
+<a class="reference external" href="http://code.djangoproject.com/wiki/RemovingTheMagic">Removing The Magic</a> のページに列挙してあります。また、移植作業を準備する
+際に必要な <a class="reference external" href="http://code.djangoproject.com/wiki/MagicRemovalCheatSheet1">チェックリスト</a> のページもあります。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-problem-reports-and-getting-help"></span><h2>問題の報告と手助けの求め方<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Django を使った問題解決で手助けが必要になったときは? 配布物に入っているドキュ
+メントは <a class="reference external" href="http://www.djangoproject.com/">Django ウェブサイト</a> から <a class="reference external" href="http://www.djangoproject.com/documentation/0.95/">オンラインで</a> 入手できます (訳注:
+<a class="reference external" href="http://ymasuda.jp/python/django/docs/">日本語ドキュメント</a> もあります)。特に、何度も寄せられる質問について回答し
+ている <a class="reference external" href="../faq/index.html#faq-index"><em>FAQ</em></a> ドキュメントを一読するようお勧めします。</p>
+<p>より個人的な手助けが必要な場合には、 <a class="reference external" href="http://groups.google.com/group/django-users">django-users</a> メーリングリストがあり
+ます。このリストは非常に活発で、 2,000 を超える読者があらゆる Django に関す
+る問題解決の手助けをしてくれます。とはいえ、よくある多くの質問にはなにがし
+かの共通性があり、その名かには既に回答されているものもあるので、まずはアー
+カイブをチェックするよう勧めます。</p>
+<p>最後に、 IRC ですぐ応答をもらいたい人のために、 irc.freenode.net には
+#django というチャネルがあります。このチャネルには世界中の Django ユーザや
+開発者が常に集まっています。気さくな人達がいつもいて、手助けをしてくれたり、
+話相手になってくれます。</p>
+<p>Django を使ってくれてありがとう！</p>
+<p>The Django Team
+July 2006</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django バージョン 0.95 リリースノート</a><ul>
+<li><a class="reference external" href="#api">適合性と API の安定性</a></li>
+<li><a class="reference external" href="#id1">変更点と新たな機能</a></li>
+<li><a class="reference external" href="#id3">問題の報告と手助けの求め方</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">リリースノート</a></li>
+    
+    
+      <li>次: <a href="0.96.html">Django バージョン 0.96 リリースノート</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">リリースノート</a>
+        
+        <ul><li>Django バージョン 0.95 リリースノート</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/releases/0.95.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="リリースノート">前へ</a> 
+     |
+    <a href="index.html" title="リリースノート" accesskey="U">上へ</a>
+   |
+    <a href="0.96.html" title="Django バージョン 0.96 リリースノート">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

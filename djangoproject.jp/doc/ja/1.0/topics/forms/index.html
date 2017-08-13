@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>フォームの操作 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Django を使う" href="../index.html" />
+    <link rel="next" title="モデルからフォームを生成する" href="modelforms.html" />
+    <link rel="prev" title="セッションの使い方" href="../http/sessions.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="../http/sessions.html" title="セッションの使い方">前へ</a> 
+     |
+    <a href="../index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="modelforms.html" title="モデルからフォームを生成する">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="topics-forms-index">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-topics-forms-index"></span><h1>フォームの操作<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition- admonition">
+<p class="first admonition-title">このドキュメントについて</p>
+<p class="last">このドキュメントでは、 Django のフォーム処理機能を紹介しています。
+フォーム API の詳細は、 <a class="reference external" href="../../ref/forms/api.html#ref-forms-api"><em>フォーム API</em></a> を参照してください。
+利用できるフィールドタイプのドキュメントは <a class="reference external" href="../../ref/forms/fields.html#ref-forms-fields"><em>フォームフィールド</em></a>
+を参照してください。</p>
+</div>
+<p><tt class="docutils literal"><span class="pre">django.forms</span></tt> は、 Django のフォーム処理ライブラリです。</p>
+<p>フォームによって提出 (submit) されたデータの処理は、Django の
+<a title="django.http.HttpRequest" class="reference external" href="../../ref/request-response.html#django.http.HttpRequest"><tt class="xref docutils literal"><span class="pre">HttpRequest</span></tt></a> クラスだけでも実現できます。しかし、フォー
+ムライブラリを使うと、フォーム処理に必要な共通のタスクの面倒を見てくれます。
+フォームライブラリを使えば、以下のようなことを実現できます:</p>
+<ol class="arabic simple">
+<li>フォームウィジェットから、 HTML フォームを自動的に生成して表示できま
+す。</li>
+<li>提出されたデータに対して、バリデーション規則 (validation rule) を適
+用できます。</li>
+<li>バリデーションエラーを検出したときに、フォームをエラーメッセージ付き
+で表示できます。</li>
+<li>提出されたデータを、適切な Python のデータ型に変換できます。</li>
+</ol>
+<div class="section" id="s-id2">
+<h2>概要<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>このライブラリでは、以下のような概念を扱います:</p>
+<dl class="glossary docutils">
+<dt id="term-widget">ウィジェット (Widget)</dt>
+<dd><tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> や <tt class="docutils literal"><span class="pre">&lt;textarea&gt;</span></tt> のような、 HTML フォーム
+ウィジェットに対応するクラスです。ウィジェットから HTML へのレンダ
+リングもこのクラスで行われます。</dd>
+<dt id="term-field">フィールド (Field)</dt>
+<dd>データの検証を行うためのクラスです。例えば、 <tt class="docutils literal"><span class="pre">EmailField</span></tt> はデー
+タが有効な電子メールアドレスかどうか検証します。</dd>
+<dt id="term-form">フォーム (Form)</dt>
+<dd>フィールドの集まりで、データの検証や HTML への表示方法が実装された
+ものです。</dd>
+<dt id="term-form-media">フォームメディア (Form Media)</dt>
+<dd>フォームをレンダするときに必要な CSS や JavaScript リソースの定義です。</dd>
+</dl>
+<p>このライブラリは、データベースレイヤやビュー、テンプレートといった他の
+Django コンポーネントに対してカップリングしていません。このライブラリが依存
+しているのは settings と <tt class="docutils literal"><span class="pre">django.utils</span></tt> の二つのヘルパ関数、そして国際化
+のためのフックだけです (ただし、このライブラリを使うために国際化の機能を使
+わねばならないわけではありません) 。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-form-objects"></span><h2>フォームオブジェクト<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>フォームオブジェクトは、フォームに含める一連のフィールドや、フォームに入力
+した値を受理するために充足しなければならないバリデーション規則をカプセル化
+します。フォームクラスは、 <tt class="docutils literal"><span class="pre">django.newforms.Form</span></tt> クラスをサブクラス化し、
+Django のデータベースモデルによく似た方法でフォームのフィールドを定義して作
+成します。</p>
+<p>一例として、個人のウェブサイトでコンタクトフォームの機能を実装するときに使
+うフォームを考えてみましょう:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+
+<span class="k">class</span> <span class="nc">ContactForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">()</span>
+    <span class="n">sender</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">EmailField</span><span class="p">()</span>
+    <span class="n">cc_myself</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+<p>フォームは <tt class="docutils literal"><span class="pre">Field</span></tt> オブジェクトの組み合わせでできています。今回の例では、
+<tt class="docutils literal"><span class="pre">subject</span></tt> (題名)、 <tt class="docutils literal"><span class="pre">message</span></tt> (メッセージ)、 <tt class="docutils literal"><span class="pre">sender</span></tt> (送信者)、そして
+<tt class="docutils literal"><span class="pre">cc_myself</span></tt> (自分に CC する)、の 4 つのフィールドをフォームに持たせます。
+<tt class="docutils literal"><span class="pre">CharField</span></tt> や <tt class="docutils literal"><span class="pre">EmailField</span></tt>, <tt class="docutils literal"><span class="pre">BooleanField</span></tt> はフィールド型です。
+フィールド型の一覧は <a class="reference external" href="../../ref/forms/fields.html#ref-forms-fields"><em>フォームフィールド</em></a> を参照してください。</p>
+<p><a class="reference external" href="modelforms.html#topics-forms-modelforms"><em>ModelForm</em></a> を使えば、フォームを使って
+Django のモデルを直接追加したり編集したりしたいときに、モデルと重複する記述
+をせずにすみます。</p>
+<div class="section" id="s-id4">
+<span id="s-using-a-form-in-a-view"></span><h3>ビュー内でフォームを使う<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>フォームをビュー内で処理するときの標準的なパターンを以下に示します:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">contact</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span> <span class="c"># If the form has been submitted...</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ContactForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span> <span class="c"># A form bound to the POST data</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span> <span class="c"># All validation rules pass</span>
+            <span class="c"># Process the data in form.cleaned_data</span>
+            <span class="c"># ...</span>
+            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/thanks/&#39;</span><span class="p">)</span> <span class="c"># Redirect after POST</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ContactForm</span><span class="p">()</span> <span class="c"># An unbound form</span>
+
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;contact.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+    <span class="p">})</span>
+</pre></div>
+<p>このパターンには、 3 つのコードパスがあります:</p>
+<ol class="arabic simple">
+<li>フォームデータが提出されていなければ、非束縛の <tt class="docutils literal"><span class="pre">ContactForm</span></tt> イン
+スタンスを生成して、テンプレートに渡します。</li>
+<li>フォームデータが提出されていれば、 <tt class="docutils literal"><span class="pre">request.POST</span></tt> を使って束縛フォー
+ムを生成します。入力データのバリデーションに成功したら、フォームデー
+タを処理して、ユーザを「ありがとう」ページにリダイレクトします。</li>
+<li>フォームデータが提出され、バリデーションに成功しなければ、束縛フォー
+ムインスタンスをテンプレートに渡します。</li>
+</ol>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました:</span> <tt class="docutils literal"><span class="pre">cleaned_data</span></tt> 属性は、以前のリリースでは <tt class="docutils literal"><span class="pre">clean_data</span></tt> という名前で
+した。</div>
+<p><strong>束縛</strong> フォームと <strong>非束縛</strong> フォームの違いはとても重要です。非束縛フォー
+ムには、何らデータが結び付いていません。非束縛フォームをレンダしてユーザに
+呈示すると、フォームには空の値かデフォルトの値が表示されます。束縛フォーム
+にはユーザから提出されたデータが入るので、そのデータが有効であるかどうか調
+べられます。入力データが無効な束縛フォームをレンダすると、入力データの何が
+おかしいのかを示すエラーメッセージが各行に出力されます。</p>
+<p>束縛フォームと非束縛フォームの違いについてもっと詳しく知りたければ、
+<a class="reference external" href="../../ref/forms/api.html#ref-forms-api-bound-unbound"><em>束縛フォームと非束縛フォーム</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-id5">
+<span id="s-processing-the-data-from-a-form"></span><h3>フォームから入力されたデータを処理する<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>フォームの <tt class="docutils literal"><span class="pre">is_valid()</span></tt> が <tt class="xref docutils literal"><span class="pre">True</span></tt> を返すなら、入力データはフォームに設
+定しておいたバリデーション条件を満たしているので、提出されたフォームを安全
+に処理できます。この時点でも、 <tt class="docutils literal"><span class="pre">request.POST</span></tt> には直接アクセスできますが、
+<tt class="docutils literal"><span class="pre">form.cleaned_data</span></tt> にアクセスする方がよいでしょう。
+<tt class="docutils literal"><span class="pre">form.cleaned_data</span></tt> 内のデータはバリデーション済みであるだけでなく、適切
+な Python の型に変換されているからです。上の例では、 <tt class="docutils literal"><span class="pre">cc_myself</span></tt> はブール
+型の値に変換されています。同様に、 <tt class="docutils literal"><span class="pre">IntegerField</span></tt> や <tt class="docutils literal"><span class="pre">FloatField</span></tt> は、
+それぞれ Python の整数型や浮動小数型の値に変換されています。</p>
+<p>上の例を拡張すると、フォームデータの処理は以下のように書けます:</p>
+<div class="highlight"><pre><span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;subject&#39;</span><span class="p">]</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;message&#39;</span><span class="p">]</span>
+    <span class="n">sender</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;sender&#39;</span><span class="p">]</span>
+    <span class="n">cc_myself</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;cc_myself&#39;</span><span class="p">]</span>
+
+    <span class="n">recipients</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;info@example.com&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cc_myself</span><span class="p">:</span>
+        <span class="n">recipients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sender</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
+    <span class="n">send_mail</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">recipients</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/thanks/&#39;</span><span class="p">)</span> <span class="c"># Redirect after POST</span>
+</pre></div>
+<p>この例ではメールを送信しています。Django からメールを送信する方法の詳細は
+<a class="reference external" href="../email.html#topics-email"><em>電子メールの送信</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-id6">
+<span id="s-displaying-a-form-using-a-template"></span><h3>テンプレートを使ってフォームを表示する<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>フォームは Django のテンプレート言語を使うように設計されています。上の例で
+は、コンテキスト変数 <tt class="docutils literal"><span class="pre">form</span></tt> を使ってテンプレートに <tt class="docutils literal"><span class="pre">ContactForm</span></tt> インス
+タンスを渡しています。簡単なテンプレートの例を示します:</p>
+<pre>&lt;form action="/contact/" method="POST"&gt;
+{{ form.as_p }}
+&lt;input type="submit" value="Submit"&gt;
+&lt;/form&gt;</pre>
+<p>フォームインスタンスはフィールドのマークアップだけを出力します。前後の
+<tt class="docutils literal"><span class="pre">&lt;form&gt;</span></tt> タグや、 submit ボタンは自分で追加します。</p>
+<p><tt class="docutils literal"><span class="pre">form.as_p</span></tt> を参照すると、各フィールドとラベルをパラグラフ (<tt class="docutils literal"><span class="pre">&lt;p&gt;</span></tt>) タグ
+で囲って出力します。上のテンプレートの例を出力すると、以下のようになります:</p>
+<pre>&lt;form action="/contact/" method="POST"&gt;
+&lt;p&gt;&lt;label for="id_subject"&gt;Subject:&lt;/label&gt;
+    &lt;input id="id_subject" type="text" name="subject" maxlength="100" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for="id_message"&gt;Message:&lt;/label&gt;
+    &lt;input type="text" name="message" id="id_message" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for="id_sender"&gt;Sender:&lt;/label&gt;
+    &lt;input type="text" name="sender" id="id_sender" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for="id_cc_myself"&gt;Cc myself:&lt;/label&gt;
+    &lt;input type="checkbox" name="cc_myself" id="id_cc_myself" /&gt;&lt;/p&gt;
+&lt;input type="submit" value="Submit"&gt;
+&lt;/form&gt;</pre>
+<p>各フォームフィールドには、 <tt class="docutils literal"><span class="pre">id_&lt;field-name&gt;</span></tt> の形式で id 属性が付加されて
+おり、すぐそばのラベルで参照されています。これは、画面読み上げソフトウェア
+のような入出力補助技術でフォームを扱うために重要な仕組みです。
+<a class="reference external" href="../../ref/forms/api.html#ref-forms-api-configuring-label"><em>ラベルや idの出力方法はカスタマイズできます</em></a> 。</p>
+<p><tt class="docutils literal"><span class="pre">form.as_table</span></tt> を使うと、各フィールドがテーブルの各行になるように出力で
+きます (自分で <tt class="docutils literal"><span class="pre">&lt;table&gt;</span></tt> タグで囲む必要があります)。また、
+<tt class="docutils literal"><span class="pre">form.as_ul</span></tt> を使えば、リストとして出力できます。</p>
+</div>
+<div class="section" id="s-id7">
+<h3>フォームテンプレートのカスタマイズ<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>デフォルトの HTML 出力が気に入らなければ、 Django のテンプレート言語を使っ
+て、フォームの表示方法をいくらでもカスタマイズできます。例えば、前掲の例は
+以下のように拡張できます:</p>
+<pre>&lt;form action="/contact/" method="POST"&gt;
+    &lt;div class="fieldWrapper"&gt;
+        {{ form.subject.errors }}
+        &lt;label for="id_subject"&gt;E-mail subject:&lt;/label&gt;
+        {{ form.subject }}
+    &lt;/div&gt;
+    &lt;div class="fieldWrapper"&gt;
+        {{ form.message.errors }}
+        &lt;label for="id_message"&gt;Your message:&lt;/label&gt;
+        {{ form.message }}
+    &lt;/div&gt;
+    &lt;div class="fieldWrapper"&gt;
+        {{ form.sender.errors }}
+        &lt;label for="id_sender"&gt;Your email address:&lt;/label&gt;
+        {{ form.sender }}
+    &lt;/div&gt;
+    &lt;div class="fieldWrapper"&gt;
+        {{ form.cc_myself.errors }}
+        &lt;label for="id_cc_myself"&gt;CC yourself?&lt;/label&gt;
+        {{ form.cc_myself }}
+    &lt;/div&gt;
+    &lt;p&gt;&lt;input type="submit" value="Send message"&gt;&lt;/p&gt;
+&lt;/form&gt;</pre>
+<p>各フォームフィールドは、その名前に従って、 <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">form.name_of_field</span> <span class="pre">}}</span></tt>
+で出力でき、フォームウィジェットを表示するための適切な HTML を生成します。
+<tt class="docutils literal"><span class="pre">{{</span> <span class="pre">form.name_of_field.errors</span> <span class="pre">}}</span></tt> はフォームエラーのリストを以下のような
+無番号リストで表示します:</p>
+<pre>&lt;ul class="errorlist"&gt;
+    &lt;li&gt;Sender is required.&lt;/li&gt;
+&lt;/ul&gt;</pre>
+<p>リストには <tt class="docutils literal"><span class="pre">errorlist</span></tt> という CSS があてられていて、表示スタイルを変更で
+きます。エラーの表示方法をもっと細かく制御したければ、ループを使って以下の
+ように表現できます:</p>
+<pre>{% if form.subject.errors %}
+    &lt;ol&gt;
+    {% for error in form.message.errors %}
+        &lt;li&gt;&lt;strong&gt;{{ error|escape }}&lt;/strong&gt;&lt;/li&gt;
+    {% endfor %}
+    &lt;/ol&gt;
+{% endif %}</pre>
+</div>
+</div>
+<div class="section" id="s-id8">
+<h2>その他のトピック<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>ここではフォームの基本を説明しましたが、フォームライブラリのできることはもっ
+とたくさんあります:</p>
+<ul>
+<li><a class="reference external" href="modelforms.html">モデルからフォームを生成する</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="formsets.html">フォームセット (formsets)</a></li>
+</ul>
+<ul>
+<li><a class="reference external" href="media.html">Form Media</a></li>
+</ul>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="../../ref/forms/index.html#ref-forms-index"><em>フォーム API リファレンス</em></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">フォームの操作</a><ul>
+<li><a class="reference external" href="#id2">概要</a></li>
+<li><a class="reference external" href="#id3">フォームオブジェクト</a><ul>
+<li><a class="reference external" href="#id4">ビュー内でフォームを使う</a></li>
+<li><a class="reference external" href="#id5">フォームから入力されたデータを処理する</a></li>
+<li><a class="reference external" href="#id6">テンプレートを使ってフォームを表示する</a></li>
+<li><a class="reference external" href="#id7">フォームテンプレートのカスタマイズ</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id8">その他のトピック</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="../http/sessions.html">セッションの使い方</a></li>
+    
+    
+      <li>次: <a href="modelforms.html">モデルからフォームを生成する</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">Django を使う</a>
+        
+        <ul><li>フォームの操作</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/topics/forms/index.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="../http/sessions.html" title="セッションの使い方">前へ</a> 
+     |
+    <a href="../index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="modelforms.html" title="モデルからフォームを生成する">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

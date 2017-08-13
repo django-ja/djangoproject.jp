@@ -1,0 +1,703 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python プログラマのための Django テンプレート言語ガイド &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="テンプレートシステムリファレンス" href="index.html" />
+    <link rel="next" title="Django での Unicode の扱い" href="../unicode.html" />
+    <link rel="prev" title="組み込みタグ／フィルタリファレンス" href="builtins.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="builtins.html" title="組み込みタグ／フィルタリファレンス">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="../unicode.html" title="Django での Unicode の扱い">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-templates-api">
+            
+  
+  <div class="section" id="s-python-django">
+<span id="s-the-django-template-language-for-python-programmers"></span><span id="s-ref-templates-api"></span><h1>Python プログラマのための Django テンプレート言語ガイド<a class="headerlink" href="#python-django" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントでは、 Django のテンプレートシステムを技術的な側面、すなわ
+ちどのように動作し、どうやって拡張するかという観点から解説します。テンプレー
+ト言語の構文リファレンスを探しているのなら、 <a class="reference external" href="../../topics/templates.html#topics-templates"><em>Django テンプレート言語</em></a> を参照
+してください。</p>
+<p>Django テンプレートシステムを他のアプリケーションの部品として使いたい場合、
+すなわち Django フレームワークの他の部分は必要ない場合、このドキュメントの
+後の方にある <a class="reference internal" href="#configuring-the-template-system-in-standalone-mode">設定</a> の節に必ず目を通して下さい。</p>
+<div class="section" id="s-id2">
+<span id="s-basics"></span><h2>基礎<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><strong>テンプレート (template)</strong> とは、 Django テンプレート言語を使ってマークアッ
+プしたテキストドキュメントや Python 文字列です。テンプレートには
+<strong>ブロックタグ (block tag)</strong> や <strong>変数 (variable)</strong> を入れられます。</p>
+<p><strong>ブロックタグ</strong> はテンプレート中で何らかの処理を行う部分を表すシンボルです。</p>
+<p>とはいえ、この定義はいささか曖昧ですね。例えば、ブロックタグを使うと、何ら
+かのコンテンツを出力したり、制御構造 (&#8220;if&#8221; 文や &#8220;for&#8221; ループ) を記述したり、
+データベースからコンテンツを取り出したり、他のテンプレートタグにアクセスし
+たりします。</p>
+<p>ブロックタグは <tt class="docutils literal"><span class="pre">&quot;{%&quot;</span></tt> と <tt class="docutils literal"><span class="pre">&quot;%}&quot;</span></tt> で囲みます。</p>
+<p>ブロックタグを使ったテンプレートの例を示します:</p>
+<pre>{% if is_logged_in %}Thanks for logging in!{% else %}Please log in.{% endif %}</pre>
+<p><strong>変数</strong> はテンプレート中で何らかの値を出力する部分を表すシンボルです。</p>
+<p>変数は <tt class="docutils literal"><span class="pre">&quot;{{&quot;</span></tt> と <tt class="docutils literal"><span class="pre">&quot;}}&quot;</span></tt> で囲みます。</p>
+<p>変数を使ったテンプレートの例を示します。:</p>
+<pre>My first name is {{ first_name }}. My last name is {{ last_name }}.</pre>
+<p><strong>コンテキスト (context)</strong> はテンプレートに渡される「変数名」から「変数の値」
+へのマッピングです。</p>
+<p>テンプレートの <strong>レンダリング (rendering)</strong> では、コンテキストから値を取り
+出して変数という「穴」に埋め、全てのブロックタグを実行します。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-using-the-template-system"></span><h2>テンプレートシステムの利用<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Python でテンプレートを使うには、以下の 2 段階のプロセスを踏みます:</p>
+<ul class="simple">
+<li>生のテンプレートをコンパイルして <tt class="docutils literal"><span class="pre">Template</span></tt> オブジェクトを生成しま
+す。</li>
+<li>コンテキストを指定して、 <tt class="docutils literal"><span class="pre">Template</span></tt> オブジェクトの <tt class="docutils literal"><span class="pre">render()</span></tt> メ
+ソッドを呼び出します。</li>
+</ul>
+<div class="section" id="s-id4">
+<span id="s-compiling-a-string"></span><h3>文字列のコンパイル<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">Template</span></tt> オブジェクトを作成するには、直接インスタンスを生成する方法が最
+も簡単です。 <tt class="docutils literal"><span class="pre">Template</span></tt> クラスは <tt class="docutils literal"><span class="pre">django.template.Template</span></tt> にあります。
+コンストラクタは引数に生のテンプレートコードを取ります:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s">&quot;My name is {{ my_name }}.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">t</span>
+<span class="go">&lt;django.template.Template instance&gt;</span>
+</pre></div>
+<div class="admonition-behind-the-scenes admonition">
+<p class="first admonition-title">舞台裏</p>
+<p>このシステムは <tt class="docutils literal"><span class="pre">Template</span></tt> オブジェクトを生成するときに生のテンプレー
+トコードを一度しか解析しません。コンパイル後のテンプレートはパフォーマ
+ンス上の目的から &quot;node&quot; データ構造に保存されます。</p>
+<p class="last">テンプレートコードの解析自体もきわめて高速です。解析のほとんどは短い正
+規表現を一つ呼び出すだけで終わります。</p>
+</div>
+</div>
+<div class="section" id="s-id5">
+<span id="s-rendering-a-context"></span><h3>コンテキストのレンダリング<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>コンパイル済みの <tt class="docutils literal"><span class="pre">Template</span></tt> オブジェクトを作成したら、オブジェクトを使っ
+てコンテキストをレンダリングできるようになります。 <tt class="docutils literal"><span class="pre">Context</span></tt> クラスは
+<tt class="docutils literal"><span class="pre">django.template.Context</span></tt> にあります。コンテキストクラスのコンストラクタ
+は単一の (省略可能な) 引数として、変数名を変数の値に対応づける辞書をとりま
+す。コンテキストの値でテンプレートを「埋める」には、 <tt class="docutils literal"><span class="pre">Template</span></tt>  オブジェ
+クトの <tt class="docutils literal"><span class="pre">render()</span></tt> メソッドを使います:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Template</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s">&quot;My name is {{ my_name }}.&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s">&quot;my_name&quot;</span><span class="p">:</span> <span class="s">&quot;Adrian&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">&quot;My name is Adrian.&quot;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s">&quot;my_name&quot;</span><span class="p">:</span> <span class="s">&quot;Dolores&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">&quot;My name is Dolores.&quot;</span>
+</pre></div>
+<p>変数名には、任意の文字 (A-Z)、数字 (0-9)、アンダースコアまたはドットしか
+使えません。</p>
+<p>ドットはテンプレートレンダリングにおいて特殊な意味を持ちます。変数名中の
+ドットは、 <strong>値の照合 (lookup)</strong> を意味します。もっと詳しく言えば、テンプレー
+トシステムが変数名中にドットを見つけた場合、以下の順で値の照合を試みます:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">foo[&quot;bar&quot;]</span></tt> のような辞書としての照合。</li>
+<li><tt class="docutils literal"><span class="pre">foo.bar</span></tt> のような属性値の照合。</li>
+<li><tt class="docutils literal"><span class="pre">foo.bar()</span></tt> のようなメソッド呼び出し。</li>
+<li><tt class="docutils literal"><span class="pre">foo[bar]</span></tt> のようなリストのインデクス指定。</li>
+</ul>
+<p>テンプレートシステムは最初に成功した照合結果を使います。いわば短絡的ロジッ
+ク (short-circuit logic) です。</p>
+<p>いくつか例を示します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Template</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s">&quot;My name is {{ person.first_name }}.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;person&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s">&quot;first_name&quot;</span><span class="p">:</span> <span class="s">&quot;Joe&quot;</span><span class="p">,</span> <span class="s">&quot;last_name&quot;</span><span class="p">:</span> <span class="s">&quot;Johnson&quot;</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+<span class="go">&quot;My name is Joe.&quot;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PersonClass</span><span class="p">:</span> <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PersonClass</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="s">&quot;Ron&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="s">&quot;Nasty&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s">&quot;person&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">}))</span>
+<span class="go">&quot;My name is Ron.&quot;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PersonClass2</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s">&quot;Samantha&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PersonClass2</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s">&quot;person&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">}))</span>
+<span class="go">&quot;My name is Samantha.&quot;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s">&quot;The first stooge in the list is {{ stooges.0 }}.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s">&quot;stooges&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;Larry&quot;</span><span class="p">,</span> <span class="s">&quot;Curly&quot;</span><span class="p">,</span> <span class="s">&quot;Moe&quot;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">&quot;The first stooge in the list is Larry.&quot;</span>
+</pre></div>
+<p>メソッドの照合は他の照合よりもちょっと複雑です。いくつか心に留めておくべき
+ことを挙げておきます:</p>
+<ul>
+<li><p class="first">メソッドの照合中にメソッドが送出した例外に
+<tt class="docutils literal"><span class="pre">silent_variable_failure</span></tt> という属性があり、かつ値が <tt class="xref docutils literal"><span class="pre">True</span></tt> に設
+定されている場合を除き、例外はそのまま伝播します。例外が
+<tt class="docutils literal"><span class="pre">silent_variable_failure</span></tt> という属性を持つ場合、変数は空文字列にレ
+ンダリングされます。例えば:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s">&quot;My name is {{ person.first_name }}.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PersonClass3</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PersonClass3</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s">&quot;person&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">}))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">AssertionError</span>: <span class="n">foo</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SilentAssertionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">silent_variable_failure</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PersonClass4</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">raise</span> <span class="n">SilentAssertionError</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PersonClass4</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s">&quot;person&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">}))</span>
+<span class="go">&quot;My name is .&quot;</span>
+</pre></div>
+<p>全ての Django データベース API の <tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> 例外の基底クラスで
+ある <tt class="docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt> では
+<tt class="docutils literal"><span class="pre">silent_variable_failure</span> <span class="pre">=</span> <span class="pre">True</span></tt> になっているので注意してください。
+つまり、 Django テンプレートと Django モデルオブジェクトを使っている
+限り、 <tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> 例外が出ても暗黙のうちに失敗するだけなのです。</p>
+</li>
+<li><p class="first">メソッド呼び出しがうまくいくのは、メソッドに必須の引数が存在しない場
+合だけです。必須の引数がある場合、メソッドは呼び出されず、次の照合タ
+イプ (リストのインデクス指定による照合) に移ります。</p>
+</li>
+<li><p class="first">言うまでもないことですが、メソッドによっては副作用があります。
+副作用のあるメソッドをテンプレートからアクセスできるようにしておくと、
+間抜けな結果になったりセキュリティホールを作ったりしてしまうことがある
+ので注意して下さい。</p>
+<p>分かりやすい例に、 Django モデルオブジェクトの <tt class="docutils literal"><span class="pre">delete()</span></tt> メソッド
+があります。テンプレートシステムでは、以下のような書き方を許すべきで
+はありません:</p>
+<pre>大事なデータを消しちゃいますよ。 {{ data.delete }}</pre>
+<p>このような操作を防ぐには、メソッドに <tt class="docutils literal"><span class="pre">alters_data</span></tt> 関数属性を設定し
+ます。テンプレートシステムは、 <tt class="docutils literal"><span class="pre">alters_data=True</span></tt> の設定されたメソッ
+ドを実行しません。 Django モデルオブジェクトが動的に生成する
+<tt class="docutils literal"><span class="pre">delete()</span></tt> および <tt class="docutils literal"><span class="pre">save()</span></tt> メソッドには <tt class="docutils literal"><span class="pre">alters_data=True</span></tt> が自
+動的に設定されます。 <tt class="docutils literal"><span class="pre">alters_data=True</span></tt> の例を以下に示します:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">sensitive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">database_record</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="n">sensitive_function</span><span class="o">.</span><span class="n">alters_data</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</li>
+</ul>
+<div class="section" id="s-id6">
+<span id="s-how-invalid-variables-are-handled"></span><span id="s-invalid-template-variables"></span><h4>無効な値の扱い<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>基本的に、変数が存在しなければ、 テンプレートシステムは
+<a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> の設定値を挿入します。この値のデフォルトは
+<tt class="docutils literal"><span class="pre">''</span></tt> (空文字列) です。</p>
+<p>無効な値に対してフィルタが適用されるのは、
+<a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> の値が <tt class="docutils literal"><span class="pre">''</span></tt> に設定されている場合だ
+けです。 <a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> が <tt class="docutils literal"><span class="pre">''</span></tt> 以外の値になってい
+ると、フィルタは無視されます。</p>
+<p>ただし、 <tt class="docutils literal"><span class="pre">if</span></tt>, <tt class="docutils literal"><span class="pre">for</span></tt>, <tt class="docutils literal"><span class="pre">regroup</span></tt> といったテンプレートタグの中では、少
+し違った挙動になります。これらのテンプレートタグ中では、無効な値は <tt class="xref docutils literal"><span class="pre">None</span></tt>
+であると解釈されます。また、これらのテンプレートタグ中のフィルタは、無効な
+値に対しも常に適用されます。</p>
+<p><a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> にフォーマット指示文字の <tt class="docutils literal"><span class="pre">'%s'</span></tt> が
+入っている場合、 <tt class="docutils literal"><span class="pre">'%s'</span></tt> は不正な変数の変数名で置き換えられます。</p>
+<div class="admonition- admonition">
+<p class="first admonition-title">デバッグ専用です!</p>
+<p><a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> はデバッグには便利ですが、「開発
+時のデフォルトの設定」としてオンにするのはよい考えではありません。</p>
+<p>Admin サイトのテンプレートをはじめとする多くのテンプレートは、実在し
+ない値を呼び出しても何も出力しないという動作を前提に作られています。
+<tt class="docutils literal"><span class="pre">''</span></tt> 以外の値を <a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> に指定した場合、
+こうしたテンプレートやサイトのレンダリングで問題が生じるかもしれません。</p>
+<p class="last">一般に、 <a class="reference external" href="../settings.html#setting-TEMPLATE_STRING_IF_INVALID"><tt class="xref docutils literal"><span class="pre">TEMPLATE_STRING_IF_INVALID</span></tt></a> を有効にするのは特定のテ
+ンプレートに対する問題を解決したいときだけにして、デバッグが終わったら
+すぐに無効にしておくべきです。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-id7">
+<span id="s-playing-with-context-objects"></span><h3>コンテキストオブジェクトの操作<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>皆さんはほとんどの場合、全ての値を入れた辞書を <tt class="docutils literal"><span class="pre">Context()</span></tt> に渡して
+<tt class="docutils literal"><span class="pre">Context</span></tt> オブジェクトのインスタンスを生成していることでしょう。しかし、
+<tt class="docutils literal"><span class="pre">Context</span></tt> オブジェクトはインスタンス化した後にも、通常の辞書と同じように
+値を追加したり削除したりできます:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s">&quot;foo&quot;</span><span class="p">:</span> <span class="s">&quot;bar&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="s">&#39;foo&#39;</span><span class="p">]</span>
+<span class="go">&#39;bar&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">c</span><span class="p">[</span><span class="s">&#39;foo&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="s">&#39;foo&#39;</span><span class="p">]</span>
+<span class="go">&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="s">&#39;newvariable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;hello&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="p">[</span><span class="s">&#39;newvariable&#39;</span><span class="p">]</span>
+<span class="go">&#39;hello&#39;</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">Context</span></tt> オブジェクトは一種のスタックです。すなわち、 <tt class="docutils literal"><span class="pre">push()</span></tt> や
+<tt class="docutils literal"><span class="pre">pop()</span></tt> 操作を行えます。 <tt class="docutils literal"><span class="pre">pop()</span></tt> しすぎると、
+<tt class="docutils literal"><span class="pre">django.template.ContextPopException</span></tt> を送出します:</p>
+<pre>&gt;&gt;&gt; c = Context()
+&gt;&gt;&gt; c['foo'] = 'first level'
+&gt;&gt;&gt; c.push()
+&gt;&gt;&gt; c['foo'] = 'second level'
+&gt;&gt;&gt; c['foo']
+'second level'
+&gt;&gt;&gt; c.pop()
+&gt;&gt;&gt; c['foo']
+'first level'
+&gt;&gt;&gt; c['foo'] = 'overwritten'
+&gt;&gt;&gt; c['foo']
+'overwritten'
+&gt;&gt;&gt; c.pop()
+Traceback (most recent call last):
+...
+django.template.ContextPopException</pre>
+<p><tt class="docutils literal"><span class="pre">Context</span></tt> をスタック的に使うと、後述するカスタムテンプレートタグで便利な
+ことがあります。</p>
+</div>
+<div class="section" id="s-requestcontext">
+<span id="s-id8"></span><span id="s-subclassing-context-requestcontext"></span><h3>コンテキストのサブクラス: RequestContext<a class="headerlink" href="#requestcontext" title="Permalink to this headline">¶</a></h3>
+<p>Django には <tt class="docutils literal"><span class="pre">django.template.RequestContext</span></tt> という特別なコンテキストクラ
+スがあります。このクラスは通常の <tt class="docutils literal"><span class="pre">django.template.Context</span></tt> とは少し異なる
+部分があります。まず、 <tt class="docutils literal"><span class="pre">RequestContext</span></tt> は第一引数に
+<a title="django.http.HttpRequest" class="reference external" href="../request-response.html#django.http.HttpRequest"><tt class="xref docutils literal"><span class="pre">HttpRequest</span></tt></a> をとります。例えば:</p>
+<pre>c = RequestContext(request, {
+    'foo': 'bar',
+}</pre>
+<p>第二に、 <tt class="docutils literal"><span class="pre">RequestContext</span></tt> は <a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> 設定
+に従っていくつかの値を自動的にコンテキストに入れます。</p>
+<p><a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> 設定は呼び出し可能オブジェクトのタプルになっ
+ています。個々の呼び出し可能オブジェクトは <strong>コンテキストプロセッサ</strong> と呼
+ばれ、リクエストオブジェクトを引数にとって。何らかの値を要素に持った辞書を
+返します。この辞書はコンテキストオブジェクトに統合されます。デフォルトでは、
+<a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> は以下のようになっています:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">&quot;django.core.context_processors.auth&quot;</span><span class="p">,</span>
+<span class="s">&quot;django.core.context_processors.debug&quot;</span><span class="p">,</span>
+<span class="s">&quot;django.core.context_processors.i18n&quot;</span><span class="p">,</span>
+<span class="s">&quot;django.core.context_processors.media&quot;</span><span class="p">)</span>
+</pre></div>
+<p>各プロセッサはタプルに列挙した順に適用されます。従って、あるプロセッサが
+ある変数をコンテキストに入れた後、別のプロセッサが同じ名前の変数を入れれば、
+後者が前者の内容を上書きします。デフォルトのプロセッサについては後で説明し
+ます。</p>
+<p><tt class="docutils literal"><span class="pre">RequestContext</span></tt> にはオプションの第三引数 <tt class="docutils literal"><span class="pre">processors</span></tt> に追加のプロセッ
+サのリストを指定できます。下記の例では、 <tt class="docutils literal"><span class="pre">RequestContext</span></tt> に
+<tt class="docutils literal"><span class="pre">ip_address</span></tt> 変数が入ります:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">ip_address_processor</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;ip_address&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="p">[</span><span class="s">&#39;REMOTE_ADDR&#39;</span><span class="p">]}</span>
+
+<span class="k">def</span> <span class="nf">some_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># ...</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s">&#39;foo&#39;</span><span class="p">:</span> <span class="s">&#39;bar&#39;</span><span class="p">,</span>
+    <span class="p">},</span> <span class="p">[</span><span class="n">ip_address_processor</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Django の <tt class="docutils literal"><span class="pre">render_to_response()</span></tt> ショートカットを使っていて、辞書オブ
+ジェクトを渡してコンテキストの変数を追加している場合、テンプレートはデ
+フォルトで (<tt class="docutils literal"><span class="pre">RequestContext</span></tt> ではなく) <tt class="docutils literal"><span class="pre">Context</span></tt> になります。テンプ
+レートのレンダリングに <tt class="docutils literal"><span class="pre">RequestContext</span></tt> を使うには、
+<tt class="docutils literal"><span class="pre">render_to_response()</span></tt> の 3 つめの引数に <tt class="docutils literal"><span class="pre">RequestContext</span></tt> インスタ
+ンスを指定します。コードは以下のようになるでしょう:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">some_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># ...</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;my_template.html&#39;</span><span class="p">,</span>
+                              <span class="n">my_data_dictionary</span><span class="p">,</span>
+                              <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>各デフォルトプロセッサの動作を以下に示します:</p>
+<div class="section" id="s-django-core-context-processors-auth">
+<h4>django.core.context_processors.auth<a class="headerlink" href="#django-core-context-processors-auth" title="Permalink to this headline">¶</a></h4>
+<p>このプロセッサが <a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> にある場合、以下の
+3 つの変数が <tt class="docutils literal"><span class="pre">RequestContext</span></tt> に入ります:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">user</span></tt> -- 現在ログインしているユーザを表す <tt class="docutils literal"><span class="pre">auth.User</span></tt> インスタン
+ス (クライアントがログインしていない場合には <tt class="docutils literal"><span class="pre">AnonymousUser</span></tt> インス
+タンス) です。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">messages</span></tt> -- 現在ログインしているユーザ宛の (文字列の) メッセージ
+のリストです。舞台裏では、この変数を参照するたびに
+<tt class="docutils literal"><span class="pre">request.user.get_and_delete_messaages()</span></tt> を呼び出しています。
+<tt class="docutils literal"><span class="pre">request.user.get_and_delete_messaages()</span></tt> は、ユーザ宛の全メッセー
+ジを集めて返し、 <tt class="docutils literal"><span class="pre">Message</span></tt> オブジェクトを削除します。</p>
+<p>メッセージは <tt class="docutils literal"><span class="pre">user.message_set.create</span></tt> で設定します。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">perms</span></tt> -- 現在ログインしているユーザが有しているパーミッションを表
+す、 <tt class="docutils literal"><span class="pre">django.core.context_processors.PermWrapper</span></tt> のインスタンスで
+す。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="s-django-core-context-processors-debug">
+<h4>django.core.context_processors.debug<a class="headerlink" href="#django-core-context-processors-debug" title="Permalink to this headline">¶</a></h4>
+<p>このプロセッサが <a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> にある場合、以下の
+2 つの変数が <tt class="docutils literal"><span class="pre">RequestContext</span></tt> に入ります。ただし、 <tt class="docutils literal"><span class="pre">DEBUG</span></tt> の設定が
+<tt class="xref docutils literal"><span class="pre">True</span></tt> で、リクエストの IP アドレス (<tt class="docutils literal"><span class="pre">request.META['REMOTE_ADDR']</span></tt>) が
+<a class="reference external" href="../settings.html#setting-INTERNAL_IPS"><tt class="xref docutils literal"><span class="pre">INTERNAL_IPS</span></tt></a> 設定に入っている場合だけです:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">debug</span></tt> -- <tt class="xref docutils literal"><span class="pre">True</span></tt> です。 <a class="reference external" href="../settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> モードかどうかをテスト
+するのに使えます。</li>
+<li><tt class="docutils literal"><span class="pre">sql_queries</span></tt> -- <tt class="docutils literal"><span class="pre">{'sql':</span> <span class="pre">...,</span> <span class="pre">'time':</span> <span class="pre">...}</span></tt> 辞書のリストです。
+このリストはリクエスト処理中に実行された SQL クエリと、それにかかった
+時間を表しています。リストはクエリの実行順にならんでいます。</li>
+</ul>
+</div>
+<div class="section" id="s-django-core-context-processors-i18n">
+<h4>django.core.context_processors.i18n<a class="headerlink" href="#django-core-context-processors-i18n" title="Permalink to this headline">¶</a></h4>
+<p>このプロセッサが <a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> にある場合、以下の
+2 つの変数が <tt class="docutils literal"><span class="pre">RequestContext</span></tt> に入ります:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> -- <a class="reference external" href="../settings.html#setting-LANGUAGES"><tt class="xref docutils literal"><span class="pre">LANGUAGES</span></tt></a> 設定の値です。</li>
+<li><tt class="docutils literal"><span class="pre">LANGUAGE_CODE</span></tt> -- <tt class="docutils literal"><span class="pre">request.LANGUAGE_CODE</span></tt> が存在する場合、その値
+です。値がなければ <a class="reference external" href="../settings.html#setting-LANGUAGE_CODE"><tt class="xref docutils literal"><span class="pre">LANGUAGE_CODE</span></tt></a> 設定の値になります。</li>
+</ul>
+<p>詳しくは <a class="reference external" href="../../topics/i18n.html#topics-i18n"><em>国際化</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-django-core-context-processors-media">
+<h4>django.core.context_processors.media<a class="headerlink" href="#django-core-context-processors-media" title="Permalink to this headline">¶</a></h4>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p><a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> にこのコンテキストプロセッサを入れる
+と、 <tt class="docutils literal"><span class="pre">RequestContext</span></tt> に <tt class="docutils literal"><span class="pre">MEDIA_URL</span></tt> というコンテキスト変数が入ります。
+<tt class="docutils literal"><span class="pre">MEDIA_URL</span></tt> には <a class="reference external" href="../settings.html#setting-MEDIA_URL"><tt class="xref docutils literal"><span class="pre">MEDIA_URL</span></tt></a> 設定の値が入っています。</p>
+</div>
+<div class="section" id="s-django-core-context-processors-request">
+<h4>django.core.context_processors.request<a class="headerlink" href="#django-core-context-processors-request" title="Permalink to this headline">¶</a></h4>
+<p>このプロセッサが <a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> にある場合、変数
+<tt class="docutils literal"><span class="pre">request</span></tt> が <tt class="docutils literal"><span class="pre">RequestContext</span></tt> に入ります。この変数は現在の
+<a title="django.http.HttpRequest" class="reference external" href="../request-response.html#django.http.HttpRequest"><tt class="xref docutils literal"><span class="pre">HttpRequest</span></tt></a> を表現します。このプロセッサはデフォルト
+では有効でないので注意してください。利用したければ有効にせねばなりません。</p>
+</div>
+<div class="section" id="s-id9">
+<span id="s-writing-your-own-context-processors"></span><h4>コンテキストプロセッサを自作する<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>コンテキストプロセッサのインタフェースはとても簡単です。コンテキストプロセッ
+サは単なる Python の関数で、 <tt class="docutils literal"><span class="pre">HttpRequest</span></tt> オブジェクトを引数にとり、
+テンプレートコンテキストに追加できるような辞書を返します。コンテキストプロ
+セッサは、 <strong>必ず</strong> 辞書型を返さねばなりません。</p>
+<p>自分のコードベースに自作のコンテキストプロセッサを入れてもかまいません。
+Django 側からは、自作のコンテキストプロセッサを
+<a class="reference external" href="../settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> 設定で指定するようにしてください。</p>
+</div>
+</div>
+<div class="section" id="s-id10">
+<span id="s-loading-templates"></span><h3>テンプレートのロード<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>一般的には、低水準の <tt class="docutils literal"><span class="pre">Template</span></tt> API を自分で使うことはほとんどなく、テン
+プレートはファイルの形でファイルシステム上に保存することになるでしょう。
+<strong>テンプレートディレクトリ</strong> に指定したディレクトリにテンプレートファイルを
+保存してください。</p>
+<p>Django はテンプレートローダの設定 (「Loader 型」を参照してください)
+に従って、いくつものテンプレートディレクトリを検索しますが、最も基本的なテ
+ンプレートディレクトリ指定方法は <a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> を使う方法です。</p>
+<div class="section" id="s-template-dirs">
+<span id="s-the-template-dirs-setting"></span><h4>TEMPLATE_DIRS 設定<a class="headerlink" href="#template-dirs" title="Permalink to this headline">¶</a></h4>
+<p>設定ファイル中で、 <a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> 設定を使ってどのディレクトリに
+テンプレートが収められているかを指定してください。この値は文字列のリストか
+タプルで指定します。文字列にはテンプレートディレクトリへの完全なパスを指定
+せねばなりません。例えば:</p>
+<div class="highlight"><pre><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&quot;/home/html/templates/lawrence.com&quot;</span><span class="p">,</span>
+    <span class="s">&quot;/home/html/templates/default&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+<p>Web サーバがテンプレートディレクトリの中身を読みだせる限り、テンプレートは
+どこにでも置けます。拡張子はなんでもよく、 <tt class="docutils literal"><span class="pre">.html</span></tt> でも <tt class="docutils literal"><span class="pre">.txt</span></tt> でも
+かまいませんし、拡張子を付けなくてもかまいません。</p>
+<p>Windows を使っている場合でも、パスは Unix 形式のスラッシュを使った表記法で
+指定せねばならないので注意して下さい。</p>
+</div>
+<div class="section" id="s-python-api">
+<span id="s-ref-templates-api-the-python-api"></span><h4>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h4>
+<p>Django でファイルからテンプレートを読み出すには二通りの方法があります:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">django.template.loader.get_template(template_name)</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">get_template</span></tt> は、指定した名前のテンプレートに対応したコンパイル済み
+のテンプレート (<tt class="docutils literal"><span class="pre">Template</span></tt> オブジェクト) を返します。テンプレートが存
+在しなければ <tt class="docutils literal"><span class="pre">django.template.TemplateDoesNotExist</span></tt> を送出します。</dd>
+<dt><tt class="docutils literal"><span class="pre">django.template.loader.select_template(template_name_list)</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">select_template</span></tt> は <tt class="docutils literal"><span class="pre">get_template</span></tt> と同じです。ただし、テンプレー
+ト名のリストを引数にとります。リストの中で最初に見つかったテンプレート
+を返します。</dd>
+</dl>
+<p>例えば <tt class="docutils literal"><span class="pre">get_template('story_detail.html')</span></tt> を呼び出した場合、前述のような
+<a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> の設定をしていれば、Django は以下のような順番でテ
+ンプレートファイルを探します:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/lawrence.com/story_detail.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/default/story_detail.html</span></tt></li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">select_template(['story_253_detail.html',</span> <span class="pre">'story_detail.html'])</span></tt> なら、
+以下の順で探します:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/lawrence.com/story_253_detail.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/default/story_253_detail.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/lawrence.com/story_detail.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/default/story_detail.html</span></tt></li>
+</ul>
+<p>テンプレートが見つかった時点で Django は検索を停止します。</p>
+<div class="admonition-tip admonition">
+<p class="first admonition-title">Tip</p>
+<p class="last"><tt class="docutils literal"><span class="pre">select_template()</span></tt> を使うと、極めて柔軟な「テンプレート構成機能
+(templatability)」を実現できます。例えば、あるニュース記事を書いていて、
+記事によってはカスタムのテンプレートを使いたいとします。
+<tt class="docutils literal"><span class="pre">select_template(['story_%s_detail.html'</span> <span class="pre">%</span> <span class="pre">story.id,</span> <span class="pre">'story_detail.html'])</span></tt>
+のようにすると、個々の記事にカスタムのテンプレートを使いながら、カスタ
+ムのテンプレートがない記事に対してはフォールバックのテンプレートを用意
+できるというわけです。</p>
+</div>
+</div>
+<div class="section" id="s-id11">
+<span id="s-using-subdirectories"></span><h4>サブディレクトリの使用<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>テンプレートディレクトリを複数のサブディレクトリで構成するのは可能ですし、
+お勧めでもあります。慣習的には各 Django アプリケーション毎にサブディレク
+トリを作成します。必要に応じてさらにサブディレクトリを作成します。</p>
+<p>精神衛生のためにもぜひテンプレートを階層化しましょう。一つのディレクトリの
+ルートレベルに全てのテンプレートを保存するのは、だらしないことこの上ありま
+せん。</p>
+<p>サブディレクトリ下にあるテンプレートをロードするには、以下のようにスラッシュ
+を使って指定します:</p>
+<div class="highlight"><pre><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;news/story_detail.html&#39;</span><span class="p">)</span>
+</pre></div>
+<p>この例の <tt class="docutils literal"><span class="pre">get_template()</span></tt> は、上の <a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> と同じ設定を
+使った場合、以下の順番でテンプレートをロードしようと試みます:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/lawrence.com/news/story_detail.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">/home/html/templates/default/news/story_detail.html</span></tt></li>
+</ul>
+</div>
+<div class="section" id="s-loader">
+<span id="s-loader-types"></span><span id="s-template-loaders"></span><h4>Loader 型<a class="headerlink" href="#loader" title="Permalink to this headline">¶</a></h4>
+<p>デフォルトでは、 Django はファイルシステムベースのテンプレートローダを使っ
+ていますが、 Django には他のテンプレートローダも付属しており、その他のデー
+タソースからテンプレートをロードできるようになっています。</p>
+<p>ファイルシステムベース以外のテンプレートローダはデフォルトでは無効化されて
+いますが、 <a class="reference external" href="../settings.html#setting-TEMPLATE_LOADERS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_LOADERS</span></tt></a> 設定を編集して有効にできます。
+<a class="reference external" href="../settings.html#setting-TEMPLATE_LOADERS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_LOADERS</span></tt></a> は文字列のタプルで、各文字列がテンプレートロー
+ダを表します。組み込みのテンプレートローダを以下に示します:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">django.template.loaders.filesystem.load_template_source</span></tt></dt>
+<dd><a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> の設定に従って、ファイルシステムからテンプレー
+トをロードします。</dd>
+<dt><tt class="docutils literal"><span class="pre">django.template.loaders.app_directories.load_template_source</span></tt></dt>
+<dd><p class="first">ファイルシステム上の Django アプリケーションからテンプレートをロードし
+ます。このローダは <a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> の各アプリケーションについ
+て <tt class="docutils literal"><span class="pre">templates</span></tt> サブディレクトリを探します。ディレクトリが存在すれば、
+Django はその中からテンプレートを探します。</p>
+<p>これはすなわち、個々のアプリケーションにテンプレートを保存しておけると
+いうことです。このローダを使うと、 Django アプリケーションをデフォルト
+のテンプレート付きで配りやすくなります。</p>
+<p>例えば、以下のように設定します:</p>
+<div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;myproject.polls&#39;</span><span class="p">,</span> <span class="s">&#39;myproject.music&#39;</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">get_template('foo.html')</span></tt> は以下のディレクトリを順番に探します:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">/path/to/myproject/polls/templates/foo.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">/path/to/myproject/music/templates/foo.html</span></tt></li>
+</ul>
+<p class="last">このローダは最初に import した時に最適化処理を行います。すなわち、
+<a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> パッケージリストの中で、 <tt class="docutils literal"><span class="pre">templates</span></tt> サブディ
+レクトリを持つものをキャッシュします。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">django.template.loaders.eggs.load_template_source</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">app_directories</span></tt> と同じですが、ファイルシステムではなく Python eggs
+からテンプレートをロードします。</dd>
+</dl>
+<p>Django はテンプレートローダを <a class="reference external" href="../settings.html#setting-TEMPLATE_LOADERS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_LOADERS</span></tt></a> 設定の順番に従っ
+て試してゆき、マッチするテンプレートが見つかるまで探します。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-render-to-string">
+<span id="s-the-render-to-string-shortcut"></span><h2><tt class="docutils literal"><span class="pre">render_to_string()</span></tt> ショートカット<a class="headerlink" href="#render-to-string" title="Permalink to this headline">¶</a></h2>
+<p>テンプレートのロードとレンダの反復を減らすため、 Django は作業を自動化する
+ためのショートカットとして、 <tt class="docutils literal"><span class="pre">django.template.loader</span></tt> で
+<tt class="docutils literal"><span class="pre">render_to_string()</span></tt> を提供しています。このショートカットは、テンプレート
+をロードし、レンダして、結果を文字列として返します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">render_to_string</span>
+<span class="n">rendered</span> <span class="o">=</span> <span class="n">render_to_string</span><span class="p">(</span><span class="s">&#39;my_template.html&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="s">&#39;foo&#39;</span><span class="p">:</span> <span class="s">&#39;bar&#39;</span> <span class="p">})</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">render_to_string</span></tt> ショートカットは、必須の引数として、レンダリング時にロー
+ドするテンプレートの名前  <tt class="docutils literal"><span class="pre">template_name</span></tt> をとります。また、オプション引
+数を二つとります:</p>
+<pre>dictionary
+    テンプレートのコンテキストとして使う値の入った辞書です。第二固定引
+    数として渡しても構いません。
+
+context_instance
+    ``Context`` またはサブクラス (例えば ``RequestContext``) のインスタ
+    ンスです。テンプレートのコンテキストとして使われます。第三固定引数
+    として渡してもかまいません。</pre>
+<p><tt class="xref docutils literal"><span class="pre">render_to_response()</span></tt> ショートカットも参照してくだ
+さい。このショートカットは、結果を <tt class="docutils literal"><span class="pre">HttpResponse</span></tt> に入れて、ビューからレ
+ンダ内容を直接返せるようにしています。</p>
+</div>
+<div class="section" id="s-id12">
+<span id="s-configuring-the-template-system-in-standalone-mode"></span><h2>テンプレートシステムをスタンドアロンモードに設定する<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">この節は、テンプレートシステムを他のアプリケーションの出力用コンポーネ
+ントとして使ってみたいと考えている人のためのものです。テンプレートシス
+テムを Django の一部として使っている人には、この節の内容はあてはまりま
+せん。</p>
+</div>
+<p>通常、 Django は必要な全ての設定情報を、デフォルトの設定ファイル上の設定と
+環境変数 <tt class="xref docutils literal"><span class="pre">DJANGO_SETTING_FILE</span></tt> に指定したファイル上の設定を合わせ
+たものからロードします。ただし、 Django の他の部分からテンプレートシステム
+を切り離して使いたい場合は、環境変数を介して設定ファイルを扱うよりも、アプ
+リケーション内でテンプレートシステムを初期化したいでしょうから、環境変数を
+使う方法はあまり便利とはいえないでしょう。</p>
+<p>この問題を解決するためには、 <a class="reference external" href="../../topics/settings.html#settings-without-django-settings-module"><em>DJANGO_SETTINGS_MODULE を使わない設定方法</em></a>
+に書かれている手動設定の方法を使う必要があります。テンプレートシステムの必
+要な部分を import して、何らかのテンプレート関連の関数を呼ぶ <em>前に</em> 、指定
+したい設定を引数にして <tt class="docutils literal"><span class="pre">django.conf.settings.configure</span></tt> を呼び出して下さ
+い。少なくとも <a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> (テンプレートローダを使いたい場合),
+<a class="reference external" href="../settings.html#setting-DEFAULT_CHARSET"><tt class="xref docutils literal"><span class="pre">DEFAULT_CHARSET</span></tt></a> (通常はデフォルトの <tt class="docutils literal"><span class="pre">utf-8</span></tt> で十分です),
+<a class="reference external" href="../settings.html#setting-TEMPLATE_DEBUG"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DEBUG</span></tt></a> などを設定することになるでしょう。設定可能な変数
+は、 <a class="reference external" href="../settings.html#ref-settings"><em>設定ファイルのドキュメント</em></a> に書かれています。関
+係のある変数は <em>TEMPLATE_</em> で始まっている設定です。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Python プログラマのための Django テンプレート言語ガイド</a><ul>
+<li><a class="reference external" href="#id2">基礎</a></li>
+<li><a class="reference external" href="#id3">テンプレートシステムの利用</a><ul>
+<li><a class="reference external" href="#id4">文字列のコンパイル</a></li>
+<li><a class="reference external" href="#id5">コンテキストのレンダリング</a><ul>
+<li><a class="reference external" href="#id6">無効な値の扱い</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id7">コンテキストオブジェクトの操作</a></li>
+<li><a class="reference external" href="#requestcontext">コンテキストのサブクラス: RequestContext</a><ul>
+<li><a class="reference external" href="#django-core-context-processors-auth">django.core.context_processors.auth</a></li>
+<li><a class="reference external" href="#django-core-context-processors-debug">django.core.context_processors.debug</a></li>
+<li><a class="reference external" href="#django-core-context-processors-i18n">django.core.context_processors.i18n</a></li>
+<li><a class="reference external" href="#django-core-context-processors-media">django.core.context_processors.media</a></li>
+<li><a class="reference external" href="#django-core-context-processors-request">django.core.context_processors.request</a></li>
+<li><a class="reference external" href="#id9">コンテキストプロセッサを自作する</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id10">テンプレートのロード</a><ul>
+<li><a class="reference external" href="#template-dirs">TEMPLATE_DIRS 設定</a></li>
+<li><a class="reference external" href="#python-api">Python API</a></li>
+<li><a class="reference external" href="#id11">サブディレクトリの使用</a></li>
+<li><a class="reference external" href="#loader">Loader 型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference external" href="#render-to-string"><tt class="docutils literal"><span class="pre">render_to_string()</span></tt> ショートカット</a></li>
+<li><a class="reference external" href="#id12">テンプレートシステムをスタンドアロンモードに設定する</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="builtins.html">組み込みタグ／フィルタリファレンス</a></li>
+    
+    
+      <li>次: <a href="../unicode.html">Django での Unicode の扱い</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">テンプレートシステムリファレンス</a>
+        
+        <ul><li>Python プログラマのための Django テンプレート言語ガイド</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/templates/api.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="builtins.html" title="組み込みタグ／フィルタリファレンス">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="../unicode.html" title="Django での Unicode の扱い">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

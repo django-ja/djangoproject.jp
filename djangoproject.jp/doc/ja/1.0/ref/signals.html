@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>組み込みシグナルリファレンス &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="API リファレンス" href="index.html" />
+    <link rel="next" title="テンプレートシステムリファレンス" href="templates/index.html" />
+    <link rel="prev" title="Available settings" href="settings.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="settings.html" title="Available settings">前へ</a> 
+     |
+    <a href="index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="templates/index.html" title="テンプレートシステムリファレンス">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-signals">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-ref-signals"></span><h1>組み込みシグナルリファレンス<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>ここでは、 Django が送信する組み込みのシグナルについて解説します。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="contrib/comments/index.html#ref-contrib-comments-index"><em>コメントフレームワーク</em></a> は、
+<a class="reference external" href="contrib/comments/signals.html#ref-contrib-comments-signals"><em>コメントに関するシグナル</em></a> を送信し
+ます。</p>
+</div>
+<div class="section" id="s-module-django.db.models.signals">
+<h2>モデル関連のシグナル<a class="headerlink" href="#module-django.db.models.signals" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref docutils literal"><span class="pre">django.db.models.signals</span></tt> モジュールでは、モデルシステムから送信され
+るシグナルを定義しています。</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>ここに挙げるシグナルの多くは、 <tt class="xref docutils literal"><span class="pre">__init__()</span></tt>
+や <a title="django.db.models.Model.save" class="reference external" href="models/instances.html#django.db.models.Model.save"><tt class="xref docutils literal"><span class="pre">save()</span></tt></a> といった、オーバライド可能な様々
+なメソッドから送信されます。</p>
+<p class="last">従って、これらのメソッドをオーバライドする場合、親クラスのメソッドを呼
+び出して、シグナルが送信されるようにせねばなりません。</p>
+</div>
+<div class="section" id="s-pre-init">
+<h3>pre_init<a class="headerlink" href="#pre-init" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.signals.pre_init">
+<!--[django.db.models.signals.pre_init]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">pre_init</tt><a class="headerlink" href="#django.db.models.signals.pre_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Django モデルをインスタンス化するとき、モデルの
+<tt class="xref docutils literal"><span class="pre">__init__()</span></tt> 処理の最初の段階で送信されます。</p>
+<p>シグナルの引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>インスタンスを作成したモデルクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">args</span></tt></dt>
+<dd><tt class="xref docutils literal"><span class="pre">__init__()</span></tt> に渡された固定引数のリスト
+です。</dd>
+<dt><tt class="docutils literal"><span class="pre">kwargs</span></tt></dt>
+<dd><tt class="xref docutils literal"><span class="pre">__init__()</span></tt> に渡されたキーワード引数の
+リストです。</dd>
+</dl>
+<p>例えば、 <a class="reference external" href="../intro/tutorial01.html#intro-tutorial01"><em>チュートリアル</em></a> には以下のような行があり
+ます:</p>
+<div class="highlight"><pre><span class="n">p</span> <span class="o">=</span> <span class="n">Poll</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="s">&quot;What&#39;s up?&quot;</span><span class="p">,</span> <span class="n">pub_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+</pre></div>
+<p>この行の中で送信されるシグナルを <a title="django.db.models.signals.pre_init" class="reference internal" href="#django.db.models.signals.pre_init"><tt class="xref docutils literal"><span class="pre">pre_init</span></tt></a> ハンドラで受けたときの引
+数は以下の通りです:</p>
+<table class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">引数</th>
+<th class="head">値</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">sender</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">Poll</span></tt> (クラス自体)</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">args</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">[]</span></tt> (<tt class="docutils literal"><span class="pre">__init__</span></tt> には固定引数がないので空)</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">kwargs</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">{'question':</span> <span class="pre">&quot;What's</span> <span class="pre">up?&quot;,</span> <span class="pre">'pub_date':</span> <span class="pre">datetime.now()}</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="s-post-init">
+<h3>post_init<a class="headerlink" href="#post-init" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.post_init">
+<!--[django.db.models.signals.post_init]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">post_init</tt><a class="headerlink" href="#django.db.models.signals.post_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">pre_init</span></tt> とほぼ同じですが、 <tt class="xref docutils literal"><span class="pre">__init__()</span></tt>
+の処理が終る直前に送信されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">pre_init</span></tt> と同じ、インスタンスを生成したモデルクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">instance</span></tt></dt>
+<dd>実際に生成されたモデルインスタンスです。</dd>
+</dl>
+</div>
+<div class="section" id="s-pre-save">
+<h3>pre_save<a class="headerlink" href="#pre-save" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.pre_save">
+<!--[django.db.models.signals.pre_save]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">pre_save</tt><a class="headerlink" href="#django.db.models.signals.pre_save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>モデルインスタンスの <a title="django.db.models.Model.save" class="reference external" href="models/instances.html#django.db.models.Model.save"><tt class="xref docutils literal"><span class="pre">save()</span></tt></a> の処理の最初に呼
+び出されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>モデルクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">instance</span></tt></dt>
+<dd>これから保存されるインスタンスです。</dd>
+</dl>
+</div>
+<div class="section" id="s-post-save">
+<h3>post_save<a class="headerlink" href="#post-save" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.post_save">
+<!--[django.db.models.signals.post_save]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">post_save</tt><a class="headerlink" href="#django.db.models.signals.post_save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="pre_save" class="reference external" href="../howto/custom-model-fields.html#pre_save"><tt class="xref docutils literal"><span class="pre">pre_save</span></tt></a> に似ていますが、 <a title="django.db.models.Model.save" class="reference external" href="models/instances.html#django.db.models.Model.save"><tt class="xref docutils literal"><span class="pre">save()</span></tt></a> メソッ
+ドの処理の最後に呼び出されます。</p>
+<p>引数は以下の通りです</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>モデルクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">instance</span></tt></dt>
+<dd>保存されたインスタンスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">created</span></tt></dt>
+<dd>ブール値で、レコードが新たに作成されたときに <tt class="xref docutils literal"><span class="pre">True</span></tt> を返します。</dd>
+</dl>
+</div>
+<div class="section" id="s-pre-delete">
+<h3>pre_delete<a class="headerlink" href="#pre-delete" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.pre_delete">
+<!--[django.db.models.signals.pre_delete]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">pre_delete</tt><a class="headerlink" href="#django.db.models.signals.pre_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>モデルインスタンスの <tt class="xref docutils literal"><span class="pre">delete()</span></tt> メソッドの処理
+の先頭で呼出されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>モデルクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">instance</span></tt></dt>
+<dd>削除されるインスタンスです。</dd>
+</dl>
+</div>
+<div class="section" id="s-post-delete">
+<h3>post_delete<a class="headerlink" href="#post-delete" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.post_delete">
+<!--[django.db.models.signals.post_delete]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">post_delete</tt><a class="headerlink" href="#django.db.models.signals.post_delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.signals.pre_delete" class="reference internal" href="#django.db.models.signals.pre_delete"><tt class="xref docutils literal"><span class="pre">pre_delete</span></tt></a> に似ていますが、 <tt class="xref docutils literal"><span class="pre">delete()</span></tt>
+メソッドの処理の最後に呼び出されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>モデルクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">instance</span></tt></dt>
+<dd><p class="first">削除されたインスタンスです。</p>
+<p class="last">オブジェクトはもはやデータベース上に存在しないので、このインスタン
+スの扱いには十分注意してください。</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="s-class-prepared">
+<h3>class_prepared<a class="headerlink" href="#class-prepared" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.class_prepared">
+<!--[django.db.models.signals.class_prepared]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">class_prepared</tt><a class="headerlink" href="#django.db.models.signals.class_prepared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>モデルクラスの「準備が完了した」ときに呼び出されます。準備の完了とは、モデ
+ルの定義が読み込まれ、 Django のモデルシステムに組み込まれたことを示します。
+Django はこのシグナルを内部的に使っています。通常は、サードパーティ製のアプ
+リケーションでは使いません。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>準備の完了したモデルクラスです。</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="s-id3">
+<h2>管理コマンド関連のシグナル<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="django-admin.html#ref-django-admin"><em>django-admin</em></a> の送信するシグナルです。</p>
+<div class="section" id="s-post-syncdb">
+<h3>post_syncdb<a class="headerlink" href="#post-syncdb" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.db.models.signals.post_syncdb">
+<!--[django.db.models.signals.post_syncdb]--><tt class="descclassname">django.db.models.signals.</tt><tt class="descname">post_syncdb</tt><a class="headerlink" href="#django.db.models.signals.post_syncdb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">syncdb</span></tt> でアプリケーションがインストールされると送信されます。</p>
+<p>このシグナルを待ち受けるハンドラは、 <a class="reference external" href="settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> に登録されて
+いるいずれかのアプリケーションの <tt class="docutils literal"><span class="pre">management</span></tt> モジュール内に定義せねばな
+りません。それ以外の場所にハンドラを定義しても、 <tt class="xref docutils literal"><span class="pre">syncdb</span></tt> はハンド
+ラをロードしません。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>インストールされた <tt class="docutils literal"><span class="pre">models</span></tt> モジュールです。つまり、
+<tt class="xref docutils literal"><span class="pre">syncdb</span></tt> が <tt class="docutils literal"><span class="pre">&quot;foo.bar.myapp&quot;</span></tt> という名前のアプリケーショ
+ンをインストールすると、 <tt class="docutils literal"><span class="pre">sender</span></tt> には <tt class="docutils literal"><span class="pre">foo.bar.myapp.models</span></tt>
+モジュールが入ります。</dd>
+<dt><tt class="docutils literal"><span class="pre">app</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">sender</span></tt> と同じです。</dd>
+<dt><tt class="docutils literal"><span class="pre">created_models</span></tt></dt>
+<dd><tt class="xref docutils literal"><span class="pre">syncdb</span></tt> が生成した全てのモデルクラスからなるリストです。</dd>
+<dt><tt class="docutils literal"><span class="pre">verbosity</span></tt></dt>
+<dd><p class="first">manage.py がどれくらいの情報をスクリーンに表示しているかを示す値で
+す。詳しくは <tt class="xref docutils literal"><span class="pre">--verbosity`</span></tt> フラグを参照してください。</p>
+<p class="last"><a title="django.db.models.signals.post_syncdb" class="reference internal" href="#django.db.models.signals.post_syncdb"><tt class="xref docutils literal"><span class="pre">post_syncdb</span></tt></a> を待ち受けている関数は、この引数の値に従って、
+スクリーンに表示するメッセージの量を調整してください。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">interactive</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">interactive</span></tt> が <tt class="xref docutils literal"><span class="pre">True</span></tt> の場合、ユーザにコマンドプロンプトを提
+示してもかまいません。 <tt class="docutils literal"><span class="pre">interactive</span></tt> が <tt class="xref docutils literal"><span class="pre">False</span></tt> であれば、シグ
+ナルを待ち受ける関数は、ユーザにプロンプトを表示してはなりません。</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="s-module-django.core.signals">
+<h2>リクエスト／レスポンス関連のシグナル<a class="headerlink" href="#module-django.core.signals" title="Permalink to this headline">¶</a></h2>
+<p>コアフレームワークがリクエストを処理する際に送信するシグナルです。</p>
+<div class="section" id="s-request-started">
+<h3>request_started<a class="headerlink" href="#request-started" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.core.signals.request_started">
+<!--[django.core.signals.request_started]--><tt class="descclassname">django.core.signals.</tt><tt class="descname">request_started</tt><a class="headerlink" href="#django.core.signals.request_started" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Djang が HTTP リクエストを送信する直前に送信されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>リクエストを処理するハンドラクラス、すなわち
+<tt class="xref docutils literal"><span class="pre">django.core.handlers.modpython.ModPythonHandler</span></tt> や
+<tt class="xref docutils literal"><span class="pre">django.core.handlers.wsgi.WsgiHandler</span></tt> です。</dd>
+</dl>
+</div>
+<div class="section" id="s-request-finished">
+<h3>request_finished<a class="headerlink" href="#request-finished" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.core.signals.request_finished">
+<!--[django.core.signals.request_finished]--><tt class="descclassname">django.core.signals.</tt><tt class="descname">request_finished</tt><a class="headerlink" href="#django.core.signals.request_finished" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Django が HTTP リクエストの処理を終了した直後に呼び出されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>上と同じく、ハンドラクラスです。</dd>
+</dl>
+</div>
+<div class="section" id="s-got-request-exception">
+<h3>got_request_exception<a class="headerlink" href="#got-request-exception" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.core.signals.got_request_exception">
+<!--[django.core.signals.got_request_exception]--><tt class="descclassname">django.core.signals.</tt><tt class="descname">got_request_exception</tt><a class="headerlink" href="#django.core.signals.got_request_exception" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>このシグナルは、 Django が HTTP リクエストの処理中に例外に遭遇したときに送
+信されます。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>上と同じく、ハンドラクラスです。</dd>
+<dt><tt class="docutils literal"><span class="pre">request</span></tt></dt>
+<dd><a title="django.http.HttpRequest" class="reference external" href="request-response.html#django.http.HttpRequest"><tt class="xref docutils literal"><span class="pre">HttpRequest</span></tt></a> オブジェクトです。</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="s-module-django.test.signals">
+<h2>テスト関連のシグナル<a class="headerlink" href="#module-django.test.signals" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="../topics/testing.html#topics-testing"><em>テストの実行中</em></a> にのみ送信されるシグナルです。</p>
+<div class="section" id="s-template-rendered">
+<h3>template_rendered<a class="headerlink" href="#template-rendered" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="django.test.signals.template_rendered">
+<!--[django.test.signals.template_rendered]--><tt class="descclassname">django.test.signals.</tt><tt class="descname">template_rendered</tt><a class="headerlink" href="#django.test.signals.template_rendered" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>テストシステムがテンプレートをレンダするときに送信されます。このシグナルは、
+通常の Django サーバの操作では送信されず、テスト中しか使えません。</p>
+<p>引数は以下の通りです:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">sender</span></tt></dt>
+<dd>これからレンダされる <tt class="xref docutils literal"><span class="pre">Template</span></tt> テンプレー
+トオブジェクトです。</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span></tt></dt>
+<dd><tt class="docutils literal"><span class="pre">sender</span></tt> と同じ値です。</dd>
+<dt><tt class="docutils literal"><span class="pre">context</span></tt></dt>
+<dd>テンプレートをレンダするときに渡される
+<tt class="xref docutils literal"><span class="pre">Context</span></tt> です。</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">組み込みシグナルリファレンス</a><ul>
+<li><a class="reference external" href="#module-django.db.models.signals">モデル関連のシグナル</a><ul>
+<li><a class="reference external" href="#pre-init">pre_init</a></li>
+<li><a class="reference external" href="#post-init">post_init</a></li>
+<li><a class="reference external" href="#pre-save">pre_save</a></li>
+<li><a class="reference external" href="#post-save">post_save</a></li>
+<li><a class="reference external" href="#pre-delete">pre_delete</a></li>
+<li><a class="reference external" href="#post-delete">post_delete</a></li>
+<li><a class="reference external" href="#class-prepared">class_prepared</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id3">管理コマンド関連のシグナル</a><ul>
+<li><a class="reference external" href="#post-syncdb">post_syncdb</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#module-django.core.signals">リクエスト／レスポンス関連のシグナル</a><ul>
+<li><a class="reference external" href="#request-started">request_started</a></li>
+<li><a class="reference external" href="#request-finished">request_finished</a></li>
+<li><a class="reference external" href="#got-request-exception">got_request_exception</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#module-django.test.signals">テスト関連のシグナル</a><ul>
+<li><a class="reference external" href="#template-rendered">template_rendered</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="settings.html">Available settings</a></li>
+    
+    
+      <li>次: <a href="templates/index.html">テンプレートシステムリファレンス</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">API リファレンス</a>
+        
+        <ul><li>組み込みシグナルリファレンス</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/signals.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="settings.html" title="Available settings">前へ</a> 
+     |
+    <a href="index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="templates/index.html" title="テンプレートシステムリファレンス">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

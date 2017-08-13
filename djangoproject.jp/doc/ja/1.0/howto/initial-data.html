@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>モデルに初期データを与える &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="HOWTO ガイド" href="index.html" />
+    <link rel="next" title="Jython 上で Django を動かす" href="jython.html" />
+    <link rel="prev" title="電子メールによるエラー通知" href="error-reporting.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="error-reporting.html" title="電子メールによるエラー通知">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="jython.html" title="Jython 上で Django を動かす">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="howto-initial-data">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-howto-initial-data"></span><h1>モデルに初期データを与える<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>アプリケーションを最初にセットアップするときに、データベースにハードコード
+されたデータを投入できると便利なことがあります。 Django に自動的に初期デー
+タを投入させる方法は二つあります: ひとつは <a class="reference external" href="providing-initial-datawith-fixtures">フィクスチャによる初期データの
+投入</a> で、もう一つは <a class="reference external" href="initial-sql">SQL による初
+期データの投入</a> です。</p>
+<div class="section" id="s-id3">
+<span id="s-providing-initial-data-with-fixtures"></span><h2>フィクスチャによる初期データの投入<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>フィクスチャ (fixture) とは、 Django のデータベースに投入できるよう準備済み
+のデータの集まりです。すでにデータの入ったデータベースを持っているなら、最
+も簡単にフィクスチャを生成する方法は <tt class="xref docutils literal"><span class="pre">manage.py</span> <span class="pre">dumpdata</span></tt> コマンドです。フィクスチャは手でも書けます。フィクスチャは XML,
+YAML または JSON ドキュメントとして書けるからです。サポートされている
+<a class="reference external" href="../topics/serialization.html#serialization-formats"><em>シリアライゼーションフォーマット</em></a> の詳細は
+<a class="reference external" href="../topics/serialization.html#topics-serialization"><em>シリアライゼーションのドキュメント</em></a> を参照して
+ください。</p>
+<p>とはいえ、一例として、 JSON で書かれた <tt class="docutils literal"><span class="pre">Person</span></tt> モデルのフィクスチャを示
+しておきます:</p>
+<div class="highlight"><pre><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="o">:</span> <span class="s2">&quot;myapp.person&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pk&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;fields&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;first_name&quot;</span><span class="o">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;last_name&quot;</span><span class="o">:</span> <span class="s2">&quot;Lennon&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="o">:</span> <span class="s2">&quot;myapp.person&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pk&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;fields&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;first_name&quot;</span><span class="o">:</span> <span class="s2">&quot;Paul&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;last_name&quot;</span><span class="o">:</span> <span class="s2">&quot;McCartney&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+<p>YAML で書くと以下のようになります:</p>
+<div class="highlight"><pre>- model: myapp.person
+  pk: 1
+  fields:
+    first_name: John
+    last_name: Lennon
+- model: myapp.person
+  pk: 2
+  fields:
+    first_name: Paul
+    last_name: McCartney
+</pre></div>
+<p>フィクスチャデータはアプリケーションの <tt class="docutils literal"><span class="pre">fixture</span></tt> ディレクトリに保存します。</p>
+<p>データのロードは簡単で、単に <tt class="xref docutils literal"><span class="pre">manage.py</span> <span class="pre">loaddata</span> <span class="pre">fixturename</span></tt> を実行するだけです。 <em>fixturename</em> はフィクスチャファイルの名前
+です。 <tt class="xref docutils literal"><span class="pre">loaddata</span></tt> を実行するたびに、フィクスチャデータが読み出され、
+データベースにリロードされます。つまり、フィクスチャによって生成されたレコー
+ド行を変更して <tt class="xref docutils literal"><span class="pre">loaddata</span></tt> を再度実行すると、変更後のデータは消去さ
+れてしまうのです。注意してください。</p>
+<div class="section" id="s-id4">
+<h3>初期データフィクスチャの自動ロード<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">initial_data.[xml/yml/json]</span></tt> という名前のフィクスチャを作成しておくと、
+<tt class="xref docutils literal"><span class="pre">syncdb</span></tt> を実行するたびに自動的にロードされます。この機能はとても
+便利なのですが、一つだけ注意が必要です。というのも、 <tt class="xref docutils literal"><span class="pre">syncdb</span></tt>
+を実行するたびに <em>毎回</em> データがリフレッシュされるからです。ですから、
+変更する予定のデータに <tt class="docutils literal"><span class="pre">initial_data</span></tt> を使ってはなりません。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">フィクスチャは <a class="reference external" href="../topics/testing.html#topics-testing-fixtures"><em>テストフレームワーク</em></a> で
+一貫したテスト環境を構築するためにも使われています。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-id5">
+<span id="s-initial-sql"></span><h2>SQL による初期データの投入<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>Django には、データベースに任意の SQL を渡すためのフックがあります。 この
+SQL は、 <tt class="xref docutils literal"><span class="pre">syncdb</span></tt> を実行した時に CREATE TABLE 文の直後に実行されま
+す。このフックを使えば、自動的にデフォルトのレコードをテーブルに追加したり、
+SQL関数やビュー、トリガなどを作成したりできます。</p>
+<p>フックのからくりは単純です: Django はアプリケーション内の
+<tt class="docutils literal"><span class="pre">sql/&lt;modelname&gt;.sql</span></tt> という名前のファイルを探し、実行するだけです。
+<tt class="docutils literal"><span class="pre">&lt;modelname&gt;</span></tt> は、モデル名を小文字にした文字列です。</p>
+<p>このドキュメントの冒頭にある <tt class="docutils literal"><span class="pre">Person</span></tt> の例で、モデルが <tt class="docutils literal"><span class="pre">myapp</span></tt> の下に置
+かれていたとすると、 <tt class="docutils literal"><span class="pre">myapp/sql/person.sql</span></tt> というファイルに任意の SQL 文を指定できます。例えば以下のような命令を入れられます:</p>
+<div class="highlight"><pre><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">myapp_person</span> <span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;Lennon&#39;</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">myapp_person</span> <span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;Paul&#39;</span><span class="p">,</span> <span class="s1">&#39;McCartney&#39;</span><span class="p">);</span>
+</pre></div>
+<p>各 SQL ファイルには、必要なデータを <tt class="docutils literal"><span class="pre">INSERT</span></tt> するための有効な SQL 文を
+(すなわち、正しくフォーマットされた <tt class="docutils literal"><span class="pre">INSERT</span></tt> 文をセミコロンで区切って) 入
+れておかねばなりません。</p>
+<p>SQL ファイルは <a class="reference external" href="../ref/django-admin.html#ref-django-admin"><em>manage.py</em></a> の <tt class="xref docutils literal"><span class="pre">sqlcustom</span></tt>
+<tt class="xref docutils literal"><span class="pre">sqlreset</span></tt>, <tt class="xref docutils literal"><span class="pre">sqlall</span></tt> および <tt class="xref docutils literal"><span class="pre">reset</span></tt> コマンドの実
+行時に参照されます。詳しくは <a class="reference external" href="../ref/django-admin.html#ref-django-admin"><em>manage.py のドキュメント</em></a> を参照してください。</p>
+<p>複数の SQL データファイルがある場合、個々のファイルを実行する順番は保証され
+ていないので注意して下さい。仮定していてよいのは、カスタムの SQL データファ
+イルを実行する前に、必ずデータベーステーブルは作成されているということだけ
+です。</p>
+<div class="section" id="s-id6">
+<h3>データベースバックエンド特有の SQL データ<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>バックエンド特有の SQL データに対するフックもあります。例えば、 PostgreSQL
+と MySQL 向けに別々の初期データを用意できます。各アプリケーションごとに
+Django は <tt class="docutils literal"><span class="pre">&lt;appname&gt;/sql/&lt;modelname&gt;.&lt;backend&gt;.sql</span></tt> というファイルを探し
+ます。 <tt class="docutils literal"><span class="pre">&lt;appname&gt;</span></tt> はアプリケーションディレクトリの名前、 <tt class="docutils literal"><span class="pre">&lt;modelname&gt;</span></tt>
+はモデル名を小文字にした文字列、 <tt class="docutils literal"><span class="pre">&lt;backend&gt;</span></tt> は設定ファイルの
+<a class="reference external" href="../ref/settings.html#setting-DATABASE_ENGINE"><tt class="xref docutils literal"><span class="pre">DATABASE_ENGINE</span></tt></a> に指定するバックエンドの名前 (<tt class="docutils literal"><span class="pre">postgresql</span></tt>,
+<tt class="docutils literal"><span class="pre">mysql</span></tt> など) です。</p>
+<p>バックエンド固有の SQL データは、バックエンド非固有の SQL データよりも前に
+実行されます。例えば、アプリケーション中に <tt class="docutils literal"><span class="pre">sql/person.sql</span></tt> および
+<tt class="docutils literal"><span class="pre">sql/person.postgresql.sql</span></tt> が入っていて、 PostgreSQL をバックエンドにし
+てインストールを行った場合、 Django はまず <tt class="docutils literal"><span class="pre">sql/person.postgresql.sql</span></tt> の
+内容を実行してから <tt class="docutils literal"><span class="pre">sql/person.sql</span></tt> を実行します。</p>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">モデルに初期データを与える</a><ul>
+<li><a class="reference external" href="#id3">フィクスチャによる初期データの投入</a><ul>
+<li><a class="reference external" href="#id4">初期データフィクスチャの自動ロード</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id5">SQL による初期データの投入</a><ul>
+<li><a class="reference external" href="#id6">データベースバックエンド特有の SQL データ</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="error-reporting.html">電子メールによるエラー通知</a></li>
+    
+    
+      <li>次: <a href="jython.html">Jython 上で Django を動かす</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">HOWTO ガイド</a>
+        
+        <ul><li>モデルに初期データを与える</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/howto/initial-data.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="error-reporting.html" title="電子メールによるエラー通知">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="jython.html" title="Jython 上で Django を動かす">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

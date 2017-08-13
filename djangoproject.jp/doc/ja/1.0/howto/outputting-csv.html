@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django で CSV を出力する &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="HOWTO ガイド" href="index.html" />
+    <link rel="next" title="Django で PDF を出力する" href="outputting-pdf.html" />
+    <link rel="prev" title="古いデータベースを Django に組み込む" href="legacy-databases.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="legacy-databases.html" title="古いデータベースを Django に組み込む">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="outputting-pdf.html" title="Django で PDF を出力する">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="howto-outputting-csv">
+            
+  
+  <div class="section" id="s-django-csv">
+<span id="s-howto-outputting-csv"></span><h1>Django で CSV を出力する<a class="headerlink" href="#django-csv" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントでは、 Django のビューを使って動的に CSV (Comma Separated
+Values: カンマ区切りのフィールドデータ) ファイルを生成する方法について説明
+します。  CSV の生成には <a class="reference external" href="http://www.python.jp/doc/release/lib/module-csv.html">Python CSV ライブラリ</a> 、 <strong>または</strong> Django テン
+プレートシステムが必要です。</p>
+<div class="section" id="s-csv">
+<h2>CSV ライブラリを使う<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h2>
+<p>Python には CSV ライブラリモジュール <tt class="docutils literal"><span class="pre">csv</span></tt> がついてきます。Django で
+<tt class="docutils literal"><span class="pre">csv</span></tt> を使う上での鍵は、モジュールの CSV 生成機能がファイルライクオ
+ブジェクトを扱えることと、 Django の <a title="django.http.HttpResponse" class="reference external" href="../ref/request-response.html#django.http.HttpResponse"><tt class="xref docutils literal"><span class="pre">HttpResponse</span></tt></a> オ
+ブジェクトがファイルライクオブジェクトであることです。</p>
+<p>一例を示します:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+
+<span class="k">def</span> <span class="nf">some_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># 適切な CSV 用ヘッダとともに HttpResponse オブジェクトを生成します。</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mimetype</span><span class="o">=</span><span class="s">&#39;text/csv&#39;</span><span class="p">)</span>
+    <span class="n">response</span><span class="p">[</span><span class="s">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;attachment; filename=somefilename.csv&#39;</span>
+
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">&#39;First row&#39;</span><span class="p">,</span> <span class="s">&#39;Foo&#39;</span><span class="p">,</span> <span class="s">&#39;Bar&#39;</span><span class="p">,</span> <span class="s">&#39;Baz&#39;</span><span class="p">])</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">&#39;Second row&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;&quot;Testing&quot;&#39;</span><span class="p">,</span> <span class="s">&quot;Here&#39;s a quote&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+<p>コードとコメントを読めば一目瞭然ですが、いくつか注意しておいたほうがよいで
+しょう:</p>
+<ul class="simple">
+<li>レスポンスの MIME タイプは <tt class="docutils literal"><span class="pre">text/csv</span></tt> にします。これにより、
+ブラウザにドキュメントが CSV であると指示します。 MIME タイプを指定し
+ないと、出力を HTML として解釈するので、ブラウザウィンドウに見苦しい
+ごみのような出力が表示されてしまいます。</li>
+<li>さらに、レスポンスオブジェクトには <tt class="docutils literal"><span class="pre">Content-Disposition</span></tt> ヘッダを指
+定しています。このヘッダは CSV ファイルの名前にします。ファイル名には
+何を指定しても構いません。この名前は、ブラウザが「名前を付けて保存」
+ダイアログなどで使います。</li>
+<li>CSV 生成 API のフックは簡単です: <tt class="docutils literal"><span class="pre">response</span></tt> を <tt class="docutils literal"><span class="pre">csv.writer</span></tt> の第
+一引数に指定します。 <tt class="docutils literal"><span class="pre">csv.writer</span></tt> クラスはファイルライクオブジェク
+トを扱うようになっているので、 <a title="django.http.HttpResponse" class="reference external" href="../ref/request-response.html#django.http.HttpResponse"><tt class="xref docutils literal"><span class="pre">HttpResponse</span></tt></a> オ
+ブジェクトを使えます。</li>
+<li>CSV ファイルの各行ごとにリストやタプルのようなイテレーション可能オブ
+ジェクトを渡して <tt class="docutils literal"><span class="pre">writer.writerow</span></tt> を呼び出します。</li>
+<li>CSV モジュールはクオート処理を行ってくれるので、文字列中にクオートや
+カンマがあっても心配することはありません。出力したい値を
+<tt class="docutils literal"><span class="pre">writerow()</span></tt> に渡せば、モジュールが正しく処理してくれます。</li>
+</ul>
+</div>
+<div class="section" id="s-id1">
+<h2>テンプレートシステムを使う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">csv</span></tt> を使う代りに <a class="reference external" href="../topics/templates.html#topics-templates"><em>Django テンプレートシステム</em></a>
+を使っても CSV を生成できます。この方法よりも <tt class="docutils literal"><span class="pre">csv</span></tt> モジュールを使った方
+がより高水準で実現できますが、完全さのために紹介しておきます。</p>
+<p>基本的な考え方は、テンプレートに要素リストを渡し、テンプレート上の
+<a class="reference external" href="../ref/templates/builtins.html#ttag-for"><tt class="xref docutils literal"><span class="pre">for</span></tt></a> ループの中でコンマとともに出力するというものです。</p>
+<p>上と同じ CSV ファイルを生成する例を示します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.core.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
+
+<span class="k">def</span> <span class="nf">some_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># 適切な CSV 用応答ヘッダを持った HttpResponse オブジェクトを</span>
+    <span class="c"># 作成します。</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mimetype</span><span class="o">=</span><span class="s">&#39;text/csv&#39;</span><span class="p">)</span>
+    <span class="n">response</span><span class="p">[</span><span class="s">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;attachment; filename=somefilename.csv&#39;</span>
+
+    <span class="c"># ここではデータをハードコードしていますが、実際にはデータベースな</span>
+    <span class="c"># のデータソースから取り出せます。</span>
+    <span class="n">csv_data</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="s">&#39;First row&#39;</span><span class="p">,</span> <span class="s">&#39;Foo&#39;</span><span class="p">,</span> <span class="s">&#39;Bar&#39;</span><span class="p">,</span> <span class="s">&#39;Baz&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&#39;Second row&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;&quot;Testing&quot;&#39;</span><span class="p">,</span> <span class="s">&quot;Here&#39;s a quote&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;my_template_name.html&#39;</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
+        <span class="s">&#39;data&#39;</span><span class="p">:</span> <span class="n">csv_data</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+<p>前節の例との違いは、 CSV モジュールの代りにテンプレートをロードしている点だ
+けです。それ以外のコード、例えば <tt class="docutils literal"><span class="pre">mimetype='text/csv'</span></tt> のような部分はまっ
+たく同じです。</p>
+<p>次に、 <tt class="docutils literal"><span class="pre">my_template_name.txt</span></tt> というテンプレートを以下のように書きます:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">row</span> <span class="k">in</span> <span class="nv">data</span> <span class="cp">%}</span>&quot;<span class="cp">{{</span> <span class="nv">row.0</span><span class="o">|</span><span class="nf">addslashes</span> <span class="cp">}}</span>&quot;, &quot;<span class="cp">{{</span> <span class="nv">row.1</span><span class="o">|</span><span class="nf">addslashes</span> <span class="cp">}}</span>&quot;, &quot;<span class="cp">{{</span> <span class="nv">row.2</span><span class="o">|</span><span class="nf">addslashes</span> <span class="cp">}}</span>&quot;, &quot;<span class="cp">{{</span> <span class="nv">row.3</span><span class="o">|</span><span class="nf">addslashes</span> <span class="cp">}}</span>&quot;, &quot;<span class="cp">{{</span> <span class="nv">row.4</span><span class="o">|</span><span class="nf">addslashes</span> <span class="cp">}}</span>&quot;
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</pre></div>
+<p>このテンプレートはきわめて基本的なものです。テンプレートは指定されたデータ
+に渡って繰り返し CSV の各行を表示してゆきます。クオートで問題が生じないよう、
+<a class="reference external" href="../ref/templates/builtins.html#tfilter-addslashes"><tt class="xref docutils literal"><span class="pre">addslashes</span></tt></a>  テンプレートフィルタを使っています。データに引用符
+(一重と二重の両方) が入っていないと保証できる場合は <a class="reference external" href="../ref/templates/builtins.html#tfilter-addslashes"><tt class="xref docutils literal"><span class="pre">addslashes</span></tt></a>
+フィルタを外してもかまいません。</p>
+</div>
+<div class="section" id="s-id2">
+<span id="s-other-text-based-formats"></span><h2>その他のテキストベース形式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>ここで示した例の大部分は、 CSV 固有の内容ではないことに注意してください。
+CSV に関する部分といえば、出力形式くらいのものです。同じようなテクニックを
+使えば、 どんなテキスト形式のデータでも生成できるのです。バイナリデータを生
+成するときにも、同じようなテクニックを使えます。
+<a class="reference external" href="outputting-pdf.html#howto-outputting-pdf"><em>Django で PDF を出力する</em></a> を参照してください。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django で CSV を出力する</a><ul>
+<li><a class="reference external" href="#csv">CSV ライブラリを使う</a></li>
+<li><a class="reference external" href="#id1">テンプレートシステムを使う</a></li>
+<li><a class="reference external" href="#id2">その他のテキストベース形式</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="legacy-databases.html">古いデータベースを Django に組み込む</a></li>
+    
+    
+      <li>次: <a href="outputting-pdf.html">Django で PDF を出力する</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">HOWTO ガイド</a>
+        
+        <ul><li>Django で CSV を出力する</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/howto/outputting-csv.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="legacy-databases.html" title="古いデータベースを Django に組み込む">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="outputting-pdf.html" title="Django で PDF を出力する">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

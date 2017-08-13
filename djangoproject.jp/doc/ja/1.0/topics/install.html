@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django のインストール &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="Django を使う" href="index.html" />
+    <link rel="next" title="モデルとデータベース" href="db/index.html" />
+    <link rel="prev" title="Django を使う" href="index.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="Django を使う">前へ</a> 
+     |
+    <a href="index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="db/index.html" title="モデルとデータベース">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="topics-install">
+            
+  
+  <div class="section" id="s-django">
+<span id="s-topics-install"></span><h1>Django のインストール<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントを読めば Django を動かせるようになります。</p>
+<div class="section" id="s-python">
+<h2>Python のインストール<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>Django は Python の Web フレームワークなので Python が必要です。</p>
+<p>Django はバージョン 2.3 以上の Python で動作します。</p>
+<p><a class="reference external" href="http://www.python.org">http://www.python.org</a> から Python を取ってきましょう。 Linux や Mac OSX を
+動かしているのなら、おそらくインストール済みのはずです。</p>
+<div class="admonition-jython-django admonition">
+<p class="first admonition-title">Jython で Django を動かす</p>
+<p class="last"><a class="reference external" href="http://jython.org/">Jython</a> (Java プラットフォームで動く Python 実装) を使っているなら、他
+にもいくつかステップを踏む必要があります。詳しくは <a class="reference external" href="../howto/jython.html#howto-jython"><em>Jython 上で Django を動かす</em></a>
+を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-apache-mod-python">
+<span id="s-install-apache-and-mod-python"></span><h2>Apache と mod_python のインストール<a class="headerlink" href="#apache-mod-python" title="Permalink to this headline">¶</a></h2>
+<p>単に Django を試してみたいだけなら、この節は読み飛ばして次の節を読んでくだ
+さい。Djangoにはテスト用の軽量なWebサーバが付属しているので、運用環境での動
+作が必要になるまでApacheをセットアップする必要はないのです。</p>
+<p>Django を実運用のサイトで使いたい場合、 Apache と <a class="reference external" href="http://www.modpython.org/">mod_python</a> を使って下
+さい。 mod_python は mod_perl のようなもので、 Python を Apache の中に埋め
+込み、サーバの起動時に Python コードをメモリにロードします。コードは Apache
+プロセスが生きている間ずっとメモリ上に存在するので、他のサーバ構成よりも明
+らかに高いパフォーマンスを実現します。 Django の動作には Apache 2.x および
+mod_python 3.x が必要です。</p>
+<p>mod_python をインストールしたら、設定に関する情報は
+<a class="reference external" href="../howto/deployment/modpython.html#howto-deployment-modpython"><em>mod_python で Django を動かす</em></a> を参照し
+てください。</p>
+<p>何らかの理由で mod_python を使えない場合でも心配はいりません: Django は
+<a class="reference external" href="http://www.python.org/peps/pep-0333.html">WSGI</a> 仕様に従っているので、様々なサーバプラットフォームで動作させられます。
+個々のプラットフォームにおけるインストール方法の説明は
+<a class="reference external" href="http://code.djangoproject.com/wiki/ServerArrangements">サーバ構成に関する wiki ページ</a> を参照してください。</p>
+</div>
+<div class="section" id="s-id1">
+<span id="s-get-your-database-running"></span><span id="s-database-installation"></span><h2>データベースを動かす<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Django のデータベース API 機能を使うのなら、データベースサーバを動かす必要
+があります。 Django は <a class="reference external" href="http://www.postgresql.org/">PostgreSQL</a>, <a class="reference external" href="http://www.mysql.com/">MySQL</a>, <a class="reference external" href="http://www.oracle.com/">Oracle</a> および <a class="reference external" href="http://www.sqlite.org/">SQLite</a> で動作し
+ます (SQLite はサーバを動かさなくても使えます)。</p>
+<p>さらに、各データベースの Python バインディングをインストールしておく必要が
+あります。</p>
+<ul class="simple">
+<li>PostgreSQL を使う場合、 <a class="reference external" href="http://initd.org/projects/psycopg">psycopg</a> パッケージが必要です。 Django はバージョ
+ン 1 および 2 の psycopg をサポートしています (Django のデータベース設定
+で、 <tt class="docutils literal"><span class="pre">postgresql</span></tt> [バージョン 1 の場合] か、 <tt class="docutils literal"><span class="pre">postgresql_psycopg2</span></tt>
+[バージョン 2 の場合] を選んでください。Windows 環境なら、
+非公式の <a class="reference external" href="http://stickpeople.com/projects/python/win-psycopg/">Windows むけコンパイル済みパッケージ</a> を使って下さい。</li>
+<li>MySQL を使う場合は、バージョン 1.2.1p2 以降の <a class="reference external" href="http://sourceforge.net/projects/mysql-python">MySQLdb</a> が必要です。
+<a class="reference external" href="../ref/databases.html#ref-databases"><em>MySQL バックエンド</em></a> にまつわるデータベース固有の説
+明も読んでおいたほうがよいでしょう。</li>
+<li>Python 2.3 または Python 2.4 で SQLite を使う場合、は <a class="reference external" href="http://initd.org/tracker/pysqlite">pysqlite</a> が必要で
+す。バージョン 2.0.3 以上を使って下さい。 Python 2.5 は標準ライブラリに
+SQLite のラッパモジュールが入っているので、特に追加でインストールするもの
+はありません。</li>
+<li>Oracle を使っているなら、 <a class="reference external" href="http://cx-oracle.sourceforge.net/">cx_Oracle</a> が必要です。バージョン 4.3.1 以上を
+使ってください。 <a class="reference external" href="../ref/databases.html#oracle-notes"><em>Oracle バックエンド</em></a> 固有の注意事項
+も参照してください。</li>
+</ul>
+<p>Django の <tt class="docutils literal"><span class="pre">manage.py</span> <span class="pre">syncdb</span></tt> を使って、モデルに対応するテーブルを自動生成
+するつもりなら、Django に対して、データベース上でテーブルの生成や ALTER を
+行える権限を付与せねばなりません。テーブルを手動で生成するのなら、Django に
+付与する権限は <tt class="docutils literal"><span class="pre">SELECT</span></tt>, <tt class="docutils literal"><span class="pre">INSERT</span></tt>, <tt class="docutils literal"><span class="pre">UPDATE</span></tt> および <tt class="docutils literal"><span class="pre">DELETE</span></tt> だけで
+かまいません。ただし、データベースによっては、 <tt class="docutils literal"><span class="pre">syncdb</span></tt> 時に
+<tt class="docutils literal"><span class="pre">ALTER</span> <span class="pre">TABLE</span></tt> 権限を付与しておく必要があります。 <tt class="docutils literal"><span class="pre">syncdb</span></tt> で一度テーブ
+ルを生成してしまえば、 <tt class="docutils literal"><span class="pre">syncdb</span></tt> は <tt class="docutils literal"><span class="pre">ALTER</span> <span class="pre">TABLE</span></tt> 文を発行しません。</p>
+<p><a class="reference external" href="testing.html#topics-testing"><em>テストフレームワーク</em></a> を使ってデータベースクエリのテ
+ストを行うのなら、データベースを生成する権限も必要です。</p>
+</div>
+<div class="section" id="s-id2">
+<span id="s-removing-old-versions-of-django"></span><h2>旧バージョンの Django の除去<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>以前のバージョンからアップグレードする形で Django をインストールする場合、
+新しいバージョンをインストールする前に、まず旧バージョンをアンインストール
+しておく必要があります。</p>
+<p><tt class="docutils literal"><span class="pre">setup.py</span> <span class="pre">install</span></tt> を使って Django をインストールした場合は簡単で、
+Python の <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリから <tt class="docutils literal"><span class="pre">django</span></tt> ディレクトリを削除
+するだけです。</p>
+<p>Python egg を使って Django をインストールした場合、Django の <tt class="docutils literal"><span class="pre">.egg</span></tt> ファ
+イルを削除するとともに、 <tt class="docutils literal"><span class="pre">easy-install.pth</span></tt> から Django の <tt class="docutils literal"><span class="pre">.egg</span></tt> ファ
+イルパスが書かれたエントリを削除します。 <tt class="docutils literal"><span class="pre">easy-install.pth</span></tt> や <tt class="docutils literal"><span class="pre">.egg</span></tt>
+は、通常  <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリ下にあります。</p>
+<div class="admonition-site-packages admonition">
+<p class="first admonition-title"><tt class="docutils literal"><span class="pre">site-packages</span></tt> はどこにあるの？</p>
+<p><tt class="docutils literal"><span class="pre">site-packages</span></tt> の在処はオペレーティングシステムや Python のインストー
+ル場所によって異なります。 <tt class="docutils literal"><span class="pre">site-pacakges</span></tt> の場所を調べるには、以下の
+コマンドを実行してみてください:</p>
+<div class="highlight"><pre>python -c <span class="s2">&quot;from distutils.sysconfig import get_python_lib; print get_python_lib()&quot;</span>
+</pre></div>
+<p class="last">(このコマンドはPythonの対話プロンプトではなく、シェルプロンプトで実行し
+てください。)</p>
+</div>
+</div>
+<div class="section" id="s-id3">
+<span id="s-install-the-django-code"></span><span id="s-install-django-code"></span><h2>Django コードのインストール<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>インストール方法の説明は、 OS ごとのインストールパッケージを入れる場合、公
+式リリース版を入れる場合、そして最新の開発バージョンを入れる場合で少し異な
+ります。</p>
+<p>どの方法を選ぶにしても、そんなに難しくはないので安心してください。</p>
+<div class="section" id="s-os">
+<span id="s-installing-a-distribution-specific-package"></span><h3>OS ごとのインストールパッケージによるインストール<a class="headerlink" href="#os" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="../misc/distributions.html#misc-distributions"><em>ディストリビューション固有の注意</em></a> を調べて、自分
+のプラットフォーム/ディストリビューションで公式の Django パッケージやインス
+トーラが提供されていないか調べます。ディストリビューション固有の配布パッケー
+ジは、たいてい依存関係のあるパッケージを自動的にインストールしてくれたり、パ
+スの更新を行ってくれたりします。</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-installing-official-release"></span><h3>公式リリースのインストール<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www.djangoproject.com/download/">ダウンロードページ</a> から、最新版の Django をダウンロードします。</li>
+<li>ダウンロードしたファイルを tar で展開します
+(例: <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">Django-NNN.tar.gz</span></tt>)。 Windows を使っているのなら、
+コマンドラインツール <a class="reference external" href="http://gnuwin32.sourceforge.net/packages/bsdtar.htm">bsdtar</a> を使うか、 <a class="reference external" href="http://www.7-zip.org/">7-zip</a> のような GUI ベースの
+ツールを使います。</li>
+<li>ステップ 2 で生成された展開先のディレクトリに移ります
+(例: <tt class="docutils literal"><span class="pre">cd</span> <span class="pre">Django-NNN</span></tt>)</li>
+<li>Linux, Mac OS X, その他の Unix 系のオペレーティングシステムでは、
+シェルプロンプトからコマンド <tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> を入力
+します。 Windows を使っているのなら、管理者権限でコマンドプロンプト
+を起動して、コマンド <tt class="docutils literal"><span class="pre">setup.py</span> <span class="pre">install</span></tt> を実行します。</li>
+</ol>
+<p>上のコマンドを実行すると、 Django は Python インストールディレクトリの
+<tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリ下にインストールされます。</p>
+</div>
+<div class="section" id="s-id5">
+<span id="s-installing-the-development-version"></span><span id="s-installing-development-version"></span><h3>開発バージョンのインストール<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-django admonition">
+<p class="first admonition-title">Django の開発版を追いかける</p>
+<p class="last">最新版の Django を使うと決めたのなら、 <a class="reference external" href="http://code.djangoproject.com/timeline">開発の進行状況</a> によく注意して、
+<a class="reference external" href="http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges">以前のバージョンと互換性のない変更</a> がないか気をつけておく必要がある
+でしょう。これらのリンク先のページに注意していれば、使ってみたい新たな
+機能や、手元の Django をアップデートする際に、自分のコードのどこを修正
+する必要があるか追いかけられます。 (安定版では、 Django のアップデート
+時に必要な変更は全てドキュメントに記載されています。)</p>
+</div>
+<p>Django のコードを更新して最新のバグフィクスや改良を適用したいのなら、以下の
+説明に従って開発バージョンをインストールしてください。</p>
+<ol class="arabic">
+<li><p class="first"><a class="reference external" href="http://subversion.tigris.org/">Subversion</a> がインストールされていて、シェルからコマンドを実行できること
+を確認してください。 (調べるには、シェルプロンプトで <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">help</span></tt> を入力
+します。)</p>
+</li>
+<li><p class="first">以下のようにして、Django のメイン開発ブランチ ('trunk') をチェックアウト
+します:</p>
+<div class="highlight"><pre>svn co http://code.djangoproject.com/svn/django/trunk/ django-trunk
+</pre></div>
+</li>
+<li><p class="first">Python インタプリタが Django のコードをロードできるようにします。いくつ
+か方法がありますが、 Linux や Mac OS X, Unix 系オペレーティングシステム
+上では、以下のようにしてシンボリックリンクを張るのが最も便利な方法です:</p>
+<div class="highlight"><pre>ln -s <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/django-trunk/django SITE-PACKAGES-DIR/django
+</pre></div>
+<p>(上の作業では、使っているプラットフォームの <tt class="docutils literal"><span class="pre">site-packages</span></tt>  ディレク
+トリに合わせて SITE-PACKAGES-DIR を書き換えてください。
+<tt class="docutils literal"><span class="pre">site-packages</span></tt> の場所の探し方は、「 <tt class="docutils literal"><span class="pre">site-packages</span></tt> はどこにあるの？」
+を参照してください)</p>
+<p>環境変数 <tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> に、 <tt class="docutils literal"><span class="pre">django-trunk</span></tt> ディレクトリを含めるよう設
+定する方法もあります。 Windows システムではシンボリックリンクがサポート
+されていないので、この方法が最も便利な方法です。 (Windows システムでは、
+環境変数は、 <a class="reference external" href="http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/ja/sysdm_advancd_environmnt_addchange_variable.mspx">コントロールパネルから</a> 設定します)。</p>
+<div class="admonition-apache-mod-python admonition">
+<p class="first admonition-title">Apache と mod_python の設定は？</p>
+<p><tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> を設定する方法をとる場合、同じ値を Apache の設定ファ
+イルにも入れておくのを忘れないでください。 Apache で PYTHONPATH を設定
+するには、 <tt class="docutils literal"><span class="pre">PythonPath</span></tt> ディレクティブを使います。</p>
+<p class="last">もちろん、 Apache と mod_python を使った運用に関する情報はこれだけでは
+ありません。
+<a class="reference external" href="../howto/deployment/modpython.html#howto-deployment-modpython"><em>mod_python で Django を動かす</em></a> も参
+照してください。</p>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">django_src/django/bin/django-admin.py</span></tt> を実行できるようにします。
+Unix系のシステムでは、例えば以下のようにして、 <tt class="docutils literal"><span class="pre">/usr/local/bin</span></tt> のよう
+なシステムパス上にシンボリックリンクを作成します:</p>
+<div class="highlight"><pre>ln -s <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/django-trunk/django/bin/django-admin.py /usr/local/bin
+</pre></div>
+<p>これで、 <tt class="docutils literal"><span class="pre">django-admin.py</span></tt> とコマンド入力するだけで、どのディレクトリ
+上でも <tt class="docutils literal"><span class="pre">django-admin.py</span></tt> を起動できるようになります。</p>
+<p>Windows では、 <tt class="docutils literal"><span class="pre">django_src/django/bin/django-admin.py</span></tt> を、
+<tt class="docutils literal"><span class="pre">C:\Python24\Scripts</span></tt> のようなシステムパス上にコピーします。</p>
+</li>
+</ol>
+<p>ステップ 3 と 4 は <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> と同じ作業を実行しているので、
+<tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> を実行する必要は <strong>ありません</strong> 。</p>
+<p>Django のソースコードを更新する際には、 <tt class="docutils literal"><span class="pre">django-trunk</span></tt> ディレクトリで
+<tt class="docutils literal"><span class="pre">svn</span> <span class="pre">update</span></tt> を実行してください。実行すると、 Subversion が更新部分を自動
+的にダウンロードします。</p>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django のインストール</a><ul>
+<li><a class="reference external" href="#python">Python のインストール</a></li>
+<li><a class="reference external" href="#apache-mod-python">Apache と mod_python のインストール</a></li>
+<li><a class="reference external" href="#id1">データベースを動かす</a></li>
+<li><a class="reference external" href="#id2">旧バージョンの Django の除去</a></li>
+<li><a class="reference external" href="#id3">Django コードのインストール</a><ul>
+<li><a class="reference external" href="#os">OS ごとのインストールパッケージによるインストール</a></li>
+<li><a class="reference external" href="#id4">公式リリースのインストール</a></li>
+<li><a class="reference external" href="#id5">開発バージョンのインストール</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">Django を使う</a></li>
+    
+    
+      <li>次: <a href="db/index.html">モデルとデータベース</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">Django を使う</a>
+        
+        <ul><li>Django のインストール</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/topics/install.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="Django を使う">前へ</a> 
+     |
+    <a href="index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="db/index.html" title="モデルとデータベース">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

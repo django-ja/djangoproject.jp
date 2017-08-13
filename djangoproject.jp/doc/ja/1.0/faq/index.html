@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django FAQ &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="next" title="FAQ: 全般" href="general.html" />
+    <link rel="prev" title="静的なファイルの提供方法" href="../howto/static-files.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="../howto/static-files.html" title="静的なファイルの提供方法">前へ</a> 
+     |
+    <a title="Django v1.0 documentation" href="../index.html" accesskey="U">上へ</a>
+   |
+    <a href="general.html" title="FAQ: 全般">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="faq-index">
+            
+  
+  <div class="section" id="s-django-faq">
+<span id="s-faq-index"></span><h1>Django FAQ<a class="headerlink" href="#django-faq" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><a class="reference external" href="general.html">FAQ: 全般</a><ul>
+<li><a class="reference external" href="general.html#id1">なぜこんなプロジェクトがあるのですか？</a></li>
+<li><a class="reference external" href="general.html#django">&#8220;Django&#8221; とはどういう意味で、どのように発音するのですか？</a></li>
+<li><a class="reference external" href="general.html#id4">Django は安定していますか？</a></li>
+<li><a class="reference external" href="general.html#id5">Django はスケールしますか？</a></li>
+<li><a class="reference external" href="general.html#id6">Django の舞台裏には誰がいるのですか？</a></li>
+<li><a class="reference external" href="general.html#id7">どんなサイトが Django を使っているのですか？</a></li>
+<li><a class="reference external" href="general.html#django-mvc-controller-view-view-template">Django は MVC フレームワークのようですが、コントローラ (Controller) を「ビュー (view)」と呼び、ビュー (View) を「テンプレート (template)」と呼んでいます。どうして標準的な呼び方をしないのですか？</a></li>
+<li><a class="reference external" href="general.html#x-y-django">&lt;フレームワーク X&gt; には &lt;機能 Y&gt; があります &#8211; どうして Django にないのですか？</a></li>
+<li><a class="reference external" href="general.html#python-django">なぜ既存の Python ライブラリを使わずスクラッチで Django を作ったのですか？</a></li>
+<li><a class="reference external" href="general.html#id9">かっこいい「スクリーンキャスト」か何かがありますか？</a></li>
+<li><a class="reference external" href="general.html#django-cms">Django はコンテンツ管理システム (CMS) なのでしょうか?</a></li>
+<li><a class="reference external" href="general.html#django-1-0">いつになったら Django 1.0 をリリースするのですか？</a></li>
+<li><a class="reference external" href="general.html#id11">どうやれば Django のドキュメントをダウンロードしてオフラインで読めますか？</a></li>
+<li><a class="reference external" href="general.html#id13">Django 開発者はどこで雇えますか？</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a class="reference external" href="install.html">FAQ: インストール</a><ul>
+<li><a class="reference external" href="install.html#id1">どこから始めたらいいですか？</a></li>
+<li><a class="reference external" href="install.html#install-a-later-version-of-setuptools">&#8220;install a later version of setuptools&#8221; と表示されます。どうすればよいですか？</a></li>
+<li><a class="reference external" href="install.html#django">Django を動かすには何が必要ですか？</a></li>
+<li><a class="reference external" href="install.html#python-2-3-2-5">Python 2.3 を使うのは、 2.5 のような新しいバージョンを使うよりも不利ですか？</a></li>
+<li><a class="reference external" href="install.html#id4">mod_python を使わねばならないのでしょうか？</a></li>
+<li><a class="reference external" href="install.html#windows-mod-python">どうすれば Windows に mod_python をインストールできますか？</a></li>
+<li><a class="reference external" href="install.html#django-textdrive-dreamhost">Django は共有ホスティングサービス (TextDrive や Dreamhost) で動きますか？</a></li>
+<li><a class="reference external" href="install.html#id6">公式リリースと開発版のどちらを使うべきなのでしょうか？</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a class="reference external" href="usage.html">FAQ: Django を使う</a><ul>
+<li><a class="reference external" href="usage.html#django-settings-module-import">なぜ、 DJANGO_SETTINGS_MODULE を import できないというエラーが出るのですか？</a></li>
+<li><a class="reference external" href="usage.html#id1">テンプレート言語を好きになれません。どうしても使わないとだめですか？</a></li>
+<li><a class="reference external" href="usage.html#id2">付属のモデル／データベースレイヤを使わねばならないのですか？</a></li>
+<li><a class="reference external" href="usage.html#id3">画像やファイルのフィールドはどう使うのですか？</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a class="reference external" href="help.html">FAQ: 助けを求める</a><ul>
+<li><a class="reference external" href="help.html#id1">何かをしたいとき、うまくいかないときは、どこで助けを求めればよいですか？</a></li>
+<li><a class="reference external" href="help.html#id2">メッセージを django-users に送ったのに表示されないのはなぜですか？</a></li>
+<li><a class="reference external" href="help.html#id4">django-users で質問したのに誰も答えてくれません。どうすればよいですか？</a></li>
+<li><a class="reference external" href="help.html#id5">バグを見つけたように思います。どうすればよいですか？</a></li>
+<li><a class="reference external" href="help.html#id6">セキュリティホールを見つけたように思います。どうすればよいですか？</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a class="reference external" href="models.html">FAQ: データベースとモデル</a><ul>
+<li><a class="reference external" href="models.html#django-sql">Django が実行している生の SQL クエリを見られますか？</a></li>
+<li><a class="reference external" href="models.html#django">既存のデータベースで Django を使えますか？</a></li>
+<li><a class="reference external" href="models.html#id1">モデルを変更したとき、どうやってデータベースを更新すればよいですか？</a></li>
+<li><a class="reference external" href="models.html#id2">Django のモデルは複数カラムにわたる主キーをサポートしていますか？</a></li>
+<li><a class="reference external" href="models.html#myisam-create-table">テーブル形式を MyISAM に指定するなど、データベース固有のオプションを CREATE TABLE 文に追加したいのですが、どうすればよいですか？</a></li>
+<li><a class="reference external" href="models.html#id3">Django がメモリリークを起こしているのですが、なぜですか？</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a class="reference external" href="admin.html">FAQ: admin</a><ul>
+<li><a class="reference external" href="admin.html#id2">ログインできません。正しいユーザ名とパスワードを入力したのに、エラーメッセージも出ず再度ログインページが表示されるのです。</a></li>
+<li><a class="reference external" href="admin.html#id3">ログインできません。正しいユーザ名とパスワードを入力したところ、「正しいユーザ名とパスワードを入力してください」というエラーメッセージの表示されたログインページが表示されます。</a></li>
+<li><a class="reference external" href="admin.html#admin">キャッシュミドルウェアに admin サイトをキャッシュさせなくするにはどうすればよいですか？</a></li>
+<li><a class="reference external" href="admin.html#id4">admin 上でフィールドの値をオブジェクトを最後に編集したユーザの指定した値と同じにするにはどうすればよいですか？</a></li>
+<li><a class="reference external" href="admin.html#id5">admin でオブジェクトを作成したユーザだけがオブジェクトを編集できるようにアクセス制限するにはどうすればよいですか？</a></li>
+<li><a class="reference external" href="admin.html#admin-css-mod-python">開発サーバでは admin サイトの CSS や画像がうまく表示されるのに、 mod_python を使うと表示されません。</a></li>
+<li><a class="reference external" href="admin.html#list-filter-manytomanyfield">&#8220;list_filter&#8221; に ManyToManyField を入れたのに、フィルタが表示されません。</a></li>
+<li><a class="reference external" href="admin.html#id6">admin インタフェースの機能をカスタマイズするにはどうすればよいですか？</a></li>
+<li><a class="reference external" href="admin.html#id7">動的に生成される admin サイトがみっともありません！どうすれば変更できますか？</a></li>
+<li><a class="reference external" href="admin.html#id8">パスワードハッシュを編集せずにユーザを作成するにはどうすればよいですか？</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a class="reference external" href="contributing.html">FAQ: コードへの貢献</a><ul>
+<li><a class="reference external" href="contributing.html#django">Django プロジェクトにコードを寄贈したいんですが、どうすればよいですか？</a></li>
+<li><a class="reference external" href="contributing.html#id1">何週間も前にチケットシステムにバグフィクスを提出したんですが。何で私のパッチを無視するんですか？</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="../howto/static-files.html">静的なファイルの提供方法</a></li>
+    
+    
+      <li>次: <a href="general.html">FAQ: 全般</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+        <ul><li>Django FAQ</li></ul>
+        
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/faq/index.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="../howto/static-files.html" title="静的なファイルの提供方法">前へ</a> 
+     |
+    <a title="Django v1.0 documentation" href="../index.html" accesskey="U">上へ</a>
+   |
+    <a href="general.html" title="FAQ: 全般">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>用語集 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="contents.html" />
+    <link rel="index" title="Global index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="index.html" />
+    <link rel="next" title="リリースノート" href="releases/index.html" />
+    <link rel="prev" title="サードパーティによる Django ディストリビューション" href="misc/distributions.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="index.html">ホーム</a>  |
+        <a title="Table of contents" href="contents.html">目次</a>  |
+        <a title="Global index" href="genindex.html">索引</a>  |
+        <a title="Search" href="modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="misc/distributions.html" title="サードパーティによる Django ディストリビューション">前へ</a> 
+     |
+    <a title="Django v1.0 documentation" href="index.html" accesskey="U">上へ</a>
+   |
+    <a href="releases/index.html" title="リリースノート">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="glossary">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-glossary"></span><h1>用語集<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<dl class="glossary docutils">
+<dt id="term-field">field</dt>
+<dd><p class="first"><a class="reference internal" href="#term-model"><em class="xref">model</em></a> 内のアトリビュートです。通常、一つのフィールドが一つ
+のデータベースカラムに対応しています。</p>
+<p class="last"><a class="reference external" href="topics/db/models.html#topics-db-models"><em>モデルの作成</em></a> を参照してください。</p>
+</dd>
+<dt id="term-generic-view">generic view</dt>
+<dd><p class="first">ビューを開発するときによくある言い回しやパターンを抽象化する
+<a class="reference internal" href="#term-15"><em class="xref">ビュー</em></a> 関数です。</p>
+<p class="last"><a class="reference external" href="ref/generic-views.html#ref-generic-views"><em>汎用ビュー</em></a> を参照してください。</p>
+</dd>
+<dt id="term-model">model</dt>
+<dd><p class="first">アプリケーションのデータの保存に使われるクラスです。</p>
+<p class="last"><a class="reference external" href="topics/db/models.html#topics-db-models"><em>モデルの作成</em></a> を参照してください。</p>
+</dd>
+<dt id="term-mtv">MTV</dt>
+<dd><a class="reference external" href="faq/general.html#mtv"><em>Django は MVC フレームワークのようですが、コントローラ (Controller) を「ビュー (view)」と呼び、ビュー (View) を「テンプレート (template)」と呼んでいます。どうして標準的な呼び方をしないのですか？</em></a> を参照してください。</dd>
+<dt id="term-mvc">MVC</dt>
+<dd>ソフトウェアパターンの <a class="reference external" href="http://en.wikipedia.org/wiki/Model-view-controller">Model-view-controller</a> です。
+Django は <a class="reference external" href="faq/general.html#mtv"><em>部分的に MVC です</em></a> 。</dd>
+<dt id="term-project">project</dt>
+<dd>Python のパッケージ、すなわちコードの入ったディレクトリです。プロジェ
+クトには、一つの Django インスタンスを動かすために必要な全ての情報、
+たとえばデータベースの設定、 Django 固有のオプション、アプリケーショ
+ン固有の設定などが収められています。</dd>
+<dt id="term-property">property</dt>
+<dd><blockquote class="first">
+Python バージョン 2.2 から導入された機能で、「マネージドアトリビュー
+ト (managed attribute)」ともいいます。詳しくは
+<a class="reference external" href="http://www.python.org/download/releases/2.2/descrintro/#property">プロパティのドキュメント</a> を参照してください。</blockquote>
+<p>プロパティは、アトリビュートのアクセス時に実際にはメソッド呼び出しを
+行いたいような場合に便利な手法です。同じようなことは <tt class="docutils literal"><span class="pre">__getattr__</span></tt>
+と <tt class="docutils literal"><span class="pre">__setattr__</span></tt> のオーバライドでも実現できます。しかし、
+<tt class="docutils literal"><span class="pre">__setattr__</span></tt> をオーバライドすると、全てのアトリビュートのアクセス
+が遅くなりますし、 <tt class="docutils literal"><span class="pre">__getattr__</span></tt> をオーバライドして正しい動作を実
+現するのはちょっと大変です。プロパティを使えば、 <tt class="docutils literal"><span class="pre">__getattr__</span></tt> や
+<tt class="docutils literal"><span class="pre">__setattr__</span></tt> をオーバライドしなくても、望みのことを実現できます。</p>
+<blockquote class="last">
+</blockquote>
+</dd>
+<dt id="term-queryset">queryset</dt>
+<dd><p class="first">データベースから取り出したレコード行を表現するオブジェクトです。</p>
+<p class="last"><a class="reference external" href="topics/db/queries.html#topics-db-queries"><em>クエリを生成する</em></a> を参照してください。</p>
+</dd>
+<dt id="term-slug">slug</dt>
+<dd><p class="first">英文字と数字、アンダースコア、ハイフンだけからなる短いラベル文字列
+です。 URL の中で使われます。例えば、以下の URL :</p>
+<pre class="literal-block">
+<a class="reference external" href="http://www.djangoproject.com/weblog/2008/apr/12/">http://www.djangoproject.com/weblog/2008/apr/12/</a><strong>spring</strong>/
+</pre>
+<p class="last">の中で、最後の部分 (<tt class="docutils literal"><span class="pre">spring</span></tt>) がスラグです。</p>
+</dd>
+<dt id="term-template">template</dt>
+<dd><p class="first">ドキュメントのデータと表現を分離するためのテキストです。</p>
+<p class="last"><a class="reference external" href="topics/templates.html#topics-templates"><em>Django テンプレート言語</em></a> を参照してください。</p>
+</dd>
+<dt id="term-view">view</dt>
+<dd>ページのレンダリングを行う関数です。</dd>
+<dt id="term-">クエリセット</dt>
+<dd><a class="reference internal" href="#term-queryset"><em class="xref">queryset</em></a> を参照してください。</dd>
+<dt id="term-12">スラグ</dt>
+<dd><a class="reference internal" href="#term-slug"><em class="xref">slug</em></a> を参照してください。</dd>
+<dt id="term-13">テンプレート</dt>
+<dd><a class="reference internal" href="#term-template"><em class="xref">template</em></a> を参照してください。</dd>
+<dt id="term-14">汎用ビュー</dt>
+<dd><a class="reference internal" href="#term-generic-view"><em class="xref">generic view</em></a> を参照してください。</dd>
+<dt id="term-15">ビュー</dt>
+<dd><a class="reference internal" href="#term-view"><em class="xref">view</em></a> を参照してください。</dd>
+<dt id="term-16">フィールド</dt>
+<dd><a class="reference internal" href="#term-field"><em class="xref">field</em></a> を参照してください。</dd>
+<dt id="term-17">プロジェクト</dt>
+<dd><a class="reference internal" href="#term-project"><em class="xref">project</em></a> を参照してください。</dd>
+<dt id="term-18">プロパティ</dt>
+<dd><a class="reference internal" href="#term-property"><em class="xref">property</em></a> を参照してください。</dd>
+<dt id="term-19">モデル</dt>
+<dd><a class="reference internal" href="#term-model"><em class="xref">model</em></a> を参照してください。</dd>
+</dl>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="misc/distributions.html">サードパーティによる Django ディストリビューション</a></li>
+    
+    
+      <li>次: <a href="releases/index.html">リリースノート</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="index.html">Django v1.0 documentation</a>
+        
+        <ul><li>用語集</li></ul>
+        
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/glossary.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="misc/distributions.html" title="サードパーティによる Django ディストリビューション">前へ</a> 
+     |
+    <a title="Django v1.0 documentation" href="index.html" accesskey="U">上へ</a>
+   |
+    <a href="releases/index.html" title="リリースノート">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

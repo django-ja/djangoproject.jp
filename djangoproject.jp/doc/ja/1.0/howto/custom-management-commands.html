@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>アクションを自作する &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="HOWTO ガイド" href="index.html" />
+    <link rel="next" title="カスタムのモデルフィールド" href="custom-model-fields.html" />
+    <link rel="prev" title="Apache での認証に Django のユーザデータベースを使う" href="apache-auth.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="apache-auth.html" title="Apache での認証に Django のユーザデータベースを使う">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="custom-model-fields.html" title="カスタムのモデルフィールド">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="howto-custom-management-commands">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-customized-actions"></span><span id="s-howto-custom-management-commands"></span><h1>アクションを自作する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>アプリケーションごとに独自のアクションを定義して、 <tt class="docutils literal"><span class="pre">manage.py</span></tt> で使える
+ようにできます。例えば、配布したいアプリケーションの中に、 <tt class="docutils literal"><span class="pre">manage.py</span></tt> ア
+クションを追加したい場合があるとします。</p>
+<p>アクションを追加するには、アプリケーション内に <tt class="docutils literal"><span class="pre">management/commands</span></tt> ディ
+レクトリを作成します。このディレクトリ内のモジュールは、 <tt class="docutils literal"><span class="pre">manage.py</span></tt> の実
+行時に呼び出せるアクションとして自動的に検出されます:</p>
+<pre>blog/
+    __init__.py
+    models.py
+    management/
+        __init__.py
+        commands/
+            __init__.py
+            explode.py
+    views.py</pre>
+<p>上の例では、 <tt class="docutils literal"><span class="pre">blog</span></tt> アプリケーションを <tt class="docutils literal"><span class="pre">settings.INSTALLED_APPS</span></tt> に登録
+してあるプロジェクトで <tt class="docutils literal"><span class="pre">explode</span></tt> というコマンドを使えるようになります。</p>
+<p>コマンドモジュールの必須の条件として、 <tt class="docutils literal"><span class="pre">explode.py</span></tt> は
+<tt class="docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></tt> を拡張した <tt class="docutils literal"><span class="pre">Command</span></tt> という名
+前のクラスを定義していなければなりません。</p>
+<p>自作のコマンドを定義する詳しい方法は、既存の <tt class="docutils literal"><span class="pre">django-admin.py</span></tt> コマンドの
+ソースコードを参照してください。ソースは
+<tt class="docutils literal"><span class="pre">/django/core/management/commands</span></tt> にあります。</p>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="apache-auth.html">Apache での認証に Django のユーザデータベースを使う</a></li>
+    
+    
+      <li>次: <a href="custom-model-fields.html">カスタムのモデルフィールド</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">HOWTO ガイド</a>
+        
+        <ul><li>アクションを自作する</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/howto/custom-management-commands.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="apache-auth.html" title="Apache での認証に Django のユーザデータベースを使う">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="custom-model-fields.html" title="カスタムのモデルフィールド">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

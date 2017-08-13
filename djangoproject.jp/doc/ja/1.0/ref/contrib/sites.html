@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&#8220;sites&#8221; フレームワーク &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="配信フィードフレームワーク" href="syndication.html" />
+    <link rel="prev" title="sitemaps フレームワーク" href="sitemaps.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="sitemaps.html" title="sitemaps フレームワーク">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="syndication.html" title="配信フィードフレームワーク">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-sites">
+            
+  
+  <div class="section" id="s-module-django.contrib.sites">
+<span id="s-ref-contrib-sites"></span><h1>&#8220;sites&#8221; フレームワーク<a class="headerlink" href="#module-django.contrib.sites" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django にはオプションとして使える &#8220;sites&#8221; フレームワークが付属しています。
+&#8220;sites&#8221; はオブジェクトや機能を特定の Web サイトに関連付けるためのフックであ
+ると同時に、 Django で作成したサイトのドメイン名と「分かりやすい名前
+verbose name」を保存しています。</p>
+<p>一つの Django で複数のサイトを管理していて、サイト間に違いを持たせたい場合
+に使ってください。</p>
+<p>sites フレームワークは、簡単なモデルだけでできています:</p>
+<dl class="class">
+<dt id="django.contrib.sites.django.contrib.sites.models.Site">
+<!--[django.contrib.sites.django.contrib.sites.models.Site]-->class <tt class="descclassname">django.contrib.sites.models.</tt><tt class="descname">Site</tt><a class="headerlink" href="#django.contrib.sites.django.contrib.sites.models.Site" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>モデルには、 <tt class="xref docutils literal"><span class="pre">domain</span></tt> と
+<tt class="xref docutils literal"><span class="pre">name</span></tt> という二つのフィールドがあり
+ます。あるサイトの設定ファイルの  <a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> 設定は、そのサイトを表
+す <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトのデータベース上
+での ID を指定します。</p>
+<p>site の使い道は自由ですが、 Django では簡単な呼び出し規約で自動的に sites
+を使える方法を 2 種類提供しています。</p>
+<div class="section" id="s-id1">
+<span id="s-example-usage"></span><h2>使用例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>どういう状況で sites を使うのでしょうか？例を挙げて説明しましょう。</p>
+<div class="section" id="s-id2">
+<span id="s-associating-content-with-multiple-sites"></span><h3>コンテンツを複数のサイトに関連づける<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://www.ljworld.com/">LJWorld.com</a> と <a class="reference external" href="http://www.lawrence.com/">Lawrence.com</a> は同じニュース組織、Kansaz 州 Lawrence にある
+Lawrence Journal-World newspaper が管理しています。 LJWorld.com はニュース
+に、 Lawrence.com は地域の娯楽情報にフォーカスしていますが、編集者は
+<em>両方の</em> サイトで同じニュースを公開したいと考える場合もあります。</p>
+<p>この問題を何も考えずに処理するなら、サイト構築担当者に対して、 LJWorld.com
+と Lawrence.com に同じ記事を出すよう 2 度依頼することになります。しかしこれ
+はサイト構築担当にとって非効率的ですし、同じ記事のコピーが複数データベース
+に入ることになってしまいます。</p>
+<p>もっとましで簡単な方法ががあります: どちらのサイトも同じデータベースを使い、
+1 つの記事を複数のサイトに関連づけるというものです。この関係は、 Django モ
+デルの用語で言えば <tt class="docutils literal"><span class="pre">Article</span></tt> モデルの
+<a title="django.db.models.ManyToManyField" class="reference external" href="../models/fields.html#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> で表現されます:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sites.models</span> <span class="kn">import</span> <span class="n">Site</span>
+
+<span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">headline</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="c"># ...</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Site</span><span class="p">)</span>
+</pre></div>
+<p>このモデルは、以下のようにいくつかの点で優れています:</p>
+<ul>
+<li><p class="first">site 構築担当が 1 つのインタフェース (Django admin サイト) で両方のサ
+イトにある全てのコンテンツを編集できます。</p>
+</li>
+<li><p class="first">同じ記事をデータベース上に何度も書き込まなくて済み、一つのレコードと
+して保存できます。</p>
+</li>
+<li><p class="first">サイト開発者は同じビューコードを両方のサイトで使えます。ビューコード
+では、リクエストされている記事が現在のサイト用のものかチェックします。
+例えば以下のようなコードになるでしょう:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="k">def</span> <span class="nf">article_detail</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">article_id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">article_id</span><span class="p">,</span> <span class="n">sites__id__exact</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SITE_ID</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Article</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span>
+    <span class="c"># ...</span>
+</pre></div>
+</li>
+</ul>
+</div>
+<div class="section" id="s-id3">
+<span id="s-associating-content-with-a-single-site"></span><h3>コンテンツを単一のサイトに関連づける<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>あるモデルを <tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> を使って
+他対一の関係で <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> に関連づけても構
+いません。</p>
+<p>例えば、ある記事をあるサイトだけで表示できるようにしたければ、モデルは以下
+のように書きます:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sites.models</span> <span class="kn">import</span> <span class="n">Site</span>
+
+<span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">headline</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="c"># ...</span>
+    <span class="n">site</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Site</span><span class="p">)</span>
+</pre></div>
+<p>この方法でも、前節で述べたのと同じような恩恵を得られます。</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-hooking-into-the-current-site-from-views"></span><h3>ビュー内で現在のサイトをフックに使う<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>低水準では、 Django ビューの中で sites フレームワークを使って、ビューを呼び
+出しているサイトごとに固有の処理を実行できます。</p>
+<p>例えば:</p>
+<pre>from django.conf import settings
+
+def my_view(request):
+    if settings.SITE_ID == 3:
+        # Do something.
+    else:
+        # Do something else.</pre>
+<p>もちろん、上のようにサイト ID をハードコードするのは見栄えよくありません。
+この種のハードコード化は、すぐに実行しなければならないハックのときにはベス
+トでしょう。同じことをよりクリーンに実現するには、サイトのドメイン名をチェッ
+クします:</p>
+<pre>from django.conf import settings
+from django.contrib.sites.models import Site
+
+def my_view(request):
+    current_site = Site.objects.get(id=settings.SITE_ID)
+    if current_site.domain == 'foo.com':
+        # Do something
+    else:
+        # Do something else.</pre>
+<p><a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">settings.SITE_ID</span></tt></a> の値から
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトを取得するというイディ
+オムはよく使われるので、 <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> のモデ
+ルマネジャには <tt class="docutils literal"><span class="pre">get_current()</span></tt> メソッドがあります。以下の例は上の例と同じ
+です:</p>
+<pre>from django.contrib.sites.models import Site
+
+def my_view(request):
+    current_site = Site.objects.get_current()
+    if current_site.domain == 'foo.com':
+        # Do something
+    else:
+        # Do something else.</pre>
+</div>
+<div class="section" id="s-id5">
+<span id="s-getting-the-current-domain-for-display"></span><h3>現在のドメインをディスプレイ用に取得する<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>LJWorld.com と Lawrence.com には e-mail による通知機能があり、読者が登録し
+ておくとニュースが届いたときに通知メールを受け取れるようになっています。こ
+のからくりは簡単で、 Web フォームから登録すると、「ご登録ありがとうございま
+した」という内容のメールを受け取ります。</p>
+<p>登録処理を行うコードを二度開発するのは非効率的で冗長なので、舞台裏では複数
+サイトで同じコードを使うようにします。ただし、「ご登録ありがとうございます」
+通知はサイトごとに変えなければなりません。
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトを使えば、現在のサイ
+トの <tt class="docutils literal"><span class="pre">name</span></tt> と <tt class="docutils literal"><span class="pre">domain</span></tt> の値を使って「ありがとうございます」メッセージ
+を抽象化できます。</p>
+<p>フォーム処理ビューの例は以下の通りです:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.sites.models</span> <span class="kn">import</span> <span class="n">Site</span>
+<span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
+
+<span class="k">def</span> <span class="nf">register_for_newsletter</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># Check form values, etc., and subscribe the user.</span>
+    <span class="c"># ...</span>
+
+    <span class="n">current_site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span>
+    <span class="n">send_mail</span><span class="p">(</span><span class="s">&#39;Thanks for subscribing to </span><span class="si">%s</span><span class="s"> alerts&#39;</span> <span class="o">%</span> <span class="n">current_site</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s">&#39;Thanks for your subscription. We appreciate it.</span><span class="se">\n\n</span><span class="s">-The </span><span class="si">%s</span><span class="s"> team.&#39;</span> <span class="o">%</span> <span class="n">current_site</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s">&#39;editor@</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">current_site</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">])</span>
+
+    <span class="c"># ...</span>
+</pre></div>
+<p>Lawrence.com では、 e-mail の件名は &quot;Thanks for subscribing to lawrence.com
+alerts.&quot; です。 LJWorld.com では、件名は &quot;Thanks for subscribing to
+LJWorld.com alerts.&quot; で、メール本体も同様です。</p>
+<p>より柔軟 (で、重量な) 方法として、 Django テンプレートシステムを使った方法
+と比較してみましょう。 Lawrence.com と LJWorld.com は別々のテンプレートディ
+レクトリ (<a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a>) を持っているので、以下のようにすればサ
+イト間の違いをテンプレートシステムに追い出せます:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span><span class="p">,</span> <span class="n">Context</span>
+
+<span class="k">def</span> <span class="nf">register_for_newsletter</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># Check form values, etc., and subscribe the user.</span>
+    <span class="c"># ...</span>
+
+    <span class="n">subject</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;alerts/subject.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({}))</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;alerts/message.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({}))</span>
+    <span class="n">send_mail</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="s">&#39;editor@ljworld.com&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">])</span>
+
+    <span class="c"># ...</span>
+</pre></div>
+<p>この場合、 LJWorld.com と Lawrence.com のテンプレートディレクトリ下に
+<tt class="docutils literal"><span class="pre">subject.txt</span></tt> と <tt class="docutils literal"><span class="pre">message.txt</span></tt> の二つのテンプレートを作成します。
+ただし、こうすればより柔軟にはなりますが、複雑さは増します。</p>
+<p>不要な複雑さと冗長性を排除するためには、
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトを可能な限り使うとよ
+いでしょう。</p>
+</div>
+<div class="section" id="s-url">
+<span id="s-getting-the-current-domain-for-full-urls"></span><h3>現在のドメインの完全な URL を取得する<a class="headerlink" href="#url" title="Permalink to this headline">¶</a></h3>
+<p>Django の <tt class="docutils literal"><span class="pre">get_absolute_url()</span></tt> は、オブジェクトの URL をドメイン名なしで
+取得する際には便利ですが、場合によっては、完全な URL、すなわち <tt class="docutils literal"><span class="pre">http://</span></tt>
+とドメイン名、その他全てを表示したいこともあるでしょう。これには sites フレー
+ムワークを使います。簡単な例を示します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.contrib.sites.models</span> <span class="kn">import</span> <span class="n">Site</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">()</span>
+<span class="go">&#39;/mymodel/objects/3/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span><span class="o">.</span><span class="n">domain</span>
+<span class="go">&#39;example.com&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;http://</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">())</span>
+<span class="go">&#39;http://example.com/mymodel/objects/3/&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-site">
+<span id="s-caching-the-current-site-object"></span><h2>現在の <tt class="docutils literal"><span class="pre">Site</span></tt> オブジェクトをキャッシュする<a class="headerlink" href="#site" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>現在のサイトを表す <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクト
+は、もともとデータベースに保存されているので、
+<tt class="xref docutils literal"><span class="pre">get_current()</span></tt> を呼ぶたび
+にデータベース呼び出しが発生してしまいます。ただし、 Django はもう少し賢く
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> を扱います。</p>
+<p>すなわち、現在のサイトをキャッシュし、それ以降 <tt class="docutils literal"><span class="pre">get_current()</span></tt> を呼び出し
+ても、データベースに触らずキャッシュから
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトを返します。</p>
+<p>何らかの理由で、データベースクエリを強制したい場合には、
+<tt class="xref docutils literal"><span class="pre">clear_cache()`()</span></tt> を使って
+キャッシュを消去させられます:</p>
+<div class="highlight"><pre><span class="c"># 最初の呼び出し: データベースから Site オブジェクトを取り出す</span>
+<span class="n">current_site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span>
+<span class="c"># ...</span>
+
+<span class="c"># 2 回目の呼び出し: キャッシュから取り出す</span>
+<span class="n">current_site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span>
+<span class="c"># ...</span>
+
+<span class="c"># 3 回目の呼び出しで、データベースクエリを強制する</span>
+<span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+<span class="n">current_site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="s-currentsitemanager">
+<span id="s-the-currentsitemanager"></span><h2><tt class="docutils literal"><span class="pre">CurrentSiteManager</span></tt><a class="headerlink" href="#currentsitemanager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager">
+<!--[django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager]-->class <tt class="descclassname">django.contrib.sites.managers.</tt><tt class="descname">CurrentSiteManager</tt><a class="headerlink" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>アプリケーション内で <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> が重要な働
+きを持っている場合、
+<a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> という便利なクラ
+スを検討してみてください。</p>
+<p><a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> はモデルの
+<a class="reference external" href="../../topics/db/managers.html#topics-db-managers"><em>マネジャ</em></a> クラスで、クエリ結果を現在の
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> に関連づけられたオブジェクトだけ
+に自動的にフィルタします。</p>
+<p><a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> を使うには、モデ
+ルの中に明示的に追加します。例を示します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sites.models</span> <span class="kn">import</span> <span class="n">Site</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sites.managers</span> <span class="kn">import</span> <span class="n">CurrentSiteManager</span>
+
+<span class="k">class</span> <span class="nc">Photo</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">photo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&#39;/home/photos&#39;</span><span class="p">)</span>
+    <span class="n">photographer_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">site</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Site</span><span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span>
+    <span class="n">on_site</span> <span class="o">=</span> <span class="n">CurrentSiteManager</span><span class="p">()</span>
+</pre></div>
+<p>このモデルでは、 <tt class="docutils literal"><span class="pre">Photo.objects.all()</span></tt> を使うとデーターベース上の全ての
+<tt class="docutils literal"><span class="pre">Photo</span></tt> オブジェクトを返しますが、 <tt class="docutils literal"><span class="pre">Photo.on_site.all()</span></tt> を使うと、
+<a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> 設定に従って、現在のサイトに関連づけられた  <tt class="docutils literal"><span class="pre">Photo</span></tt> オ
+ブジェクトだけを返します。</p>
+<p>つまり、以下の二つの文は等価になります:</p>
+<div class="highlight"><pre><span class="n">Photo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">site</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">SITE_ID</span><span class="p">)</span>
+<span class="n">Photo</span><span class="o">.</span><span class="n">on_site</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+<p><a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> は <tt class="docutils literal"><span class="pre">Photo</span></tt> の
+どのフィールドが <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> なのかをどうやっ
+て見付けるのでしょう？
+<a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> はデフォルトでは
+<tt class="docutils literal"><span class="pre">site</span></tt> という名前のフィールドを探します。モデル内で <tt class="docutils literal"><span class="pre">site</span></tt> <em>以外の</em>
+名前の <tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> や
+<tt class="xref docutils literal"><span class="pre">ManyToManyField`</span></tt> を定義している場
+合、 <a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> に明示的に
+フィールド名を渡す必要があります。以下のモデルでは、 <tt class="docutils literal"><span class="pre">publish_on</span></tt> という
+名前のフィールドがその例です:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sites.models</span> <span class="kn">import</span> <span class="n">Site</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sites.managers</span> <span class="kn">import</span> <span class="n">CurrentSiteManager</span>
+
+<span class="k">class</span> <span class="nc">Photo</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">photo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&#39;/home/photos&#39;</span><span class="p">)</span>
+    <span class="n">photographer_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">publish_on</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Site</span><span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span>
+    <span class="n">on_site</span> <span class="o">=</span> <span class="n">CurrentSiteManager</span><span class="p">(</span><span class="s">&#39;publish_on&#39;</span><span class="p">)</span>
+</pre></div>
+<p><a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> を使って、存在し
+ないフィールド名を渡そうとすると、 Django は <tt class="xref docutils literal"><span class="pre">ValueError</span></tt> を送出します。</p>
+<p><a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> を使っていたとし
+ても、結局は (サイト固有でない) 通常の <tt class="docutils literal"><span class="pre">Manager</span></tt> をモデル内に持っておく必
+要に迫られるでしょう。 <a class="reference external" href="../../topics/db/managers.html#topics-db-managers"><em>マネジャのドキュメント</em></a>
+でも説明しましたが、手動でマネジャを定義すると、Django は
+<tt class="docutils literal"><span class="pre">objects</span> <span class="pre">=</span> <span class="pre">models.Manager()</span></tt> を使った自動マネジャ生成を行わなくなるからで
+す。また、 Django の一部 (例えば admin サイトや汎用ビュー) では、モデル内で
+<em>最初に定義されている</em> マネジャを常に使うようになっています。そのため、
+admin サイトから全てのオブジェクトにアクセスしたい (サイト固有のフィルタリ
+ングを行わない) 場合には、モデル内で <tt class="docutils literal"><span class="pre">objects</span> <span class="pre">=</span> <span class="pre">models.Manager()</span></tt>
+を <a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a> の定義より前
+に配置しておかねばなりません。</p>
+<p><a title="django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager" class="reference internal" href="#django.contrib.sites.django.contrib.sites.managers.CurrentSiteManager"><tt class="xref docutils literal"><span class="pre">CurrentSiteManager</span></tt></a></p>
+</div>
+<div class="section" id="s-django-site">
+<span id="s-how-django-uses-the-sites-framework"></span><h2>Django 内での site フレームワークの役割<a class="headerlink" href="#django-site" title="Permalink to this headline">¶</a></h2>
+<p>Django を使う際、必ずしも sites フレームワークを使わねばならないというわけ
+ではありません。とはいえ、 Django はいくつかの場所で sites の恩恵を利用でき
+るので、ぜひとも sites を活用するよう勧めます。 Django を単一のサイトを駆動
+するためだけに使っているとしても、ひと手間かけてサイトオブジェクトを作成し、
+<tt class="docutils literal"><span class="pre">domain</span></tt> と <tt class="docutils literal"><span class="pre">name</span></tt> を指定して、その ID を <a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> 設定に指定
+してみてください。</p>
+<p>Django における sites フレームワークの役割は以下の通りです:</p>
+<ul class="simple">
+<li><a title="リダイレクションを管理するためのフレームワークです。" class="reference external" href="redirects.html"><tt class="xref docutils literal"><span class="pre">リダイレクションフレームワーク</span></tt></a> では、各
+リダイレクトオブジェクトが特定のサイトに関連づけられています。 Django が
+リダイレクト先を探すとき、フ
+レームワークは現在の <a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> を考慮します。</li>
+<li>コメントフレームワークでは、各コメントが特定のサイトに関連づけられて
+います。コメントが投稿されると、 <tt class="docutils literal"><span class="pre">site</span></tt> は現在の <a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> に
+設定されます。コメントを何らかのテンプレートタグでリスト表示する場合、現
+在のサイトに関するコメントだけが表示されます。</li>
+<li><a title="?フラットな? HTML コンテンツをデータベース上で管理するための 簡単なアプリケーションです。" class="reference external" href="flatpages.html"><tt class="xref docutils literal"><span class="pre">フラットページフレームワーク</span></tt></a> では、各フ
+ラットページは特定のサイトに関連づけられています。フラットページを作成す
+る際には、 <tt class="docutils literal"><span class="pre">site</span></tt> を指定せねばなりません。
+<tt class="xref docutils literal"><span class="pre">FlatpageFallbackMiddleware</span></tt>
+は現在の <a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> をチェックして、表示すべきフラットページを取
+得します。</li>
+<li><a title="RSS や Atom 形式の配信フィードを簡単に生成するためのフレーム ワークです。" class="reference external" href="syndication.html"><tt class="xref docutils literal"><span class="pre">配信フレームワーク</span></tt></a> では、 <tt class="docutils literal"><span class="pre">title</span></tt>
+および <tt class="docutils literal"><span class="pre">description</span></tt> のテンプレートから自動的に <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">site</span> <span class="pre">}}</span></tt> にアクセ
+スできます。 <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">site</span> <span class="pre">}}</span></tt> は <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a>
+オブジェクトで、現在の site を表現します。また、フィード項目の URL を提供
+するためのフックでは、完全指定 (full-qualified) のドメインを指定していな
+い場合、現在の <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトの
+<tt class="docutils literal"><span class="pre">domain</span></tt> を使います。</li>
+<li><a title="Django の認証フレームワークです。" class="reference external" href="../../topics/auth.html"><tt class="xref docutils literal"><span class="pre">認証フレームワーク</span></tt></a> では、
+<a title="django.contrib.auth.views.login" class="reference external" href="../../topics/auth.html#django.contrib.auth.views.login"><tt class="xref docutils literal"><span class="pre">django.contrib.auth.views.login()</span></tt></a> ビューが現在の
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> 名を <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">site_name</span> <span class="pre">}}</span></tt> とい
+う形でテンプレートに渡しています。</li>
+<li>ショートカットビュー (<tt class="xref docutils literal"><span class="pre">django.views.defaults.shortcut()</span></tt>) では、オブ
+ジェクトの URL のドメイン部を計算する際に現在の
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトを使います。</li>
+<li><a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトに完全指定のホスト
+名を定義しておくと、 admin フレームワークで、現在の
+<tt class="docutils literal"><span class="pre">サイト上で表示</span> <span class="pre">(view</span> <span class="pre">on</span> <span class="pre">site)</span></tt> のリンク URL の構築に使います。</li>
+</ul>
+</div>
+<div class="section" id="s-requestsite">
+<span id="s-id6"></span><span id="s-requestsite-objects"></span><h2><tt class="docutils literal"><span class="pre">RequestSite</span></tt> オブジェクト<a class="headerlink" href="#requestsite" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p><a class="reference external" href="index.html#ref-contrib-index"><em>django.contrib</em></a> 内のアプリケーションの中には、
+sites フレームワークを利用はできるけれども、 <em>必須にはしない</em> ようなものが
+あります (sites を使いたくない人や、 sites フレームワークが必要とするデータ
+ベーステーブルの作成が <em>不可能な</em> 人もいるためです)。こうした場合のために、
+sites フレームワークでは <tt class="xref docutils literal"><span class="pre">RequestSite</span></tt>
+クラスを提供しています。このクラスは、データベースバックエンド上に sites フ
+レームワークがない場合のフォールバックとして使われます。</p>
+<p><tt class="xref docutils literal"><span class="pre">RequestSite</span></tt> オブジェクトは、通常の
+<a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトと同様のインタフェー
+スを備えていますが、
+<tt class="xref docutils literal"><span class="pre">__init__()</span></tt> が
+<a title="django.http.HttpRequest" class="reference external" href="../request-response.html#django.http.HttpRequest"><tt class="xref docutils literal"><span class="pre">HttpRequest</span></tt></a> オブジェクトを取るところが違います。この
+オブジェクトはリクエストのドメイン情報を見ることで <tt class="docutils literal"><span class="pre">domain</span></tt> や <tt class="docutils literal"><span class="pre">name</span></tt>
+を決定します。 <a title="django.contrib.sites.django.contrib.sites.models.Site" class="reference internal" href="#django.contrib.sites.django.contrib.sites.models.Site"><tt class="xref docutils literal"><span class="pre">Site</span></tt></a> オブジェクトとイ
+ンタフェースを合わせるため、
+<tt class="xref docutils literal"><span class="pre">RequestSite</span></tt> オブジェクトにも
+<tt class="xref docutils literal"><span class="pre">save()</span></tt> や
+<tt class="xref docutils literal"><span class="pre">delete()</span></tt> といったメソッドが
+ありますが、これらのメソッドを呼び出すと <tt class="xref docutils literal"><span class="pre">NotImplementedError</span></tt> を送出
+します。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">&#8220;sites&#8221; フレームワーク</a><ul>
+<li><a class="reference external" href="#id1">使用例</a><ul>
+<li><a class="reference external" href="#id2">コンテンツを複数のサイトに関連づける</a></li>
+<li><a class="reference external" href="#id3">コンテンツを単一のサイトに関連づける</a></li>
+<li><a class="reference external" href="#id4">ビュー内で現在のサイトをフックに使う</a></li>
+<li><a class="reference external" href="#id5">現在のドメインをディスプレイ用に取得する</a></li>
+<li><a class="reference external" href="#url">現在のドメインの完全な URL を取得する</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#site">現在の <tt class="docutils literal"><span class="pre">Site</span></tt> オブジェクトをキャッシュする</a></li>
+<li><a class="reference external" href="#currentsitemanager"><tt class="docutils literal"><span class="pre">CurrentSiteManager</span></tt></a></li>
+<li><a class="reference external" href="#django-site">Django 内での site フレームワークの役割</a></li>
+<li><a class="reference external" href="#requestsite"><tt class="docutils literal"><span class="pre">RequestSite</span></tt> オブジェクト</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="sitemaps.html">sitemaps フレームワーク</a></li>
+    
+    
+      <li>次: <a href="syndication.html">配信フィードフレームワーク</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>&#8220;sites&#8221; フレームワーク</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/sites.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="sitemaps.html" title="sitemaps フレームワーク">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="syndication.html" title="配信フィードフレームワーク">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

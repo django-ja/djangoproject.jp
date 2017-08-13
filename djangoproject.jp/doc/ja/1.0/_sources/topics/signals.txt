@@ -1,0 +1,193 @@
+.. _topics-signals:
+
+===========
+シグナル
+===========
+
+:revision-up-to: 8961 (1.0)
+
+.. module:: django.dispatch
+   :synopsis: Signal dispatch
+
+Django には「シグナルディスパッチャ (signal dispatcher)」が組み込まれていま
+す。シグナルディスパッチャにより、アプリケーションをフレームワークから脱カッ
+プリングしつつ、フレームワークのどこかで起きたアクションに応じた通知を受け
+られます。簡単にいえば、シグナルによって、ある「 *送信側(sender)* 」から
+複数の「 *受信側(receiver)* 」に向けて、何らかのアクションが起きたことを通
+知できるのです。シグナルは、たくさんのコードが同じイベントを待ち受けるよう
+な状況で特に便利です。
+
+Django は、自分自身の特定のアクションを通知するための :ref:`組み込みシグナ
+ル<ref-signals>` を提供しています。。組み込みシグナルの中には、以下のような
+便利なものがあります:
+
+    * :data:`django.db.models.signals.pre_save` および
+      :data:`django.db.models.signals.post_save`
+
+      モデルの :meth:`~django.db.models.Model.save` メソッド呼び出しの前後
+      で送信されます。
+
+    * :data:`django.db.models.signals.pre_delete` および
+      :data:`django.db.models.signals.post_delete`
+
+      モデルの :meth:`~django.db.models.Model.delete` メソッド呼び出しの前
+      後に送信されます。
+
+
+    * :data:`django.core.signals.request_started` および
+      :data:`django.core.signals.request_finished`
+
+      Django が HTTP リクエストを処理する直前直後に送信されます。
+
+組み込みシグナルの全容と各々の解説は、 :ref:`組み込みシグナルのドキュメント
+<ref-signals>` で解説しています。
+
+シグナルは `自分て定義したり送信したり 
+<define and send your own custom signals>`_ できます。詳しくは以下を参照し
+てください。
+
+.. _define and send your own custom signals: `defining and sending signals`_
+
+シグナルを待ち受ける
+====================
+
+シグナルを受信するには、シグナルが送信されたときに呼び出される 
+*レシーバ(receiver)* 関数を登録する必要があります。 HTTP リクエストの処理が
+終ったときに呼び出されるシグナルのレシーバを登録して、この仕組みを見てみま
+しょう。この例では、 :data:`~django.core.signals.request_finished` シグナル
+をレシーバに結びつけます。
+
+レシーバ関数
+-------------
+
+まず、レシーバ関数を定義します。レシーバは通常の Python の関数やメソッドと
+して定義します:
+
+.. code-block:: python
+
+    def my_callback(sender, **kwargs):
+        print "Request finished!"
+
+この関数は固定引数の ``sender`` と、ワイルドカードで表現された任意のキーワー
+ド引数 (``**kwargs``) をとります。シグナルハンドラは、全てこの形式の引数を
+とらねばなりません。
+
+``sender`` については `後で <a bit later>`_ 説明するとして、今はまず
+``**kwargs`` に注目しましょう。シグナルはすべてキーワード引数を伴い、キーワー
+ド引数の内容はいつでも変更される可能性があります。
+:data:`~django.core.signals.request_finished` の場合、ドキュメントにキーワー
+ド引数をもたないと明記されているので、シグナルハンドラを
+``my_callback(sender)`` と書いていいと思いがちです。
+
+.. _a bit later: `connecting to signals sent by specific senders`_
+
+しかしこれは誤っています。実際、 ``my_callback(sender)`` のように定義すると
+Django はエラーを送出します。というのも、将来シグナルに引数が追加されるかも
+しれず、そのときにもレシーバは新たに追加された引数を扱えねばならないからで
+す。
+
+レシーバ関数を結びつける
+-----------------------------
+
+次に、レシーバをシグナルに結びつけます:
+
+.. code-block:: python
+
+    from django.core.signals import request_finished
+
+    request_finished.connect(my_callback)
+
+これで、 ``my_callback`` 関数は、リクエストの処理が終了するたびに呼び出され
+ます。
+
+.. admonition:: シグナル処理のコードはどこにおけばよいのですか?
+
+    シグナルの処理や登録のためのコードは、どこでも好きな場所に置けます。
+    とはいえ、自分の登録したいシグナルが送信されるよりも前に、コードの入っ
+    ているモジュールを早々に import しておきたいいでしょう。そのため、シグ
+    ナルハンドラの登録は ``models.py`` に置くのがよいでしょう。
+
+.. _connecting to signals sent by specific senders:
+
+特定のセンダから送信されたシグナルだけを結びつける
+----------------------------------------------------
+
+シグナルには何度も送信されるものがありますが、その中でも特定のサブセットだ
+けを受け取りたい場合もあるでしょう。例えば、モデルインスタンスが保存される
+ときに送信される :data:`django.db.models.signals.pre_save` を考えましょう。
+大抵は、シグナルを受信したいのは *すべての* モデルの保存時ではなく、
+*特定の* モデルの保存時のはずです。
+
+こうしたケースのために、特定のセンダから送られるシグナルに対してレシーバを
+登録できます。 :data:`django.db.models.signals.pre_save` の場合、センダは
+インスタンスを保存しようとするモデルなので、以下のようにして、特定のモデル
+に対してのみシグナルを受信させられます:
+
+.. code-block:: python
+
+    from django.db.models.signals import pre_save
+    from myapp.models import MyModel
+
+    def my_handler(sender, **kwargs):
+        ...
+
+    pre_save.connect(my_handler, sender=MyModel)
+
+これで、保存されるインスタンスが ``MyModel`` のインスタンスであるときだけ、
+ ``my_handler`` 関数が呼び出されます。
+
+センダに入るオブジェクトは、シグナルによって異なります。個々のシグナルにつ
+いての情報は :ref:`組み込みシグナルのドキュメント <ref-signals>` を参照して
+ください。
+
+.. _defining and sending signals:
+
+シグナルの定義と送信
+=====================
+
+自分のアプリケーション内でも、シグナルのインフラストラクチャを使ったり、独
+自のシグナルを提供したりできます。
+
+シグナルを定義する
+--------------------
+
+.. class:: Signal([providing_args=list])
+
+シグナルは全て :class:`django.dispatch.Signal` のインスタンスです。
+``providing_args`` は、シグナルがリスナに対して提供する引数の名前が入ったリ
+ストです。
+
+例えば:
+
+.. code-block:: python
+
+    import django.dispatch
+
+    pizza_done = django.dispatch.Signal(providing_args=["toppings", "size"])
+
+上のコードは ``pizza_done`` シグナルを作成し、このシグナルが ``topping`` と
+``size`` という引数をもたらすことを宣言しています。
+
+このリストはいつでも変更できるので、最初の時点で正確に API を定義しておく必
+要はありません。
+
+シグナルを送信する
+--------------------
+
+.. method:: Signal.send(sender, **kwargs)
+
+シグナルを送信するには :meth:`Signal.send` を呼び出します。 ``sender`` を必
+ず指定し、必要に応じて追加の引数を指定します。
+
+例えば、 ``pizza_done`` シグナルを送信するには、以下のように書きます:
+
+.. code-block:: python
+
+    class PizzaStore(object):
+        ...
+
+        def send_pizza(self, toppings, size):
+            pizza_done.send(sender=self, toppings=toppings, size=size)
+            ...
+
+

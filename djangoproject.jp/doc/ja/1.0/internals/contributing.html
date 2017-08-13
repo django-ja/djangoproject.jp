@@ -1,0 +1,1080 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django プロジェクトに協力するために &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="Django の内部" href="index.html" />
+    <link rel="next" title="How the Django documentation works" href="documentation.html" />
+    <link rel="prev" title="Django の内部" href="index.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="Django の内部">前へ</a> 
+     |
+    <a href="index.html" title="Django の内部" accesskey="U">上へ</a>
+   |
+    <a href="documentation.html" title="How the Django documentation works">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="internals-contributing">
+            
+  
+  <div class="section" id="s-django">
+<span id="s-internals-contributing"></span><h1>Django プロジェクトに協力するために<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django を <em>使う</em> のを楽しいと思ってもらえたなら、 <em>使い続ける</em> 前にすこし待っ
+てください。私達は多大な情熱をかけて、ユーザがコミュニティのメンバに貢献で
+きるよう手助けしています。Django の開発を手伝うにはいくつもの方法があります:</p>
+<ul class="simple">
+<li>Django について blog を書きましょう。私達は知っている限りの全ての
+Django 関係の blog を <a class="reference external" href="http://www.djangoproject.com/community/">コミュニティのページ</a> で配信しています。この
+ページに登録したい blog があるなら <a class="reference external" href="mailto:jacob&#37;&#52;&#48;jacobian&#46;org">jacob<span>&#64;</span>jacobian<span>&#46;</span>org</a> に連絡してくだ
+さい。</li>
+<li>バグ報告や機能に関する要望を <a class="reference external" href="http://code.djangoproject.com/newticket">チケットトラッカ</a> に提出しましょう。
+私達が望んでいるバグ報告の提出方法の詳細は <a class="reference internal" href="#id3">バグの報告</a> を読んで下さい。</li>
+<li>新たな機能を追加したり従来の機能を修正するパッチを提出しましょう。
+パッチの提出方法は <a class="reference internal" href="#id6">パッチの提出</a> を参照してください。</li>
+<li><a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> メーリングリストに参加して、 Django をよりよくす
+るためのアイデアを皆で共有しましょう。どんな提案でも歓迎します。ただ
+し私達は後ろだてになるコードがないスケールの大きな話には懐疑的です。</li>
+<li>他のユーザが提出したパッチのトリアージ (選別) を行います。トリアージ
+の手順については、後述の  <a class="reference external" href="#ticket-triage">チケットのトリアージ</a> を
+参照してください。</li>
+</ul>
+<p>Django 開発コミュニティに参加するのに必要な知識はこれだけです。このドキュメ
+ントの残りの部分では、開発コミュニティがどのようになっていて、どうやってバ
+グを処理しているかについて詳しく説明し、メーリングリストやその他こまごまと
+した注意点について記述しています。</p>
+<div class="section" id="s-id3">
+<span id="s-id2"></span><span id="s-reporting-bugs"></span><h2>バグの報告<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>上手に書かれたバグ報告は <em>信じられないくらい</em> 助けになります。とはいえ、バ
+グ追跡システムでの作業はかなりのオーバヘッドを要するので、チケットトラッカ
+をできるだけ有意義に使うよう協力していただけると助かります。特に:</p>
+<ul class="simple">
+<li><strong>必ず</strong> <a class="reference external" href="../faq/index.html#faq-index"><em>FAQ</em></a> を読んで、自分の抱えている問題が既知
+のものでないか探して下さい。</li>
+<li><strong>必ず</strong> <a class="reference external" href="http://code.djangoproject.com/search">トラッカを検索</a> して、自分の抱えている問題がファイルされて
+いないか探して下さい。</li>
+<li><strong>必ず</strong> <em>最初に</em> <a class="reference external" href="http://groups.google.com/group/django-users">django-users</a> で質問して、自分の考えていることが
+バグだということを確認してください。</li>
+<li><strong>必ず</strong> 完結した、再現可能な、的確なバグ報告を書いて下さい。完全なコー
+ド断片やテストセットなど、可能な限り多くの情報を含めて下さい。問題に
+対する詳細かつ明瞭な説明と、問題を再現するための手順を含めてください。
+小さなテストケースでバグを再現できれば最良のバグ報告になります。</li>
+<li><strong>決して</strong> サポート質問にチケットシステムを <strong>使わないで下さい。</strong> 質
+問は <a class="reference external" href="http://groups.google.com/group/django-users">django-users</a> リストや <a class="reference external" href="irc://irc.freenode.net/django">#django</a> IRC チャネルでお願いします。</li>
+<li><strong>決して</strong> スケールの大きな機能の提案にチケットシステムを
+<strong>使わないで下さい。</strong> Django のコアに関わる大きな変更は、
+取り掛かる前に必ず <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> リストで議論します。</li>
+<li><strong>決して</strong> &#8220;wontfix&#8221; にマークされた問題を
+<strong>開き直さないで下さい。</strong> &#8220;wontfix&#8221; マークは決定事項であり、この問題
+についてはこれ以上修正できないか、修正する予定はないのです。納得でき
+なければ、 <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> で質問してください。</li>
+<li><strong>決して</strong> 長い議論をチケットシステムで <strong>行わないで下さい。</strong> チケッ
+トシステムでは議論内容がじきに失われてしまうからです。チケットの内容
+について議論になりそうなときは <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> に場所を移して下
+さい。</li>
+<li>バグ報告をチケットに登録したこと <strong>だけ</strong> を django-developers にポス
+ト <strong>しない</strong> でください。チケットを登録すると、別のメーリングリスト
+(<a class="reference external" href="http://groups.google.com/group/django-updates">django-updates</a>) にメールが送信されます。開発者やトリアージ担当者
+はこのメーリングリストを監視しているので、登録したことがすぐ分かるか
+らです。</li>
+</ul>
+</div>
+<div class="section" id="s-id5">
+<span id="s-id4"></span><span id="s-reporting-security-issues"></span><h2>セキュリティ問題の報告<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>セキュリティ問題の報告は <a class="reference external" href="mailto:security&#37;&#52;&#48;djangoproject&#46;com">security<span>&#64;</span>djangoproject<span>&#46;</span>com</a> にお願いします。このメー
+リングリスト経験豊かで信頼できる Django 開発者だけが購読でき、アーカイブは
+非公開になっています。</p>
+<p>Django に脆弱性が発見された場合、私達は以下のように行動します:</p>
+<ul class="simple">
+<li>報告者に対して、報告を受けとったことと、脆弱性がまもなく修正されるこ
+とを知らせます。修正までのおおまかなタイムラインを示し、報告者に対し
+て、アナウンスを行うまでにどのくらいの間この問題を秘密にしておけるか
+問い合わせます。</li>
+<li>現在のバージョンと、二つ前までのリリースに対するパッチを含む修正版の
+開発に必要な期間、他の全ての開発を停止します。</li>
+<li>脆弱性と修正版をアナウンスするする日取りを決めます。 パッチを適用する
+側と脆弱性を不正利用する側の間の「軍拡競争」を抑えるため、私達はセキュ
+リティ問題を即座にアナウンスしません。</li>
+<li>影響を受けるバージョンの Django を使っているユーザのうち、私達が把握
+している人全員に事前に通知します。この通知は個人宛の電子メールで行わ
+れます。メールには脆弱性に関するドキュメントと該当パッチへのリンク、
+そしてこの脆弱性を公式の公開日まで秘密にしておくよう要請する文が入っ
+ています。</li>
+<li>あらかじめ決めておいた日取りに基づいて、脆弱性と修正版を公開し、アナ
+ウンスします。通常は新たなバージョンの Django リリースを意味しますが、
+場合によっては現在のリリースに対する単なるパッチになります。</li>
+</ul>
+</div>
+<div class="section" id="s-id6">
+<span id="s-submitting-patches"></span><h2>パッチの提出<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Django のコードに対するパッチはつねに大歓迎です。実際、パッチつきのバグ報告
+は、パッチのないものよりも <em>はるかに</em> 素早く修正されます。</p>
+<div class="section" id="s-id7">
+<span id="s-claiming-tickets"></span><h3>チケットをクレーム（審査請求）する<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>世界中に何百人ものコントリビュータを擁するようなオープンソースプロジェクト
+では、コミュニケーションを効率的に進めることで、同じ作業が何度も繰り返され
+るのを防ぎ、コントリビュータができるだけ効果的に振る舞えるような配慮が重要
+です。そのため、コントリビュータがチケットをクレームし、他の開発者たちに、
+何らかのバグ報告や機能提案がなされていることを知らせるという方針をとります。</p>
+<p>Django プロジェクトに何らかの貢献をしたいと考えていて、 (コード作成能力や、
+Django の内部に関する知識、時間的な余裕から) 必要な修正を行えるのなら、以下
+のステップに従ってチケットをクレームしてください:</p>
+<ul class="simple">
+<li>チケットシステム上に <a class="reference external" href="http://www.djangoproject.com/accounts/register/">アカウントを作成</a> します。</li>
+<li>自分の提起したい内容がまだ <a class="reference external" href="http://code.djangoproject.com/newticket">チケットトラッカ</a> 上になければ、
+新たに作成します。</li>
+<li>自分の提起したい内容がすでにチケットトラッカ上にあるのなら、そのチケッ
+トの &#8220;Assigned to&#8221; セクションを調べて、誰かによってクレーム済みでない
+か確認してください。 &#8220;nobody&#8221; になっていれば、そのチケットはクレーム
+できます。すでに誰かのアカウント名が入っているのなら、他のチケットを
+探してクレームするか、その問題に関わっている開発者に連絡をとって、チ
+ケット解決に手を貸してください。</li>
+<li>まだログインしていなければ、自分のアカウントでログインしてください。
+ログインするには、チケットページの右上にある &#8220;Login&#8221; をクリックします。</li>
+<li>チケットをクレームするには、チケットページの下にある、&#8221;Accept ticket&#8221;
+の隣のラジオボタンをクリックしてから、 &#8220;Submit changes&#8221; をクリックします。</li>
+</ul>
+<div class="section" id="s-id9">
+<span id="s-ticket-claimers-responsibility"></span><h4>チケットをクレームしたら<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>チケットをクレームした人は、そのチケットが時代おくれにならないよう作業せね
+ばなりません。チケットに時間を割けないのなら、クレームを解除するか、そもそ
+もクレームしないようにしてください！</p>
+<p>チケットのトリアージ担当者たちは、クレーム済みのチケットを何度も調べて、各々
+のチケットに進捗があるかどうか調べます。クレーム状態にあるチケットが進捗し
+ないまま 1 週間以上過ぎた場合、チケットが独占されつづけないよう、クレームを
+解除してほしい旨問い合わせる場合があります。</p>
+<p>チケットをクレームしてから、コードを書くまでにしばらく (数日から数週間)
+かかる場合、何らかのコメントをポストして、その旨を通知してください。更新が
+なく、進捗レポートの要求に対する返事もない場合、チケットを無効にする場合も
+あります。まずは連絡第一です!</p>
+</div>
+<div class="section" id="s-id10">
+<span id="s-which-tickets-should-be-claimed"></span><h4>どのチケットをクレームすべきか<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<p>もちろん、わざわざチケットをクレームするまでもない場合もあります。ドキュメ
+ントのタイプミスや、ほんの数分あれば修正できるような小さなバグの場合には、
+チケットのクレームまでする必要はありません。単にパッチを投稿して、そのまま
+にしておいてください。</p>
+</div>
+</div>
+<div class="section" id="s-id11">
+<span id="s-patch-style"></span><h3>パッチ形式<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Django の <a class="reference internal" href="#id19">コーディングスタイル</a> に従っているか確認してください。</li>
+<li><tt class="docutils literal"><span class="pre">svn</span> <span class="pre">diff</span></tt> コマンドの返す書式のパッチを提出してください。ただし、コー
+ドよりも英語で変更点を説明した方がはるかに分かりやすい場合は例外です。
+例えばインデントはよくある例です。というのも、コードの違いがインデン
+トでしかない場合、パッチを読むのはとても大変だからです。</li>
+<li>パッチを作るときには、 常に <tt class="docutils literal"><span class="pre">trunk</span></tt> ディレクトリの最上位の階層、
+すなわち、 <tt class="docutils literal"><span class="pre">django</span></tt>, <tt class="docutils literal"><span class="pre">docs</span></tt>, <tt class="docutils literal"><span class="pre">tests</span></tt>, <tt class="docutils literal"><span class="pre">AUTHORS</span></tt> などがある場
+所で <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">diff</span></tt> を実行してください。こうしてパッチを作ったほうが
+他の人が適用しやすいからです。</li>
+<li><a class="reference external" href="http://code.djangoproject.com/newticket">チケットトラッカ</a> で、 &#8220;attach file&#8221; ボタンを使ってチケットにパッチ
+を添付してください。一行のパッチでないかぎり、チケットの説明やコメン
+トの中にパッチを <em>入れないで</em> 下さい。</li>
+<li>パッチファイルの名前には <tt class="docutils literal"><span class="pre">.diff</span></tt> 拡張子をつけて下さい。そうすること
+で、チケットトラッカは構文のハイライト強調を正しく行うので助かります。</li>
+<li>チケットの詳細情報欄にある「パッチ付き」(&#8220;Has patch&#8221;) ボックスにチェッ
+クを入れてください。チケットがパッチつきであることが分かりやすくなり、
+チケットシステムがそのチケットを <a class="reference external" href="http://code.djangoproject.com/query?status=new&amp;status=assigned&amp;status=reopened&amp;has_patch=1&amp;order=priority">パッチつきのチケットのリスト</a> に追
+加してくれます。</li>
+<li>問題を解決したり機能を追加するためのコードはパッチの重要な部分ですが、
+それだけではいけません。よいパッチというものには必ず回帰テストが付属
+していて、問題が解決されたことを検証できる (そして将来同様の問題が再
+発しないようにできる) ものです。</li>
+<li>パッチ中のコードが新たな機能や既存の機能に対する変更をもたらす場合、
+パッチにはドキュメントも含めてください。</li>
+</ul>
+</div>
+<div class="section" id="s-id12">
+<span id="s-non-trivial-patches"></span><h3>重要パッチ<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>「重要 (non-trivial)」パッチとは、単なるバグフィクスに留まらず、Django に
+新たな機能をもたらし、何らかの設計上の判断を迫るようなパッチです。</p>
+<p>重要パッチを提出する場合には、その問題について <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> で議論
+済みであるという証明を含めてください。自分のパッチが重要パッチかどうか判断
+しかねる場合には問い合わせてください。</p>
+</div>
+</div>
+<div class="section" id="s-id13">
+<span id="s-ticket-triage"></span><h2>チケットのトリアージ<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>残念ながら、 <a class="reference external" href="http://code.djangoproject.com/newticket">チケットトラッカ</a> に届くバグ報告全てが、上に述べた
+<a class="reference external" href="#reporting-bugs">チケットの要件</a> を満たしているわけではありません。
+パッチの添付されたチケットもたくさんありますが、それら全てが
+<a class="reference external" href="#patch-style">よいパッチ</a> の要件を満たしているわけでもありません。</p>
+<p>こうした状況の打開を手助けする一つの方法に、他のユーザが報告したバグのトリ
+アージ (選別) 作業があります。この作業には献身的なボランティア 2 名が常時携
+わっていますが、手助けをしてくれる人は常に歓迎です。</p>
+<p>トリアージ作業のワークフローの大半は、チケットの「トリアージ段階 (triage
+stage)」というフィールドに関わる作業です。このステージとは、あるチケットが
+ライフサイクルのどの段階にあるかを示す指標です。ステージフラグやその他のフ
+ラグによって、誰のどんなチケットが処理待ちになっているかがわかります。</p>
+<p>百聞は一見にしかずですから、例を挙げて説明しましょう:</p>
+<img alt="Django のチケットワークフロー図" src="../_images/djangotickets.png" style="width: 590px; height: 451px;" />
+<p>チケット処理の流れには、まず、 2 種類の公認の役割があります:</p>
+<ul class="simple">
+<li>コア開発者: コミット権限を持ち、コードに関する重大な決定や、大部分の
+コード作成を行う人です。</li>
+<li>トリアージ担当者:  Django コミュニティでの長期にわたる実績を持った信
+頼のおけるメンバです。その実績に基づいて、コア開発者はチケット単位の
+より小規模な決定権を委譲しています。</li>
+</ul>
+<p>次に、トリアージ作業には以下の 5 つのステージがあります:</p>
+<ol class="arabic simple">
+<li>チケットは「未レビュー(unreviewed)」の状態からスタートします。まだだ
+れもチケットを調べていない状態です。</li>
+<li>「設計判断待ち(design decision needed)」は、「このコンセプトには設計
+上の判断が必要」であり、チケットのコメント欄か、
+<a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> 上で議論すべきであることを示しています。
+設計判断待ちのステップは、原則として機能追加リクエストのチケットにし
+かありません。ただし、意見や解釈によってはバグと見なされ <em>得る</em> よう
+な問題に対して使われる場合もあります。明らかなバグ (クラッシュする、
+クエリ結果がおかしい、標準からかけ離れた動作) の場合、このステップは
+飛ばして「承認」に進みます。</li>
+<li>チケットの内容に従った修正が受け入れられた場合、「承認 (accepted)」
+ステージに移行します。このステージは全ての作業が終わった状態です。</li>
+<li>チケットは &#8220;Someday/Maybe&#8221; 状態に移行させられる場合があります。これ
+は、該当チケットに述べられている内容に対して、素晴らしいパッチが提供
+された時点でフレームワークに追加しようと考えていることを示します。こ
+の状態に移行したチケットの優先度は高くありません。</li>
+<li>チケットにパッチが関連づけられている場合 (下記参照)、トリアージ作業
+者はパッチをレビューします。パッチの内容が完璧なら、「チェックイン可
+(ready for checkin)」にマークされ、コア開発者にパッチをレビューし
+てチェックすべきであることを知らせます。</li>
+</ol>
+<p>ワークフローにはもう 1 つ、一連のフラグがあります。フラグは各チケットを
+「チェックイン可」にするために必要な条件のうち、何が満たされていて何が必要
+かを示します:</p>
+<dl class="docutils">
+<dt>「パッチあり (has patch)」</dt>
+<dd>チケットに <a class="reference internal" href="#patch-style">パッチ</a> が添付されていることを示します。
+このフラグのついたパッチはトリアージ担当者によってレビューされ、条
+件を満たした「よいパッチ」であるかどうか調べられます。</dd>
+<dt>「ドキュメント不足 (needs documentation)」</dt>
+<dd>パッチつきのチケットに対して、ドキュメントが必要であることを示しま
+す。コードベースに修正をチェックインする条件として、完全なドキュメ
+ントが必要です。</dd>
+<dt>「テスト不足 (needs tests)」</dt>
+<dd>パッチに単位テストが必要であることを示します。上ど同様、条件として
+有効なパッチが必要です。</dd>
+<dt>「パッチに改良の余地あり (patch needs improvement)」</dt>
+<dd>チケットにパッチが <em>付属している</em> が、チェックインするには修正の余
+地があることを示します。パッチが古くてきれいに当てられなくなってし
+まっている場合や、コードがコーディング基準に従っていないことを示し
+ます。</dd>
+</dl>
+<p>チケットは色々な形で解決されます:</p>
+<dl class="docutils">
+<dt>「修正済み (fixed)」</dt>
+<dd>パッチが Django に取り込まれ、問題が解決されると、コア開発者はチケッ
+トを fixed にマークします。</dd>
+<dt>「無効 (invalid)」</dt>
+<dd>チケットの内容が不正確であると判断された場合に使われます。無効扱い
+は、チケットの報告している問題が何らかのユーザの手違いに起因してい
+る、 Django に関係ない問題である、あるいは、バグ報告でも機能リクエ
+ストでもない (例えば、初心者の中にはチケットにサポート質問を書く人
+がいます) と判断されたことを示しています。</dd>
+<dt>「修正の予定なし (wontfix)」</dt>
+<dd>修正要求を Django に取り込むのは不適切であると判断した場合、コア開
+発者はチケットを wondfix にマークします。 wontfix へのマークは、
+通常は <tt class="docutils literal"><span class="pre">django-developer</span></tt> メーリングリストでの議論の末に選択され
+ることなので、気になる議論があったらぜひ参加してください。</dd>
+<dt>「他のチケットと重複 (duplicate)」</dt>
+<dd>他のチケットで同じ問題がカバーされている場合にはチケットを
+duplicate にマークします。重複したチケットをクローズして問題解決の
+ための議論を 1 箇所にまとめ、話を進めやすくするためです。</dd>
+<dt>「再現不能 (worksforme)」</dt>
+<dd>チケットに十分な情報がなく、問題を再現できない場合に使われます。</dd>
+</dl>
+<p>あるチケットが明らかに誤ってクローズされた &#8211; クローズされたチケットで提起
+されている問題が依然として生じている場合や、別の問題が生じた場合、あるいは
+トリアージ作業でミスが起きている &#8211; 場合には、そのチケットを再度開いて
+(reopen)、その理由を記載してください。また、コア開発者が &#8220;wontfix&#8221; にマーク
+したチケットを reopen しないでください。</p>
+<div class="section" id="s-id17">
+<span id="s-triage-by-the-general-community"></span><h3>一般コミュニティメンバによるトリアージ<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>コア開発者やトリアージ担当者がチケットのトリアージ作業で重要な決定を行う一
+方で、一般コミュニティのメンバもまた、トリアージ作業に参加できます。
+具体的には、以下のようなトリアージ補助があります:</p>
+<ul class="simple">
+<li>「レビュー待ち」状態のチケットを、「無効」、「再現不能」、「重複」と
+いった理由でクローズできます。</li>
+<li>「レビュー待ち」状態のチケットを、設計判断が必要な場合には「設計判断
+待ち」に、明らかなバグの場合には「承認」に昇格させられます。</li>
+<li>「テスト不足」「ドキュメント不足」のチケットを修正したり、「パッチあ
+り」フラグが正しくセットされていないチケットを修正できます。</li>
+<li>古いチケットに何も変化がないまま長時間経過している場合、その問題が解
+決されているにもかかわらずチケットがクローズされず放置されていないか
+調べられます。</li>
+<li>チケットをクレームしたにもかかわらず、最近動きのないチケットオーナに
+連絡して、返事が 1 週間以上ない場合にはチケットのクレームを失効させら
+れます。</li>
+<li>チケットの傾向と本質的な問題を分析できます。 Django の特定の部分に対
+するバグ報告が集中している場合、コードのリファクタを検討する必要があ
+ることを示しています。何らかの傾向が見られるのなら、(問題のチケットを
+引きあいに出して) <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> に問題提起してください。</li>
+</ul>
+<p>とはいえ、一般コミュニティのメンバがチケットデータベースを操作する際には、
+以下の点に気をつけてください:</p>
+<ul class="simple">
+<li>チケットを「修正の予定なし」で閉じては <strong>なりません</strong> 。チケットの生
+死を最終的に決めるのはコア開発者で、それも通常はコミュニティと相談し
+た後だからです。</li>
+<li>つづりの間違い修正やドキュメントのリンク修正といった <em>些細な</em> 変更で
+ない限り、チケットを「チェックイン可」に昇格させては <strong>なりません</strong> 。</li>
+<li>コア開発者が下した決定を差し戻しては <strong>なりません</strong> 。議論に納得でき
+ないのなら、 <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> にメッセージをポストしてください。</li>
+<li>慎重に振る舞ってください。チケットの状態を変更すべきか迷うような場合
+には、変更してはなりません。そんな場合には、チケットに自分のコメント
+を残すか、 <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> にメッセージをポストしてください。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-id18">
+<span id="s-submitting-and-maintaining-translations"></span><span id="s-contributing-translations"></span><h2>翻訳の提出と維持<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<p>admin サイトやバリデータのエラーメッセージなど、Django は様々な部分で国際化
+されており、ユーザの言語設定に従って様々なテキストを表示します。この機能を
+実現するために、Django は共通の国際化メカニズムを使っています。国際化メカニ
+ズムはどのアプリケーションからも利用できます。利用法は
+<a class="reference external" href="../topics/i18n.html#topics-i18n"><em>i18n のドキュメント</em></a> で解説しています。</p>
+<p>翻訳カタログは世界中の Django ユーザによる貢献でできています。間違った翻訳
+や、まだ翻訳存在しない言語に新たな翻訳を追加したい場合は以下のようにします:</p>
+<ul>
+<li><p class="first"><a class="reference external" href="http://groups.google.com/group/django-i18n/">Django i18n メーリングリスト</a> に参加して自己紹介してください。</p>
+</li>
+<li><p class="first"><a class="reference external" href="../topics/i18n.html#topics-i18n"><em>i18n のドキュメント</em></a> に従って翻訳を作成してくださ
+い。カタログの生成には <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> ツールを使い
+ます。 Django 全体のカタログを生成する場合、 Django のソースツリーの
+トップレベルにある <tt class="docutils literal"><span class="pre">django</span></tt> ディレクトリでコマンドを実行してくださ
+い。</p>
+<p>このツールは、 Django のソースツリー全体を走査して、翻訳対象としてマー
+クされた文字列を取り出します。メッセージカタログファイルは
+<tt class="docutils literal"><span class="pre">conf/locale</span></tt> ディレクトリ以下に生成（または更新）されます。
+（例えば、 <tt class="docutils literal"><span class="pre">pt-BR</span></tt> ロケールであれば、ファイルは
+<tt class="docutils literal"><span class="pre">conf/locale/pt-br/LC_MESSAGES/django.po</span></tt> に書き出されます。）</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">compilemessages</span> <span class="pre">-l</span> <span class="pre">&lt;lang&gt;</span></tt> を実行して、警告がでな
+いのを確認してください。</p>
+</li>
+<li><p class="first">上の二つのステップを、 <tt class="docutils literal"><span class="pre">djangojs</span></tt> ドメインに対しても実行してくださ
+い。 (<tt class="docutils literal"><span class="pre">django-admin.py</span></tt> のコマンドラインに  <tt class="docutils literal"><span class="pre">-d</span> <span class="pre">djangojs</span></tt> オプショ
+ンを付加して実行します)</p>
+</li>
+<li><p class="first">最新の Subversion trunk に対して、 <tt class="docutils literal"><span class="pre">.po</span></tt> ファイルの差分を作成してください。</p>
+</li>
+<li><p class="first">Django のチケットシステムで新しいチケットを作成し、 <tt class="docutils literal"><span class="pre">Component</span></tt> フィー
+ルドを <tt class="docutils literal"><span class="pre">Translations</span></tt> に設定して、パッチを添付して提出してください。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="s-id19">
+<span id="s-coding-style"></span><h2>コーディングスタイル<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<p>コードを書いて Django に取り込みたいなら、以下のコーディング標準に従って下
+さい:</p>
+<ul>
+<li><p class="first">特に指定のない限り <span class="target" id="index-2"></span><a class="reference external" href="http://www.python.org/dev/peps/pep-0008"><strong>PEP 8</strong></a> に従って下さい。</p>
+<p><a class="reference external" href="http://svn.browsershots.org/trunk/devtools/pep8/pep8.py">pep8.py</a> のようなツールを使えば、コーディング標準に従っているかどう
+かをチェックできます。とはいえ、 PEP 8 はガイドにすぎません。まずは、
+周辺のコードのスタイルを尊重してください。</p>
+</li>
+<li><p class="first">インデントにはスペース 4 つを使います。</p>
+</li>
+<li><p class="first">変数名、関数名、メソッド名には camelCase ではなくアンダースコアを使っ
+て下さい (たとえば <tt class="docutils literal"><span class="pre">poll.getUniqueVoters</span></tt> ではなく
+<tt class="docutils literal"><span class="pre">poll.get_unique_voters()</span></tt>)。</p>
+</li>
+<li><p class="first">クラス名 (やクラスを返すファクトリ関数) には <tt class="docutils literal"><span class="pre">InitialCaps</span></tt> を使って
+ください。</p>
+</li>
+<li><p class="first">国際化の必要な全ての文字列をマークしておいてください。詳しくは
+<a class="reference external" href="../topics/i18n.html#topics-i18n"><em>i18n ドキュメント</em></a> を参照してください。</p>
+</li>
+<li><p class="first">docstring 内では、下記のような &#8220;action word&#8221; を使ってください:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates something and returns the result.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+<p>以下のような書き方をしてはなりません:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate something and return the result.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</li>
+<li><p class="first">コード中に自分の名前を埋め込まないでください。Django プロジェクトでは、
+コードの開発者や貢献者の名前がコード中に散逸しないようにするため、
+<tt class="docutils literal"><span class="pre">AUTHORS</span></tt> ファイルにまとめて記載するというポリシを採用しています。
+ほんのちょっとした変更でないかぎり、ご自分のパッチに <tt class="docutils literal"><span class="pre">AUTHORS</span></tt> への
+変更を加えて頂いてもかまいません。</p>
+</li>
+</ul>
+<div class="section" id="s-id20">
+<span id="s-template-style"></span><h3>テンプレートのスタイル<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Django テンプレートコード内では、波括弧とタグコンテンツの間に 1 個 (1
+個だけ) スペースをいれて下さい。</p>
+<p>[正]:</p>
+<div class="highlight"><pre><span class="cp">{{</span> <span class="nv">foo</span> <span class="cp">}}</span>
+</pre></div>
+<p>[誤]:</p>
+<div class="highlight"><pre><span class="cp">{{</span><span class="nv">foo</span><span class="cp">}}</span>
+</pre></div>
+</li>
+</ul>
+</div>
+<div class="section" id="s-id21">
+<span id="s-view-style"></span><h3>ビューのスタイル<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Django のビューを書くときには、最初のパラメタは必ず <tt class="docutils literal"><span class="pre">request</span></tt> とい
+う名前にしてください。</p>
+<p>[正]:</p>
+<pre>def my_view(request, foo):
+    # ...</pre>
+<p>[誤]:</p>
+<pre>def my_view(req, foo):
+    # ...</pre>
+</li>
+</ul>
+</div>
+<div class="section" id="s-id22">
+<span id="s-model-style"></span><h3>モデルのスタイル<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">フィールド名は全て小文字で、キャメルケース (camelCase のような書き方)
+はせず、アンダースコアを使います。</p>
+<p>以下のような書き方をします:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+<p>以下のような書き方をしてはなりません:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">FirstName</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">Last_Name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">class</span> <span class="pre">Meta</span></tt> はフィールドの定義を書いた <em>後</em> に書きます。また、フィー
+ルド定義とクラス定義の間には一行空行を入れます。</p>
+<p>以下のように書きます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&#39;people&#39;</span>
+</pre></div>
+<p>以下のような書き方をしてはなりません:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&#39;people&#39;</span>
+</pre></div>
+<p>以下のような書き方もよくありません:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s">&#39;people&#39;</span>
+
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first">モデルの内部クラスや標準メソッドの順番は以下のようにします (ただし、
+どれも必須ではないので省略してもかまいません):</p>
+<ul class="simple">
+<li>全てのデータベースフィールド</li>
+<li><tt class="docutils literal"><span class="pre">class</span> <span class="pre">Meta</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">def</span> <span class="pre">__unicode__()</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">def</span> <span class="pre">__str__()</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">def</span> <span class="pre">save()</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">def</span> <span class="pre">get_absolute_url()</span></tt></li>
+<li>カスタムのメソッド定義</li>
+</ul>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">choices</span></tt> をモデルフィールドに定義する場合、選択肢は、各選択項目の
+タプルからなるタプルで定義します。定義はモデルモジュールの冒頭か、各
+モデルクラスのすぐ上に置き、全て大文字の変数名を付けます。例えば以下
+のようにします:</p>
+<div class="highlight"><pre><span class="n">GENDER_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="s">&#39;Male&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;Female&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-id23">
+<span id="s-documentation-style"></span><h2>ドキュメントの形式<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+<p>私達は、ドキュメントの一貫性と読みやすさをとても重視しています (なんといっ
+ても、 Django はジャーナリズムの中で生まれましたからね！)</p>
+<p>_How to document new features:</p>
+<div class="section" id="s-id24">
+<h3>新たな機能のドキュメント化<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p>私達は、ドキュメントをコードと同じように扱います。すなわち、可能な限り改善
+を重ねたいと思っているのです。この節では、ドキュメントの書き手に、有意義で
+エラーの少ないドキュメントの変更方法を説明します。</p>
+<p>ドキュメントの変更には、二つの形式があります:</p>
+<ul class="simple">
+<li>一般的な改善 -- タイプミス、誤った内容の修正、明確な文章への修正や、
+例題の追加です。</li>
+<li>新たな機能説明 -- 前回のリリース以降に追加された機能のドキュメントで
+す。</li>
+</ul>
+<p>私達はドキュメントを以下のポリシに従って作成しています:</p>
+<blockquote>
+<strong>新たな機能に関するドキュメントを追加する場合、必ず該当機能が開発版の
+Django でのみ使用可能な旨を明記せねばなりません。ドキュメントの読み手は、
+開発版ではなく、最新のリリースを使っていると想定してください。</strong></blockquote>
+<p>新しい機能を説明するときには、ドキュメントの先頭に &quot;.. versionadded:: X.Y&quot;
+を付加します。オプションで一行コメントを入れることもできます。
+&quot;.. versionadded:: X.Y&quot; の後には必ず空行を入れてください。</p>
+<p>一般的な改善や API の変更は、 &quot;.. versionchanged:: X.Y&quot; ディレクティブで強
+調します（フォーマットは <tt class="docutils literal"><span class="pre">versionadded</span></tt> と同じです）。</p>
+</div>
+<div class="section" id="s-rest">
+<span id="s-guidelines-for-rest-files"></span><h3>ReST ファイル作成のガイドライン<a class="headerlink" href="#rest" title="Permalink to this headline">¶</a></h3>
+<p>私達は、 ReST ドキュメントを作成するときに、以下のガイドラインに従っていま
+す:</p>
+<ul class="simple">
+<li>章や節の題名では、最初の文字と適切な名前のみ大文字で書きます。</li>
+<li>ドキュメントは幅 80 文字以内で折り返します。ただし、コード例を示す際に
+複数行に分けると著しく読みにくくなる場合や、その他妥当な理由がある場合
+は例外です。</li>
+</ul>
+</div>
+<div class="section" id="s-id25">
+<span id="s-commonly-used-terms"></span><h3>よく使う用語<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<p>ドキュメント中でよく使われる用語の書き方を以下に示します:</p>
+<ul class="simple">
+<li><strong>Django</strong> -- フレームワークそのものを指す場合には、頭文字を大文字にし
+ます。 Python コード中や djangoproject.com のロゴでは小文字です。</li>
+<li><strong>e-mail</strong> -- ハイフンを入れます。(和訳では「メール」と書いています)</li>
+<li><strong>MySQL</strong></li>
+<li><strong>PostgreSQL</strong></li>
+<li><strong>Python</strong> -- 言語そのものを指す場合には頭文字を大文字にします。</li>
+<li><strong>realize</strong>, <strong>customize</strong>, <strong>initialize</strong>, etc. -- &quot;-ise&quot; ではなく、ア
+メリカ語表記です。</li>
+<li><strong>SQLite</strong></li>
+<li><strong>subclass</strong> -- 動詞、名詞を問わず、ハイフンを入れず一つの単語で表しま
+す。</li>
+<li><strong>Web</strong>, <strong>World Wide Web</strong>, <strong>the Web</strong> -- ワールドワイドウェブを指す
+場合には、常に Web の W は大文字です。<ul>
+<li><strong>Web site</strong> -- Web を大文字にして、二つの単語を繋げません。</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="s-id26">
+<span id="s-django-specific-terminology"></span><h3>Django 固有の用語<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>model</strong> -- 頭文字は小文字です。</li>
+<li><strong>template</strong> -- 頭文字は小文字です。</li>
+<li><strong>URLconf</strong> -- &quot;URL&quot; は大文字、 &quot;conf&quot; は小文字です。</li>
+<li><strong>view</strong> -- 頭文字は小文字です。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-commit">
+<span id="s-committing-code"></span><h2>コードの commit<a class="headerlink" href="#commit" title="Permalink to this headline">¶</a></h2>
+<p>Django の Subversion リポジトリにコードをコミットする場合には以下のガイドラ
+インに従って下さい:</p>
+<ul>
+<li><p class="first">中規模から大規模な変更 (「中規模から大規模」の判断は各自に任せます)
+の際には、変更前に <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> メーリングリストに相談を持ち
+込んで下さい。</p>
+<p><a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> に持ち込んだ話題に対して返事がなかった場合、自分
+のアイデアが素晴らしく、すぐにでも実装すべきだと皆が思ったため誰も何
+も言わないのだと勘違いしないでください。 Django の開発指揮者はメーリ
+ングリストの議論にすぐに割ける時間を持ち合わせていないので、返事には
+数日待たねばならない場合もあるのです。</p>
+</li>
+<li><p class="first">詳しいコミットメッセージを過去形で書いて下さい。現在形を使ってはなり
+ません。</p>
+<ul class="simple">
+<li>良い例: &quot;Fixed Unicode bug in RSS API.&quot;</li>
+<li>悪い例: &quot;Fixes Unicode bug in RSS API.&quot;</li>
+<li>悪い例: &quot;Fixing Unicode bug in RSS API.&quot;</li>
+</ul>
+</li>
+<li><p class="first">ブランチにコミットする場合、コミットメッセージの先頭にブランチ名を付
+けて下さい。例えば &quot;magic-removal: Added support for mind reading.&quot;
+のようにします。</p>
+</li>
+<li><p class="first">意味のある変更のまとまりであるかぎり、できるだけ細かい変更に分けてコ
+ミットしてください。つまり、たまに大きなコミットをするのではなく、小
+さなコミットを頻繁に行うようにしてください。例えば、機能 X を実装して
+いて、その機能の実現にライブラリ Y の修正が必要なら、まず Y の修正を
+コミットして、次に X を別にコミットしてください。これだけで、 Django
+のコア開発者全員が変更を追うための <em>大きな</em> 助けになります。</p>
+</li>
+<li><p class="first">コミットによって Django <a class="reference external" href="http://code.djangoproject.com/newticket">チケットトラッカ</a> の何らかのチケットをクロー
+ズする場合、コミットメッセージの先頭に &quot;Fixed #abc&quot; というメッセージ
+を入れて下さい。 &quot;abc&quot; はコミットによって修正されるチケットの番号です。
+例えば &quot;Fixed # 123 -- Added support for foo&quot; のようにします。私達は
+Subversion と Trac を結びつけているので、この形式のメッセージを使って
+commit した場合、関連するチケットを自動的にクローズし、完全なコミット
+メッセージをコメントとしてチケットに追加します。</p>
+<p>コミットによってブランチのチケットをクローズする場合、ブランチ名を先
+にもってきます。例えば
+&quot;magic-removal: Fixed #123 -- Added whizbang feature.&quot; のようにします。</p>
+<p>ちなみに、この機能は <a class="reference external" href="http://trac.edgewall.org/browser/trunk/contrib/trac-post-commit-hook">Trac の post-commit フック</a> で実現しています。</p>
+</li>
+<li><p class="first">コミットメッセージで Django <a class="reference external" href="http://code.djangoproject.com/newticket">チケットトラッカ</a> の何らかのチケットを
+参照し、かつチケットを <em>閉じない</em> 場合、 &quot;Refs #abc&quot; というフレーズを
+入れて下さい。 &quot;abc&quot; はコミットで参照しているチケットの番号です。私達
+は Subversion と Trac を結びつけているので、この形式のメッセージを使っ
+て commit した場合、関連するチケットに完全なコミットメッセージをコメ
+ントとして追加します。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="s-id27">
+<span id="s-unit-tests"></span><h2>単体テストの作成<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<p>Django には独自のテストスイートが付属しています。テストは tarball 内の
+<tt class="docutils literal"><span class="pre">test</span></tt> ディレクトリ下にあります。ポリシとして、常に全てのテストがパスする
+ようにしています。</p>
+<p>テストでは以下の項目をカバーしています:</p>
+<ul class="simple">
+<li>モデル API とデータベース API (<tt class="docutils literal"><span class="pre">tests/modeltests/</span></tt>)。</li>
+<li>その他、Django のコア内にあるテスト (<tt class="docutils literal"><span class="pre">tests/regressiontests</span></tt>)</li>
+<li>contrib アプリケーション (<tt class="docutils literal"><span class="pre">django/contrib/&lt;contribapp&gt;/tests</span></tt>, 下記
+参照)</li>
+</ul>
+<p>テストスイートに対する協力は何でも歓迎します!</p>
+<p>Django のテストは全て、 Django に付属のアプリケーションテストインフラを使っ
+ています。テストの書き方の詳細は
+<a class="reference external" href="../topics/testing.html#topics-testing"><em>Django アプリケーションのテスト</em></a> を参照してください。</p>
+<div class="section" id="s-id28">
+<span id="s-running-the-unit-tests"></span><h3>単体テストの実行<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<p>テストを実行するには、 <tt class="docutils literal"><span class="pre">tests/</span></tt> ディレクトリ下に移って以下のように入力し
+ます:</p>
+<div class="highlight"><pre>./runtests.py --settings<span class="o">=</span>path.to.django.settings
+</pre></div>
+<p>そうです。テストには設定モジュールが必要です。とはいえ、必要なのは
+<a class="reference external" href="../ref/settings.html#setting-DATABASE_ENGINE"><tt class="xref docutils literal"><span class="pre">DATABASE_ENGINE</span></tt></a> を含むデータベース接続に関する情報です。また、全
+てのテストをパスするには、 <a class="reference external" href="../ref/settings.html#setting-ROOT_URLCONF"><tt class="xref docutils literal"><span class="pre">ROOT_URLCONF</span></tt></a> 設定 (この値は単にあれば
+よいだけで、内容は無視されます) を指定しておかねばなりません。</p>
+<p><tt class="docutils literal"><span class="pre">sqlite3</span></tt> バックエンドを使っているなら、設定はこれだけで十分です。一時デー
+タベースはテスト実行時にメモリ上に生成されます。</p>
+<p><tt class="docutils literal"><span class="pre">sqlite3</span></tt> 以外のバックエンドを使っている場合は、以下のような設定が必要で
+す:</p>
+<ul class="simple">
+<li><a class="reference external" href="../ref/settings.html#setting-DATABASE_USER"><tt class="xref docutils literal"><span class="pre">DATABASE_USER</span></tt></a> を、対象データベースに存在するユーザ名に設定
+する必要があります。</li>
+<li><a class="reference external" href="../ref/settings.html#setting-DATABASE_NAME"><tt class="xref docutils literal"><span class="pre">DATABASE_NAME</span></tt></a> を、実際に存在して、かつユーザが接続可能なデー
+タベースの名前に設定せねばなりません。ただし、ユニットテストはこのデー
+タベースを操作しません。テストランナは、  <a class="reference external" href="../ref/settings.html#setting-DATABASE_NAME"><tt class="xref docutils literal"><span class="pre">DATABASE_NAME</span></tt></a>
+の前に <tt class="docutils literal"><span class="pre">test_</span></tt> を付けた新たなデータベースを作成し、テスト終了後にこ
+のデータベースを削除します。従って、データベースユーザには、
+<tt class="docutils literal"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></tt> を実行する権限がなければなりません。</li>
+</ul>
+<p>また、データベースのデフォルト文字セットを UTF-8 にしているか確認してくださ
+い。データベースサーバのデフォルト文字セットが UTF-8 に設定されていないのな
+ら、 <a class="reference external" href="../ref/settings.html#setting-TEST_DATABASE_CHARSET"><tt class="xref docutils literal"><span class="pre">TEST_DATABASE_CHARSET</span></tt></a> に文字セットを指定する必要があります。</p>
+<p>テストを全て実行したければ、以下の依存モジュール全てをインストールしておく
+必要があります:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://pyyaml.org/wiki/PyYAML">PyYAML</a></li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/Markdown/1.7">Markdown</a></li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/textile">Textile</a></li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/docutils/0.4">Docutils</a></li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/setuptools/">setuptools</a></li>
+</ul>
+<p>これらの依存モジュールはなくても構いませんが、インストールされていなければ、
+関連するテストは飛ばして実行されます。</p>
+<p>ユニットテストの一部（サブセット）を実行したい場合は、 <tt class="docutils literal"><span class="pre">runtest.py</span></tt> コマ
+ンドラインの後にテストモジュールの名前を追加してください。モジュール名は、
+<tt class="docutils literal"><span class="pre">tests/modeltests</span></tt> および <tt class="docutils literal"><span class="pre">tests/regressiontests</span></tt> 以下のディレクトリ名
+を参照してください。</p>
+<p>例えば、 Django が <tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> 上になく、 <tt class="docutils literal"><span class="pre">settings.py</span></tt> が <tt class="docutils literal"><span class="pre">tests/</span></tt>
+ディレクトリにある場合で、汎用リレーション (generic relation) と国際化
+(internationalization) だけをテストしたければ、以下のようにタイプします:</p>
+<div class="highlight"><pre><span class="nv">PYTHONPATH</span><span class="o">=</span>..
+./runtests.py --settings<span class="o">=</span>settings generic_relations i18n
+</pre></div>
+</div>
+<div class="section" id="s-contrib">
+<span id="s-contrib-apps"></span><h3>contrib アプリケーション<a class="headerlink" href="#contrib" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">django/contrib</span></tt> 以下のアプリケーションのテストは、 <tt class="docutils literal"><span class="pre">django/contrib/</span></tt>
+以下のそれぞれのディレクトリ下にある <tt class="docutils literal"><span class="pre">test.py</span></tt> に収められています。
+(テストを複数のモジュールに分割したければ、 <tt class="docutils literal"><span class="pre">tests</span></tt> ディレクトリを使って
+ください。)</p>
+<p>アプリケーションのテストを見つけさせるには、アプリケーション内に
+<tt class="docutils literal"><span class="pre">models.py</span></tt> を入れていなければなりません (ファイルは空でもかまいません)。
+URL をマップする必要があるのなら、 <tt class="docutils literal"><span class="pre">tests/urls.py</span></tt> を入れてください。</p>
+<p>特定の contrib アプリケーション (例えば <tt class="docutils literal"><span class="pre">markup</span></tt>) だけをテストするには、
+上で述べたのと同じ方法を使います:</p>
+<div class="highlight"><pre>./runtests.py --settings<span class="o">=</span>settings markup
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-id29">
+<span id="s-requesting-features"></span><h2>機能に関する要望<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<p>私達は常に Django を改良しようと努めています。その中で、皆さんから寄せられ
+る要望は一つの鍵になっています。効果的に要望を出すコツをいくつか紹介してお
+きます:</p>
+<ul class="simple">
+<li>チケットトラッカではなく、 <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> に要望を出して下さい。
+メーリングリストの方が多くの人の目に触れやすいからです。</li>
+<li>不足している機能と、それをどのように実装すればよいと思っているかを、
+すっきりと、かつ詳細に説明してください。可能ならサンプルコード (実際
+に動かなくても構いません) をつけてください。</li>
+<li><em>なぜ</em> その機能を取り入れたいのかを説明してください。自明な場合もあり
+ますが、 Django は実際の開発者が実際の仕事に使うために設計されている
+ので、ある機能がどのようにユーザの役に立つのかを説明する必要がありま
+す。</li>
+</ul>
+<p>ほとんどのオープンソースプロジェクトと同じく、コードは大きな説明力を持って
+います。追加したい機能のコードを書く意志があるか、(さらに望ましいのは) すで
+に書き上げているのなら、ずっと受け入れられやすくなるでしょう。大がかりな機
+能で、複数の開発者が必要になりそうなら、いつでも喜んで実験用ブランチをリポ
+ジトリに作成します。詳しくは次節を参照してください。</p>
+</div>
+<div class="section" id="s-id30">
+<span id="s-branch-policy"></span><h2>ブランチの管理ポリシ<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
+<p>一般に、ほとんどの開発は trunk で行われており、 trunk は安定に保たれていま
+す。 trunk のコードは、いついかなるときでも実運用サイトを動作させられなけれ
+ばなりません。</p>
+<p>このため、大規模なアーキテクチャ上の変更、一つのパッチに収まらないくらい大
+きな変更を伴う場合や、多くの人が関わる必要のある変更の場合には、専用のブラ
+ンチを作成します。例えば <a class="reference external" href="http://code.djangoproject.com/browser/django/branches/i18n">i18n ブランチ</a> を見てください。この手の変更を行
+いたいと考えていて、作業をしたい場合には、 <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> でブランチ
+を作成してもらうよう問い合わせて下さい。変更を試すのに必要な文だけのブラン
+チを作成します。</p>
+<p>ツリーの一部にしか作業しない場合でも、常に Django ツリー全体のブランチを作
+成します。これはブランチへのスイッチ作業を苦痛なく行えるようにするためです。</p>
+<p>ブランチで作業している開発者は、 trunk の変更を定期的にブランチにマージせね
+ばなりません。少なくとも週に一度はマージしてください。 trunk からマージを行
+う度に、マージとリビジョン番号を commit メッセージに記載してください。</p>
+<p>ブランチが安定していて、 trunk へのマージ準備が完了したら、
+<a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> にアラートを投稿します。</p>
+<p>あるブランチがマージされると、そのブランチは「死んだ」ものとみなされます。
+死んだブランチには書き込めなくなり、古いブランチは定期的に「刈り取られ」
+ます。 SVN への世話焼きを最小限にするため、ブランチから trunk へのマージは
+一度しか行いません。</p>
+<div class="section" id="s-id31">
+<span id="s-using-branches"></span><h3>ブランチを使う<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<p>ブランチをテストするには、二つの作業が必要です:</p>
+<ul class="simple">
+<li>該当するブランチのコードを Subversion から取得します。</li>
+<li>Python の site-package ディレクトリが、該当ブランチの <tt class="docutils literal"><span class="pre">django</span></tt>
+を含むように設定します。</li>
+</ul>
+<div class="section" id="s-subversion">
+<span id="s-getting-the-code-from-subversion"></span><h4>Subversion からコードを取り出す<a class="headerlink" href="#subversion" title="Permalink to this headline">¶</a></h4>
+<p>ブランチコードの最新版を入手するには Subversion を使います:</p>
+<div class="highlight"><pre>svn co http://code.djangoproject.com/svn/django/branches/&lt;branch&gt;/
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">&lt;branch&gt;</span></tt> はブランチの名前です。ブランチの名前については
+<a class="reference external" href="http://code.djangoproject.com/browser/django/branches">ブランチ名一覧</a>
+を参照してください。</p>
+<p>既存の Django を Subversion からソースコードをチェックアウトして使っている
+場合には、ディレクトリ全体を特定のバージョンに自動的に変換できます。
+<tt class="docutils literal"><span class="pre">django</span></tt> ディレクトリの下で以下のコマンドを実行してください:</p>
+<div class="highlight"><pre>svn switch http://code.djangoproject.com/svn/django/branches/&lt;branch&gt;/
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">svn</span> <span class="pre">co</span></tt> ではなく <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">switch</span></tt> を使う利点は、 <tt class="docutils literal"><span class="pre">switch</span></tt> コマンドを使っ
+た場合、ローカルコピー上で既に変更済みの内容についてはファイルを変更しない
+点にあります。 <tt class="docutils literal"><span class="pre">switch</span></tt> はローカルコピー上の変更を &quot;スイッチ先の&quot; コード
+にマージします。 <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">switch</span></tt> には欠点もあります。それは、ローカルコピー
+上でコードに変更を加えた場合、スイッチ先のコードにも同じ部分に変更があると
+衝突するという問題です。</p>
+<p>(<tt class="docutils literal"><span class="pre">svn</span> <span class="pre">switch</span></tt> を使う場合には、次の節で述べるような、Pythonのモジュール検
+索パスを変更する操作は必要ありません。)</p>
+</div>
+<div class="section" id="s-python-django">
+<span id="s-pointing-python-at-the-new-django-version"></span><h4>Python に別のバージョンの Django を使わせる<a class="headerlink" href="#python-django" title="Permalink to this headline">¶</a></h4>
+<p>ブランチのコードを取り出したら、ブランチの <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリ
+の構成を変更して、ブランチ版の <tt class="docutils literal"><span class="pre">django</span></tt> ディレクトリを使えるようにする必
+要があります。
+(<tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリは <tt class="docutils literal"><span class="pre">/usr/lib/python2.4/site-packages</span></tt> や
+<tt class="docutils literal"><span class="pre">/usr/local/lib/python2.4/site-packages</span></tt>, <tt class="docutils literal"><span class="pre">C:\Python\site-packages</span></tt>
+などにあります。)</p>
+<p>もっとも簡単な方法は、元の <tt class="docutils literal"><span class="pre">django</span></tt> ディレクトリを <tt class="docutils literal"><span class="pre">django.OLD</span></tt> のよう
+な別の名前に変えて、 trunk などから取り出したバージョンのコードをコピーし、
+名前を <tt class="docutils literal"><span class="pre">django</span></tt> に変更します。</p>
+<p>別の方法として、 <tt class="docutils literal"><span class="pre">django</span></tt> と言う名前のシンボリックリンクを作成して、特定
+のブランチの <tt class="docutils literal"><span class="pre">django</span></tt> パッケージの場所を指すという方法もあります。元に戻
+したい場合には、シンボリックリンクが元のコードを指すように変更しなおすだけ
+です。</p>
+<p>第三の方法は、
+<a class="reference external" href="http://python.jp/doc/release/lib/module-site.html">パスファイル</a>
+(<tt class="docutils literal"><span class="pre">&lt;something&gt;.pth</span></tt>) を使うというものです。この方法は、 (シンボリックリン
+クを使えない Windows を含む) 全てのシステムで利用できます。まず、
+<tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリに、 <tt class="docutils literal"><span class="pre">django</span></tt> という名前のファイルやディレ
+クトリ、シンボリックリンクがない状態にしてください。次に、 <tt class="docutils literal"><span class="pre">django.pth</span></tt>
+という名前のテキストファイルを作成して、 <tt class="docutils literal"><span class="pre">site-packages</span></tt> ディレクトリの直
+下に保存します。このファイルには、使いたい Django の置かれているパスを一行
+で記述します。コメントを追加しても構いません。複数のブランチを指定できるよ
+うにしたパスファイルの例を以下似示します。特定のブランチ (例えば 'trunk')
+を使いたい場合、その行のコメントを解除して、他の行を全てコメント化します:</p>
+<pre># トランク (trunk): svn リポジトリの
+#   http://code.djangoproject.com/svn/django/trunk/
+# からチェックアウトしたもの
+#
+/path/to/trunk
+
+# ブランチ (branch): ブランチ名 &lt;branch&gt; を svn リポジトリの
+#   http://code.djangoproject.com/svn/django/branches/&lt;branch&gt;/
+# からチェックアウトしたもの
+#
+#/path/to/&lt;branch&gt;
+
+# Windows の場合は以下のような形式にします:
+# C:/path/to/&lt;branch&gt;</pre>
+<p>Django 0.95 やそれ以前のバージョンをインストールしていて、インストールに
+<tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> を使った場合、 <tt class="docutils literal"><span class="pre">django</span></tt> ではなく
+<tt class="docutils literal"><span class="pre">Django-0.95-py2.4.egg</span></tt> といった名前のディレクトリになっているでしょう。
+この場合、 <tt class="docutils literal"><span class="pre">setuptools.pth</span></tt> を編集して、該当する Django の <tt class="docutils literal"><span class="pre">.egg</span></tt>
+の書かれた行を削除してから、 <tt class="docutils literal"><span class="pre">django</span></tt> のブランチを <tt class="docutils literal"><span class="pre">site-packages</span></tt> にコ
+ピーします。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-id35">
+<span id="s-id34"></span><span id="s-official-releases"></span><h2>公式リリース<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h2>
+<p>Django のリリース番号は以下のようにして付けられます:</p>
+<ul>
+<li><p class="first">バージョンは <tt class="docutils literal"><span class="pre">A.B</span></tt> または <tt class="docutils literal"><span class="pre">A.B.C</span></tt> という形式でつけられます。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">A</span></tt> はメジャーバージョン番号で、増えるのは Django に重大な変更が加
+えられ、変更が必ずしも以前のバージョンと互換でない場合だけです。従っ
+て、 Django 6.0 で動いたコードは Django 7.0 では動かなくなるかもしれ
+ません。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">B</span></tt> はマイナーバージョン番号で、比較的大きいながらも後方互換性を保っ
+た変更の際に増えます。 Django 6.4 向けに書かれたコードは Django 6.5
+でも動作するでしょう。</p>
+<p>マイナーリリースでは、以前のリリースの特定の機能を撤廃することがあり
+ます。バージョン <tt class="docutils literal"><span class="pre">A.B</span></tt> の機能が撤廃された場合、撤廃された機能は
+<tt class="docutils literal"><span class="pre">A.B+1</span></tt> では動作します。 <tt class="docutils literal"><span class="pre">A.B+2</span></tt> では
+<tt class="docutils literal"><span class="pre">PendingDeprecationWarning</span></tt> 警告を送出しますが動作します。
+<tt class="docutils literal"><span class="pre">A.B+3</span></tt> では完全に機能を削除します。メジャーポイントリリースでは撤
+廃済みの仕様を全て削除します。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">C</span></tt> はマイクロバージョンで、バグやセキュリティ修正の度に増えます。
+マイクロバージョンは以前のマイクロバージョンと 100% 後方互換性を保ち
+ます。</p>
+</li>
+<li><p class="first">場合によってはリリース候補 (release candidate) を作成します。リリース
+候補のバージョン番号は  <tt class="docutils literal"><span class="pre">A.BrcN</span></tt> の形式で、 <tt class="docutils literal"><span class="pre">A.B</span></tt> の <tt class="docutils literal"><span class="pre">N</span></tt> 番目の
+リリース候補であることを表します。</p>
+</li>
+</ul>
+<p>以上のバージョン番号スキームの例外として、1.0 以前の Django のコード
+があります。 1.0 リリース以前のコードでは、後方互換性を全く保証していません。</p>
+<p>Subversion 上では、 Django の各リリースは <cite>tags/releases_</cite> でタグづけされて
+います。trunk 由来ではないバグフィクスリリースやセキュリティ修正リリースを
+出す必要画ある場合、該当リリースは  <tt class="docutils literal"><span class="pre">branches/releases</span></tt> にコピーされ、
+バグフィクスリリースになります。</p>
+</div>
+<div class="section" id="s-id36">
+<span id="s-deciding-on-features"></span><h2>仕様に関する決定<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h2>
+<p>ある仕様の要望が出て議論が始まると、そのうち仕様を取り入れるべきか棄却すべ
+きかという決定をせねばなりません。</p>
+<p>私達は、可能な場合はいつでもまずおおまかな合意を形成しようと試みます。その
+後、たいていは <a class="reference external" href="http://groups.google.com/group/django-developers">django-developers</a> において、その機能について正式でない投
+票を行います。投票では、 Apache や Python で使われている形式を採用しており、
+投票は +1, +0, -0, or -1 のいずれかを用いて行います。これらの票の大雑把な解
+釈は以下の通りです:</p>
+<ul class="simple">
+<li>+1: &quot;これはいい。強く同意します (I love the idea and I'm strongly
+committed to it.)&quot;</li>
+<li>+0: &quot;いいんじゃないかな (Sounds OK to me.)&quot;</li>
+<li>-0: &quot;あまりわくわくしないが、反対もしない (I'm not thrilled, but I
+won't stand in the way.)&quot;</li>
+<li>-1: &quot;強く反対。このアイデアが実現したらとても嫌 (I strongly disagree
+and would be very unhappy to see the idea turn into reality.)&quot;</li>
+</ul>
+<p>django-developers での投票は正式なものではありませんが、その結果は真摯に受
+け止められます。適切な投票期間を経て、明らかな合意を形成できた場合には、投
+票の決定に従うでしょう。</p>
+<p>とはいえ、つねに合意を形成できるわけではありません。その場合、完全コミッタ
+全員の中で十分に議論を重ねた後、最終判断を慈悲深き終身独裁者 (Benevolent
+Dictators for Life) である Adrian と Jacob に委ねることとします。</p>
+</div>
+<div class="section" id="s-id37">
+<span id="s-commit-access"></span><h2>commit 権限<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h2>
+<p>Django プロジェクトには二種類のコミッタがいます:</p>
+<dl class="docutils">
+<dt>完全コミッタ (full committers)</dt>
+<dd><p class="first">長期間にわたって Django のコードベースに貢献してきており、メーリングリ
+ストにおいても礼儀正しく親切で、 Django の開発に十分な時間を割けること
+が分かっている人達です。</p>
+<p class="last">完全な commit 権限者の敷居は極めて高いものです。全ての完全コミッタによ
+る全会一致でのみ受け入れることとし、その決定は覆りません。</p>
+</dd>
+<dt>部分コミッタ (partial committers)</dt>
+<dd><p class="first">「個別領域のエキスパート」です。管轄下にあるサブシステムのコードに直接
+チェックインする権限を持ち、サブシステムの懸案事項に対する正式な投票権
+を持ちます。このタイプの権限は、 Django の大きなサブフレームワーク
+に貢献し、継続してメンテナンスを続けたい人に与えられるものです。</p>
+<p class="last">完全コミッタと同様、部分コミッタの受け入れも全ての完全コミッタ (と同じ
+領域の部分コミッタ) による全会一致でのみ受け入れることとします。とはい
+え、敷居はやや低く、個別領域で十分な専門性を示しているということで十分
+です。</p>
+</dd>
+</dl>
+<p>コミット権限を得たければ、現在コミッタを勤めているだれかに個人的にコンタク
+トしてください。コミット権限を公の場でリクエストするのはフレームの元であり、
+一切無視します。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django プロジェクトに協力するために</a><ul>
+<li><a class="reference external" href="#id3">バグの報告</a></li>
+<li><a class="reference external" href="#id5">セキュリティ問題の報告</a></li>
+<li><a class="reference external" href="#id6">パッチの提出</a><ul>
+<li><a class="reference external" href="#id7">チケットをクレーム（審査請求）する</a><ul>
+<li><a class="reference external" href="#id9">チケットをクレームしたら</a></li>
+<li><a class="reference external" href="#id10">どのチケットをクレームすべきか</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id11">パッチ形式</a></li>
+<li><a class="reference external" href="#id12">重要パッチ</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id13">チケットのトリアージ</a><ul>
+<li><a class="reference external" href="#id17">一般コミュニティメンバによるトリアージ</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id18">翻訳の提出と維持</a></li>
+<li><a class="reference external" href="#id19">コーディングスタイル</a><ul>
+<li><a class="reference external" href="#id20">テンプレートのスタイル</a></li>
+<li><a class="reference external" href="#id21">ビューのスタイル</a></li>
+<li><a class="reference external" href="#id22">モデルのスタイル</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id23">ドキュメントの形式</a><ul>
+<li><a class="reference external" href="#id24">新たな機能のドキュメント化</a></li>
+<li><a class="reference external" href="#rest">ReST ファイル作成のガイドライン</a></li>
+<li><a class="reference external" href="#id25">よく使う用語</a></li>
+<li><a class="reference external" href="#id26">Django 固有の用語</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#commit">コードの commit</a></li>
+<li><a class="reference external" href="#id27">単体テストの作成</a><ul>
+<li><a class="reference external" href="#id28">単体テストの実行</a></li>
+<li><a class="reference external" href="#contrib">contrib アプリケーション</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id29">機能に関する要望</a></li>
+<li><a class="reference external" href="#id30">ブランチの管理ポリシ</a><ul>
+<li><a class="reference external" href="#id31">ブランチを使う</a><ul>
+<li><a class="reference external" href="#subversion">Subversion からコードを取り出す</a></li>
+<li><a class="reference external" href="#python-django">Python に別のバージョンの Django を使わせる</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference external" href="#id35">公式リリース</a></li>
+<li><a class="reference external" href="#id36">仕様に関する決定</a></li>
+<li><a class="reference external" href="#id37">commit 権限</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">Django の内部</a></li>
+    
+    
+      <li>次: <a href="documentation.html">How the Django documentation works</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">Django の内部</a>
+        
+        <ul><li>Django プロジェクトに協力するために</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/internals/contributing.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="Django の内部">前へ</a> 
+     |
+    <a href="index.html" title="Django の内部" accesskey="U">上へ</a>
+   |
+    <a href="documentation.html" title="How the Django documentation works">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
