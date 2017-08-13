@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sitemaps フレームワーク &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="&#8220;sites&#8221; フレームワーク" href="sites.html" />
+    <link rel="prev" title="redirects アプリケーション" href="redirects.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="redirects.html" title="redirects アプリケーション">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="sites.html" title="&amp;#8220;sites&amp;#8221; フレームワーク">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-sitemaps">
+            
+  
+  <div class="section" id="s-module-django.contrib.sitemaps">
+<span id="s-ref-contrib-sitemaps"></span><h1>sitemaps フレームワーク<a class="headerlink" href="#module-django.contrib.sitemaps" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django には、 <a class="reference external" href="http://www.sitemaps.org/">サイトマップ</a> XML ファイルを簡単に生成できる高水準
+のサイトマップ生成フレームワークが付属しています。</p>
+<div class="section" id="s-id2">
+<h2>概要<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>サイトマップ (sitemap) とは、自分のサイト上のページの更新頻度や特定のペー
+ジ間の「重要度」を検索エンジンのインデクサに対して知らせるために、Web サイ
+ト上に配置する XML ファイルです。この情報があると、検索エンジンがサイトのイ
+ンデクスを生成するときに役立ちます。</p>
+<p>Django のサイトマップフレームワークを使うと、この XML ファイルの情報を
+Python コードで表現でき、ファイルの生成を自動化できます。</p>
+<p>sitemaps は Django の <a class="reference external" href="syndication.html#ref-contrib-syndication"><em>配信フレームワーク</em></a>
+によく似ています。サイトマップの生成は簡単で、ただ <tt class="docutils literal"><span class="pre">Sitemap</span></tt> クラスを書い
+て、 <a class="reference external" href="../../topics/http/urls.html#topics-http-urls"><em>URLconf</em></a> に指定するだけです。</p>
+</div>
+<div class="section" id="s-id3">
+<h2>インストール<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>sitemaps アプリケーションは以下の手順でインストールします:</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> 設定に <tt class="docutils literal"><span class="pre">'django.contrib.sitemaps'</span></tt> を加
+えます。</li>
+<li><a class="reference external" href="../settings.html#setting-TEMPLATE_LOADERS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_LOADERS</span></tt></a> 設定に、
+<tt class="docutils literal"><span class="pre">'django.template.loaders.app_directories.load_template_source'</span></tt>
+が入っているか確かめます。デフォルトの設定ファイルには入っているので、
+注意が必要なのは設定を変更している時だけです。</li>
+<li><a title="複数のウェブサイトを一つのデータベースと Django プロジェクト で操作できるようにします。" class="reference external" href="sites.html"><tt class="xref docutils literal"><span class="pre">sites</span> <span class="pre">フレームワーク</span></tt></a> をインストールし
+ておいてください。</li>
+</ol>
+<p>(注意: sitemaps アプリケーションは、データベースに何らテーブルをインストール
+しません。 <a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> に <tt class="docutils literal"><span class="pre">sitemaps</span></tt> を入れておかねばならな
+いのは、
+<tt class="xref docutils literal"><span class="pre">load_template_source()</span></tt> テン
+プレートローダがデフォルトのテンプレートを捜し出せるようにするためです。)</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-initialization"></span><h2>初期化<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>自分の Django サイト上でサイトマップ生成を行わせるには、
+<a class="reference external" href="../../topics/http/urls.html#topics-http-urls"><em>URLconf</em></a> に以下の行を追加します:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^sitemap.xml$&#39;</span><span class="p">,</span> <span class="s">&#39;django.contrib.sitemaps.views.sitemap&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sitemaps&#39;</span><span class="p">:</span> <span class="n">sitemaps</span><span class="p">})</span>
+</pre></div>
+<p>これで、 Django はクライアントが <tt class="docutils literal"><span class="pre">/sitemap.xml</span></tt> にアクセスしたときに
+サイトマップを生成するようになります。</p>
+<p>サイトマップファイルの名前はさして重要ではありませんが、ファイルの場所は重
+要です。検索エンジンは、サイトマップ内のリンクをインデクス化する際、ファイ
+ルの置かれている URL レベルとその下のリンクしかたどりません。例えば、
+<tt class="docutils literal"><span class="pre">sitemap.xml</span></tt> がルートディレクトリ下にあれば、 Google はサイト上の全
+ての URL を参照します。一方、サイトマップの場所が
+<tt class="docutils literal"><span class="pre">/content/sitemap.xml</span></tt> であれば、 <tt class="docutils literal"><span class="pre">/content/</span></tt> で始まる URL しか
+参照しません。</p>
+<p>ビュー関数 <tt class="docutils literal"><span class="pre">sitemap()</span></tt> には、必須の引数 <tt class="docutils literal"><span class="pre">{'sitemaps':</span> <span class="pre">sitemaps}</span></tt> があり
+ます。 <tt class="docutils literal"><span class="pre">sitemaps</span></tt> はセクションラベル (例えば <tt class="docutils literal"><span class="pre">blog</span></tt> や <tt class="docutils literal"><span class="pre">news</span></tt>) を、
+<a title="django.contrib.sitemaps.Sitemap" class="reference internal" href="#django.contrib.sitemaps.Sitemap"><tt class="xref docutils literal"><span class="pre">Sitemap</span></tt></a> クラス (例えば <tt class="docutils literal"><span class="pre">BlogSitemap</span></tt> や
+<tt class="docutils literal"><span class="pre">NewsSitemap</span></tt>) に対応づける辞書にします。あるいは、
+<a title="django.contrib.sitemaps.Sitemap" class="reference internal" href="#django.contrib.sitemaps.Sitemap"><tt class="xref docutils literal"><span class="pre">Sitemap</span></tt></a> クラスの <em>インスタンス</em> (例えば
+<tt class="docutils literal"><span class="pre">BlogSitemap(some_bar)</span></tt>) でもかまいません。</p>
+</div>
+<div class="section" id="s-id5">
+<span id="s-sitemap-classes"></span><h2>Sitemap クラス<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p><a title="django.contrib.sitemaps.Sitemap" class="reference internal" href="#django.contrib.sitemaps.Sitemap"><tt class="xref docutils literal"><span class="pre">Sitemap</span></tt></a> クラスとは、サイトマップ上のエン
+トリの「セクション」を表現するための Python のクラスです。例えば、ある
+<a title="django.contrib.sitemaps.Sitemap" class="reference internal" href="#django.contrib.sitemaps.Sitemap"><tt class="xref docutils literal"><span class="pre">Sitemap</span></tt></a> クラスはブログ上の全てのエントリ
+を表し、別のクラスはイベントカレンダー上の全てのイベントを表現する、といっ
+た具合です。</p>
+<p>最も単純化すれば、全てのセクションは <tt class="docutils literal"><span class="pre">sitemap.xml</span></tt> という一つのファイ
+ルにまとめあげられることになります。とはいえ、 sitemaps フレームワークを使
+えば、各セクションごとに個別のサイトマップファイルがあるようなサイトマップ
+インデクスを生成できます (後述の <a class="reference internal" href="#id10">サイトマップインデクスを生成する</a> を参照
+してください)。</p>
+<p><a title="django.contrib.sitemaps.Sitemap" class="reference internal" href="#django.contrib.sitemaps.Sitemap"><tt class="xref docutils literal"><span class="pre">Sitemap</span></tt></a> クラスは
+<tt class="docutils literal"><span class="pre">django.contrib.sitemaps.Sitemap</span></tt> のサブクラスでなければなりません。クラ
+スはコードベースのどこに置いてもかまいません。</p>
+</div>
+<div class="section" id="s-id6">
+<span id="s-a-simple-example"></span><h2>簡単な例<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>ブログシステムを使っていて、 <tt class="docutils literal"><span class="pre">Entry</span></tt> というモデルがあるとしましょう。
+サイトマップに全てのブログエントリへのリンクを含めたければ、サイトマップク
+ラスは以下のようになります:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.sitemaps</span> <span class="kn">import</span> <span class="n">Sitemap</span>
+<span class="kn">from</span> <span class="nn">mysite.blog.models</span> <span class="kn">import</span> <span class="n">Entry</span>
+
+<span class="k">class</span> <span class="nc">BlogSitemap</span><span class="p">(</span><span class="n">Sitemap</span><span class="p">):</span>
+    <span class="n">changefreq</span> <span class="o">=</span> <span class="s">&quot;never&quot;</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">is_draft</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">lastmod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">pub_date</span>
+</pre></div>
+<p>注意点:</p>
+<ul class="simple">
+<li><a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq</span></tt></a> と <a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority</span></tt></a> はクラス属性
+で、それぞれ <tt class="docutils literal"><span class="pre">&lt;changefreq&gt;</span></tt> および <tt class="docutils literal"><span class="pre">&lt;priority&gt;</span></tt> エレメントに対応
+しています。これらの属性は、上の例の <a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod</span></tt></a> のよう
+に、メソッドとしても定義できます。</li>
+<li><a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> はオブジェクトのリストを返すだけのメソッドで
+す。このメソッドの返すオブジェクトは、サイトマップの各プロパティ
+(<a title="django.contrib.sitemaps.Sitemap.location" class="reference internal" href="#django.contrib.sitemaps.Sitemap.location"><tt class="xref docutils literal"><span class="pre">location</span></tt></a>, <a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod</span></tt></a>,
+<a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq</span></tt></a>, <a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority</span></tt></a>) に対応するメ
+ソッドに渡されます。</li>
+<li><a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod</span></tt></a> は Python の <tt class="docutils literal"><span class="pre">datetime</span></tt> オブジェクトを返さ
+ねばなりません。</li>
+<li>この例には <a title="django.contrib.sitemaps.Sitemap.location" class="reference internal" href="#django.contrib.sitemaps.Sitemap.location"><tt class="xref docutils literal"><span class="pre">location</span></tt></a> メソッドがありませんが、自分でメ
+ソッドを定義して、オブジェクトの URL を指定してもかまいません。デフォ
+ルトでは、 <a title="django.contrib.sitemaps.Sitemap.location" class="reference internal" href="#django.contrib.sitemaps.Sitemap.location"><tt class="xref docutils literal"><span class="pre">location()</span></tt></a> は各オブジェクトに対して
+<tt class="docutils literal"><span class="pre">get_absolute_url()</span></tt> を呼び出し、その結果を返します。</li>
+</ul>
+</div>
+<div class="section" id="s-id7">
+<span id="s-sitemap-class-reference"></span><h2>Sitemap クラスリファレンス<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.sitemaps.Sitemap">
+<!--[django.contrib.sitemaps.Sitemap]-->class <tt class="descname">Sitemap</tt><a class="headerlink" href="#django.contrib.sitemaps.Sitemap" title="Permalink to this definition">¶</a></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Sitemap</span></tt> のサブクラスでは、以下のメソッドや属性を定義できます:</p>
+<dl class="attribute">
+<dt id="django.contrib.sitemaps.Sitemap.items">
+<!--[django.contrib.sitemaps.Sitemap.items]--><tt class="descname">items</tt><a class="headerlink" href="#django.contrib.sitemaps.Sitemap.items" title="Permalink to this definition">¶</a></dt>
+<dd><strong>必須です。</strong> オブジェクトのリストを返すメソッドです。フレームワー
+クはオブジェクトの <em>型</em> が何であるかを問いません。重要なのは、オブ
+ジェクトが <a title="django.contrib.sitemaps.Sitemap.location" class="reference internal" href="#django.contrib.sitemaps.Sitemap.location"><tt class="xref docutils literal"><span class="pre">location()</span></tt></a>, <a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod()</span></tt></a>,
+<a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq()</span></tt></a>, <a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority()</span></tt></a> といった
+メソッドに渡されるという点だけです。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.contrib.sitemaps.Sitemap.location">
+<!--[django.contrib.sitemaps.Sitemap.location]--><tt class="descname">location</tt><a class="headerlink" href="#django.contrib.sitemaps.Sitemap.location" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>省略可能です。</strong> メソッドまたは属性です。</p>
+<p>メソッドとして定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返すオブジェ
+クトを引数にとり、オブジェクトに対する絶対 URLの文字列を計算して返
+さねばなりません。</p>
+<p>属性として定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返す
+<em>全てのオブジェクトに共通して</em> 使われる絶対 URL を表す文字列にしま
+す。</p>
+<p>いずれの場合も、「絶対 URL」とは、以下の例のようにプロトコルおよび
+ドメイン部を含まない URLを指します:</p>
+<ul class="simple">
+<li>正しい: <tt class="docutils literal"><span class="pre">'/foo/bar/'</span></tt></li>
+<li>誤り: <tt class="docutils literal"><span class="pre">'example.com/foo/bar/'</span></tt></li>
+<li>誤り: <tt class="docutils literal"><span class="pre">'http://example.com/foo/bar/'</span></tt></li>
+</ul>
+<p><a title="django.contrib.sitemaps.Sitemap.location" class="reference internal" href="#django.contrib.sitemaps.Sitemap.location"><tt class="xref docutils literal"><span class="pre">location</span></tt></a> を指定していない場合、フレームワークは
+<a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返す各オブジェクトに対して
+<tt class="docutils literal"><span class="pre">get_absolute_url()</span></tt> メソッドを呼び出します。</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.contrib.sitemaps.Sitemap.lastmod">
+<!--[django.contrib.sitemaps.Sitemap.lastmod]--><tt class="descname">lastmod</tt><a class="headerlink" href="#django.contrib.sitemaps.Sitemap.lastmod" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>省略可能です。</strong> メソッドまたは属性です。</p>
+<p>メソッドとして定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返すオブジェ
+クトを引数にとり、オブジェクトの最終更新日時を Python の
+<tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> オブジェクトで返さねばなりません。</p>
+<p>属性として定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返す
+<em>全てのオブジェクトに共通して</em> 使われるオブジェクトの最終更新日時を
+Python の <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> オブジェクトで返さねばなりません。</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.contrib.sitemaps.Sitemap.changefreq">
+<!--[django.contrib.sitemaps.Sitemap.changefreq]--><tt class="descname">changefreq</tt><a class="headerlink" href="#django.contrib.sitemaps.Sitemap.changefreq" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>省略可能です。</strong> メソッドまたは属性です。</p>
+<p>メソッドとして定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返すオブジェ
+クトを引数にとり、オブジェクトの更新頻度を Python の文字列型で返さ
+ねばなりません。</p>
+<p>属性として定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返す
+<em>全てのオブジェクトに共通して</em> 使われるオブジェクトの更新頻度を
+Python の文字列型で返さねばなりません。</p>
+<p>メソッド、属性を問わず、 <a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq</span></tt></a> の値は以下のい
+ずれかにします:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'always'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'hourly'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'daily'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'weekly'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'monthly'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'yearly'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'never'</span></tt></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="django.contrib.sitemaps.Sitemap.priority">
+<!--[django.contrib.sitemaps.Sitemap.priority]--><tt class="descname">priority</tt>()<a class="headerlink" href="#django.contrib.sitemaps.Sitemap.priority" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>省略可能です。</strong> メソッドまたは属性です。</p>
+<p>メソッドとして定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返すオブジェ
+クトを引数にとり、オブジェクトの重要度 (priority) を Python の文字
+列型か浮動小数型で返さねばなりません。</p>
+<p>属性として定義する場合、 <a title="django.contrib.sitemaps.Sitemap.items" class="reference internal" href="#django.contrib.sitemaps.Sitemap.items"><tt class="xref docutils literal"><span class="pre">items()</span></tt></a> の返す
+<em>全てのオブジェクトに共通して</em> 使われるオブジェクトの重要度を
+Python の文字列型か浮動小数型で返さねばなりません。</p>
+<p><a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority</span></tt></a> の値は <tt class="docutils literal"><span class="pre">0.4</span></tt> や <tt class="docutils literal"><span class="pre">1.0</span></tt> のようにします。
+デフォルトの重要度は <tt class="docutils literal"><span class="pre">0.5</span></tt> です。重要度の詳細は
+<a class="reference external" href="http://www.sitemaps.org/protocol.html#prioritydef">sitemaps.org のドキュメント</a> を参照してください。</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="s-id8">
+<span id="s-shortcuts"></span><h2>ショートカット<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>sitemaps フレームワークでは、よく使われる状況向けに、二つの便宜クラスを用意
+しています:</p>
+<dl class="class">
+<dt id="django.contrib.sitemaps.FlatPageSitemap">
+<!--[django.contrib.sitemaps.FlatPageSitemap]-->class <tt class="descname">FlatPageSitemap</tt><a class="headerlink" href="#django.contrib.sitemaps.FlatPageSitemap" title="Permalink to this definition">¶</a></dt>
+<dd><a title="django.contrib.sitemaps.FlatPageSitemap" class="reference internal" href="#django.contrib.sitemaps.FlatPageSitemap"><tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.FlatPageSitemap</span></tt></a> クラスは、現在の
+<a class="reference external" href="../settings.html#setting-SITE_ID"><tt class="xref docutils literal"><span class="pre">SITE_ID</span></tt></a> (<a title="複数のウェブサイトを一つのデータベースと Django プロジェクト で操作できるようにします。" class="reference external" href="sites.html"><tt class="xref docutils literal"><span class="pre">sites</span> <span class="pre">のドキュメント</span></tt></a>
+参照) 向けの全ての <a title="?フラットな? HTML コンテンツをデータベース上で管理するための 簡単なアプリケーションです。" class="reference external" href="flatpages.html"><tt class="xref docutils literal"><span class="pre">フラットページ</span></tt></a> を
+検索し、サイトマップのエントリを生成します。各エントリには
+<a title="django.contrib.sitemaps.Sitemap.location" class="reference internal" href="#django.contrib.sitemaps.Sitemap.location"><tt class="xref docutils literal"><span class="pre">location</span></tt></a> 属性だけが設定され、
+<a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod</span></tt></a>, <a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq</span></tt></a>,
+<a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority</span></tt></a> は設定されません。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.sitemaps.GenericSitemap">
+<!--[django.contrib.sitemaps.GenericSitemap]-->class <tt class="descname">GenericSitemap</tt><a class="headerlink" href="#django.contrib.sitemaps.GenericSitemap" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.GenericSitemap</span></tt></a> class works with any
+<a class="reference external" href="../generic-views.html#ref-generic-views"><em>generic views</em></a> you already have.
+To use it, create an instance, passing in the same <tt class="xref docutils literal"><span class="pre">info_dict</span></tt> you pass to
+the generic views. The only requirement is that the dictionary have a
+<tt class="xref docutils literal"><span class="pre">queryset</span></tt> entry. It may also have a <tt class="xref docutils literal"><span class="pre">date_field</span></tt> entry that specifies a
+date field for objects retrieved from the <tt class="xref docutils literal"><span class="pre">queryset</span></tt>. This will be used for
+the <a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod</span></tt></a> attribute in the generated sitemap. You may
+also pass <a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority</span></tt></a> and <a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq</span></tt></a>
+keyword arguments to the <a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">GenericSitemap</span></tt></a>
+constructor to specify these attributes for all URLs.</p>
+<p><a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.GenericSitemap</span></tt></a> クラスは任意の
+<cite>汎用ビュー &lt;ref-generic-views&gt;</cite> と組み合わせて使えます。
+<a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">GenericSitemap</span></tt></a> を使うには、汎用ビュー
+に渡すのと同じ <tt class="xref docutils literal"><span class="pre">info_dict</span></tt> を
+<a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">GenericSitemap</span></tt></a> に渡してインスタンスを
+生成します。 <tt class="xref docutils literal"><span class="pre">info_dict</span></tt> には少なくとも <tt class="xref docutils literal"><span class="pre">queryset</span></tt> がなけれ
+ばなりません。また、 <tt class="xref docutils literal"><span class="pre">info_dict</span></tt> に <tt class="xref docutils literal"><span class="pre">queryset</span></tt> で取り出され
+るオブジェクトの日時のフィールドを指定する <tt class="xref docutils literal"><span class="pre">date_field</span></tt> エントリ
+がある場合、サイトマップ生成時にエントリの <a title="django.contrib.sitemaps.Sitemap.lastmod" class="reference internal" href="#django.contrib.sitemaps.Sitemap.lastmod"><tt class="xref docutils literal"><span class="pre">lastmod</span></tt></a> 属
+性に使われます。 <a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">GenericSitemap</span></tt></a> のコ
+ンストラクタには、 <a title="django.contrib.sitemaps.Sitemap.priority" class="reference internal" href="#django.contrib.sitemaps.Sitemap.priority"><tt class="xref docutils literal"><span class="pre">priority</span></tt></a> や
+<a title="django.contrib.sitemaps.Sitemap.changefreq" class="reference internal" href="#django.contrib.sitemaps.Sitemap.changefreq"><tt class="xref docutils literal"><span class="pre">changefreq</span></tt></a> といったキーワード引数も指定できます。
+これらの引数の値は、全ての URL に共通の属性になります。</p>
+</dd></dl>
+
+<div class="section" id="s-id9">
+<span id="s-example"></span><h3>例<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><tt class="xref docutils literal"><span class="pre">FlatpageSitemap</span></tt> と
+<a title="django.contrib.sitemaps.GenericSitemap" class="reference internal" href="#django.contrib.sitemaps.GenericSitemap"><tt class="xref docutils literal"><span class="pre">GenericSitemap</span></tt></a> の両方を組み込んだ
+<a class="reference external" href="../../topics/http/urls.html#topics-http-urls"><em>URLconf</em></a> の例は以下のようになります:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">django.contrib.sitemaps</span> <span class="kn">import</span> <span class="n">FlatPageSitemap</span><span class="p">,</span> <span class="n">GenericSitemap</span>
+<span class="kn">from</span> <span class="nn">mysite.blog.models</span> <span class="kn">import</span> <span class="n">Entry</span>
+
+<span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;queryset&#39;</span><span class="p">:</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+    <span class="s">&#39;date_field&#39;</span><span class="p">:</span> <span class="s">&#39;pub_date&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">sitemaps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;flatpages&#39;</span><span class="p">:</span> <span class="n">FlatPageSitemap</span><span class="p">,</span>
+    <span class="s">&#39;blog&#39;</span><span class="p">:</span> <span class="n">GenericSitemap</span><span class="p">(</span><span class="n">info_dict</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mf">0.6</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="c"># info_dict を使った汎用ビューの設定</span>
+    <span class="c"># ...</span>
+
+    <span class="c"># サイトマップ</span>
+    <span class="p">(</span><span class="s">r&#39;^sitemap.xml$&#39;</span><span class="p">,</span> <span class="s">&#39;django.contrib.sitemaps.views.sitemap&#39;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s">&#39;sitemaps&#39;</span><span class="p">:</span> <span class="n">sitemaps</span><span class="p">})</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-id10">
+<span id="s-creating-a-sitemap-index"></span><h2>サイトマップインデクスを生成する<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>sitemap フレームワークには、個々のサイトマップファイルを参照するサイトマッ
+プインデクスを生成する機能もあります。サイトマップインデクスからサイトマッ
+プファイルへの参照は、 <tt class="xref docutils literal"><span class="pre">sitemaps</span></tt> 辞書に定義されている各セクションご
+とにひとつづつ作成されます。サイトマップインデクスを使うには、少しだけやり
+方を変えます:</p>
+<ul class="simple">
+<li>URLconf に、 <tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.views.index()</span></tt> と
+<tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.views.sitemap()</span></tt> という二つのビューを使
+います。</li>
+<li><tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.views.sitemap()</span></tt> にキーワード引数
+<tt class="xref docutils literal"><span class="pre">section</span></tt> を指定します。</li>
+</ul>
+<p>上の例にならうと、URLconf は以下のようになります:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^sitemap.xml$&#39;</span><span class="p">,</span> <span class="s">&#39;django.contrib.sitemaps.views.index&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sitemaps&#39;</span><span class="p">:</span> <span class="n">sitemaps</span><span class="p">})</span>
+<span class="p">(</span><span class="s">r&#39;^sitemap-(?P&lt;section&gt;.+)\.xml$&#39;</span><span class="p">,</span> <span class="s">&#39;django.contrib.sitemaps.views.sitemap&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sitemaps&#39;</span><span class="p">:</span> <span class="n">sitemaps</span><span class="p">})</span>
+</pre></div>
+<p>この設定では、 <tt class="docutils literal"><span class="pre">sitemap-flatpages.xml</span></tt> と <tt class="docutils literal"><span class="pre">sitemap-blog.xml</span></tt> へ
+の参照が入った <tt class="docutils literal"><span class="pre">sitemap.xml</span></tt> が自動生成されます。
+<a title="django.contrib.sitemaps.Sitemap" class="reference internal" href="#django.contrib.sitemaps.Sitemap"><tt class="xref docutils literal"><span class="pre">Sitemap</span></tt></a> クラスと <tt class="xref docutils literal"><span class="pre">sitemaps</span></tt> 辞書に
+手を加える必要はありません。</p>
+</div>
+<div class="section" id="s-google-ping">
+<span id="s-pinging-google"></span><h2>Google に ping を打つ<a class="headerlink" href="#google-ping" title="Permalink to this headline">¶</a></h2>
+<p>サイトマップの変更時に、Google に「ping を打」って、サイトのインデクスを再
+構築させたい場合もあるでしょう。 sitemap フレームワークで ping を打つには、
+<tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.ping_google()`()</span></tt> を呼び出します。</p>
+<dl class="function">
+<dt id="django.contrib.sitemaps.ping_google">
+<!--[django.contrib.sitemaps.ping_google]--><tt class="descname">ping_google</tt>()<a class="headerlink" href="#django.contrib.sitemaps.ping_google" title="Permalink to this definition">¶</a></dt>
+<dd><p><a title="django.contrib.sitemaps.ping_google" class="reference internal" href="#django.contrib.sitemaps.ping_google"><tt class="xref docutils literal"><span class="pre">ping_google()</span></tt></a> にはオプションの引数 <tt class="xref docutils literal"><span class="pre">sitemap_url</span></tt> がありま
+す。この引数にはサイトのサイトマップの絶対 URL (例えば
+<tt class="docutils literal"><span class="pre">'/sitemap.xml'</span></tt>)を指定します。 <tt class="xref docutils literal"><span class="pre">sitemap_url</span></tt> を指定しなかっ
+た場合、 <a title="django.contrib.sitemaps.ping_google" class="reference internal" href="#django.contrib.sitemaps.ping_google"><tt class="xref docutils literal"><span class="pre">ping_google()</span></tt></a> は URLconf の逆引きを行って、サイトマップ
+の在処を探します。</p>
+<p>サイトマップの URL を捜し出せなかった場合、 <a title="django.contrib.sitemaps.ping_google" class="reference internal" href="#django.contrib.sitemaps.ping_google"><tt class="xref docutils literal"><span class="pre">ping_google()</span></tt></a>
+は <tt class="xref docutils literal"><span class="pre">django.contrib.sitemaps.SitemapNotFound</span></tt> 例外を送出します。</p>
+</dd></dl>
+
+<p><a title="django.contrib.sitemaps.ping_google" class="reference internal" href="#django.contrib.sitemaps.ping_google"><tt class="xref docutils literal"><span class="pre">ping_google()</span></tt></a> の用法として有用なのは、モデルの <tt class="docutils literal"><span class="pre">save()</span></tt> メソッド
+で呼び出すというものです:</p>
+<pre> from django.contrib.sitemaps import ping_google
+
+from django.contrib.sitemaps import ping_google
+
+ class Entry(models.Model):
+     # ...
+     def save(self, force_insert=False, force_update=False):
+         super(Entry, self).save(force_insert, force_update)
+         try:
+             ping_google()
+         except Exception:
+             # Bare 'except' because we could get a variety
+             # of HTTP-related exceptions.
+             pass</pre>
+<p>とはいえ、 <a title="django.contrib.sitemaps.ping_google" class="reference internal" href="#django.contrib.sitemaps.ping_google"><tt class="xref docutils literal"><span class="pre">ping_google()</span></tt></a> は Google のサーバに HTTP リクエストを送信
+するので、 <tt class="docutils literal"><span class="pre">save()</span></tt> のたびにネットワークアクセスのオーバヘッドが生じます。
+もっと効率的にやりたければ、 cron 化されたスクリプトなど、一定の時点で実行
+するようスケジュールしたタスクの中で <a title="django.contrib.sitemaps.ping_google" class="reference internal" href="#django.contrib.sitemaps.ping_google"><tt class="xref docutils literal"><span class="pre">ping_google()</span></tt></a> を呼び出すとよい
+でしょう。</p>
+<div class="section" id="s-manage-py-google-ping">
+<span id="s-pinging-google-via-manage-py"></span><h3><tt class="docutils literal"><span class="pre">manage.py</span></tt> で Google に Ping を送信する<a class="headerlink" href="#manage-py-google-ping" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>サイトマップアプリケーションをプロジェクトに追加したら、 <tt class="docutils literal"><span class="pre">manage.py</span></tt> コマ
+ンドラインインタフェースを使って、以下のように Google サーバに ping を送信
+できます:</p>
+<pre>python manage.py ping_google [/sitemap.xml]</pre>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">sitemaps フレームワーク</a><ul>
+<li><a class="reference external" href="#id2">概要</a></li>
+<li><a class="reference external" href="#id3">インストール</a></li>
+<li><a class="reference external" href="#id4">初期化</a></li>
+<li><a class="reference external" href="#id5">Sitemap クラス</a></li>
+<li><a class="reference external" href="#id6">簡単な例</a></li>
+<li><a class="reference external" href="#id7">Sitemap クラスリファレンス</a></li>
+<li><a class="reference external" href="#id8">ショートカット</a><ul>
+<li><a class="reference external" href="#id9">例</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id10">サイトマップインデクスを生成する</a></li>
+<li><a class="reference external" href="#google-ping">Google に ping を打つ</a><ul>
+<li><a class="reference external" href="#manage-py-google-ping"><tt class="docutils literal"><span class="pre">manage.py</span></tt> で Google に Ping を送信する</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="redirects.html">redirects アプリケーション</a></li>
+    
+    
+      <li>次: <a href="sites.html">&#8220;sites&#8221; フレームワーク</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>sitemaps フレームワーク</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/sitemaps.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="redirects.html" title="redirects アプリケーション">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="sites.html" title="&amp;#8220;sites&amp;#8221; フレームワーク">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

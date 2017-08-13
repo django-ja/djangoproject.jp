@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django ドキュメント &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="contents.html" />
+    <link rel="index" title="Global index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="" />
+  </head>
+  <body>
+  <div id="custom-doc" class="">
+    <div id="hd">
+      <h1><a href="">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="">ホーム</a>  |
+        <a title="Table of contents" href="contents.html">目次</a>  |
+        <a title="Global index" href="genindex.html">索引</a>  |
+        <a title="Search" href="modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    <a title="Django v1.0 documentation" href="" accesskey="U">上へ</a></div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="index">
+            
+  
+  <div class="section" id="s-django">
+<span id="s-index"></span><h1>Django ドキュメント<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Django を使いこなすための全てがここにあります。</p>
+<div class="admonition- admonition">
+<p class="first admonition-title">和訳について</p>
+<p class="last">このドキュメントは、 <a class="reference external" href="http://docs.djangoproject.com/">Django の標準ドキュメント</a> の和訳です。
+現在、和訳は Yasushi Masuda によって進められており、 Takanao Endoh
+をはじめとする日本 Django ユーザ会の有志の手でメンテナンスされています。
+和訳に関する問い合わせは、
+<strong>Django プロジェクトのトラッカではなく</strong> 、 Yasushi Masuda
+(whosaysni-at-gmail.com) または django-ja メーリングリストにお寄せくだ
+さい。</p>
+</div>
+<div class="section" id="s-id2">
+<h2>助けを求める<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>困り事ですか？手を貸しましょう！</p>
+<ul class="simple">
+<li>よくある質問への答えは、 <a class="reference external" href="faq/index.html#faq-index"><em>FAQ</em></a> にあります。</li>
+<li>特定のトピックについて情報を探しているなら、 <a class="reference external" href="genindex.html"><em>Index</em></a> や
+<a class="reference external" href="modindex.html"><em>Module Index</em></a> , <a class="reference external" href="contents.html#contents"><em>詳細目次</em></a> を見てくだ
+さい。</li>
+<li><a class="reference external" href="http://groups.google.com/group/django-users/">django-users メーリングリスト</a> でアーカイブ を探したり、
+<a class="reference external" href="http://groups.google.com/group/django-users/">質問をポスト</a> してみましょう。</li>
+<li><a class="reference external" href="irc://irc.freenode.net/django">IRC の #django チャネル</a> で質問したり、 <a class="reference external" href="http://oebfare.com/logger/django/">IRC のログ</a> を探してみましょ
+う。</li>
+<li>Django のバグを見つけたら、 <a class="reference external" href="http://code.djangoproject.com/">チケットトラッカ</a> で報告してください。</li>
+</ul>
+</div>
+<div class="section" id="s-id5">
+<h2>最初のステップ<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="intro/overview.html#intro-overview"><em>概要 (Overview)</em></a></dt>
+<dd>Django でのデータベース駆動アプリケーションの作り方を理解しましょう。</dd>
+<dt><a class="reference external" href="intro/install.html#intro-install"><em>インストール (Installation)</em></a></dt>
+<dd>Django をインストールしましょう。</dd>
+</dl>
+</div>
+<div class="section" id="s-id6">
+<h2>チュートリアル: Django アプリケーションを書く<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="intro/tutorial01.html#intro-tutorial01"><em>その 1</em></a></dt>
+<dd>プロジェクトをセットアップし、モデルを作成して、データベース API をいじっ
+てみましょう。</dd>
+<dt><a class="reference external" href="intro/tutorial02.html#intro-tutorial02"><em>その 2</em></a></dt>
+<dd>Django が自動生成する admin サイトを使ってみましょう。</dd>
+<dt><a class="reference external" href="intro/tutorial03.html#intro-tutorial03"><em>その 3</em></a></dt>
+<dd>公開用のインタフェースビューを作成しましょう。</dd>
+<dt><a class="reference external" href="intro/tutorial04.html#intro-tutorial04"><em>その 4</em></a></dt>
+<dd>フォームの処理方法を学びましょう。</dd>
+</dl>
+</div>
+<div class="section" id="s-id7">
+<h2>Django を使う<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="topics/db/index.html#topics-db-index"><em>モデル (Models)</em></a></dt>
+<dd>データを記述する、ただ一つのデータソースであるモデルを設計しましょう。</dd>
+<dt><a class="reference external" href="topics/http/index.html#topics-http-index"><em>リクエストの処理 (Handling web requests)</em></a></dt>
+<dd>リクエストを処理して、ビューに結びつけ、ページを生成して返しましょう。</dd>
+<dt><a class="reference external" href="topics/forms/index.html#topics-forms-index"><em>フォーム (Forms)</em></a></dt>
+<dd>HTML フォームを作成して、操作しましょう。</dd>
+<dt><a class="reference external" href="topics/templates.html#topics-templates"><em>テンプレート (Templates)</em></a></dt>
+<dd>サイトの視覚的なデザインを開発しましょう。</dd>
+</dl>
+<div class="section" id="s-id8">
+<h3>他にも:<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="topics/auth.html#topics-auth"><em>Django でのユーザ認証</em></a></li>
+<li><a class="reference external" href="topics/cache.html#topics-cache"><em>Django のキャッシュフレームワーク</em></a></li>
+<li><a class="reference external" href="topics/email.html#topics-email"><em>電子メールの送信</em></a></li>
+<li><a class="reference external" href="topics/files.html#topics-files"><em>ファイルの管理</em></a></li>
+<li><a class="reference external" href="topics/i18n.html#topics-i18n"><em>国際化</em></a></li>
+<li><a class="reference external" href="topics/install.html#topics-install"><em>Django のインストール</em></a></li>
+<li><a class="reference external" href="topics/pagination.html#topics-pagination"><em>ペジネータ (paginator)</em></a></li>
+<li><a class="reference external" href="topics/serialization.html#topics-serialization"><em>Django オブジェクトのシリアライズ</em></a></li>
+<li><a class="reference external" href="topics/settings.html#topics-settings"><em>Django の設定</em></a></li>
+<li><a class="reference external" href="topics/signals.html#topics-signals"><em>シグナル</em></a></li>
+<li><a class="reference external" href="topics/testing.html#topics-testing"><em>Djangoアプリケーションのテスト</em></a></li>
+<li><a class="reference external" href="topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-contrib">
+<h2>アドオン (contrib) アプリケーション<a class="headerlink" href="#contrib" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="ref/contrib/admin.html#ref-contrib-admin"><em>管理サイト (Django&#8217;s automatic admin site)</em></a></dt>
+<dd>手間をかけずに、データを操作するためのインタフェースを構築しましょう。</dd>
+<dt><a class="reference external" href="ref/contrib/formtools/index.html#ref-contrib-formtools-index"><em>フォームツール (Form tools)</em></a></dt>
+<dd>複雑なフォームのワークフローを簡単に操作しましょう。</dd>
+<dt><a class="reference external" href="ref/contrib/syndication.html#ref-contrib-syndication"><em>配信フィード (Syndication feeds)</em></a></dt>
+<dd>データから RSS や Atom フィードを生成しましょう。</dd>
+<dt><a class="reference external" href="ref/contrib/localflavor.html#ref-contrib-localflavor"><em>ローカルフレーバ (Local flavor)</em></a></dt>
+<dd>地域特有の機能をサイトに組み込みましょう。</dd>
+</dl>
+<div class="section" id="s-id9">
+<h3>他にも:<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="ref/contrib/comments/index.html#ref-contrib-comments-index"><em>コメントフレームワーク</em></a></li>
+<li><a class="reference external" href="ref/contrib/contenttypes.html#ref-contrib-contenttypes"><em>contenttypes フレームワーク</em></a></li>
+<li><a class="reference external" href="ref/contrib/csrf.html#ref-contrib-csrf"><em>クロスサイトリクエストフォージェリ (CSRF) 対策</em></a></li>
+<li><a class="reference external" href="ref/contrib/databrowse.html#ref-contrib-databrowse"><em>databrowse</em></a></li>
+<li><a class="reference external" href="ref/contrib/flatpages.html#ref-contrib-flatpages"><em>flatpages アプリケーション</em></a></li>
+<li><a class="reference external" href="ref/contrib/humanize.html#ref-contrib-humanize"><em>django.contrib.humanize</em></a></li>
+<li><a class="reference external" href="ref/contrib/redirects.html#ref-contrib-redirects"><em>redirects アプリケーション</em></a></li>
+<li><a class="reference external" href="ref/contrib/sitemaps.html#ref-contrib-sitemaps"><em>sitemaps フレームワーク</em></a></li>
+<li><a class="reference external" href="ref/contrib/sites.html#ref-contrib-sites"><em>&#8220;sites&#8221; フレームワーク</em></a></li>
+<li><a class="reference external" href="ref/contrib/webdesign.html#ref-contrib-webdesign"><em>django.contrib.webdesign</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-id10">
+<h2>特殊な問題を解決する<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="howto/deployment/index.html#howto-deployment-index"><em>デプロイ (Deployment)</em></a></dt>
+<dd>プロジェクトをリリースしましょう。</dd>
+<dt><a class="reference external" href="howto/legacy-databases.html#howto-legacy-databases"><em>既存のデータベースからデータを取り込む (Importing data from legacy databases)</em></a></dt>
+<dd>Django を既存のデータベースや他の Web 開発ツールと組み合わせて使いましょ
+う。</dd>
+<dt><a class="reference external" href="howto/custom-template-tags.html#howto-custom-template-tags"><em>テンプレートタグの自作 (Custom template tags)</em></a></dt>
+<dd>Django のテンプレート言語に独自の拡張を追加しましょう。</dd>
+<dt><a class="reference external" href="howto/outputting-csv.html#howto-outputting-csv"><em>CSV の生成 (Generating CSV)</em></a> &amp; <a class="reference external" href="howto/outputting-pdf.html#howto-outputting-pdf"><em>PDF の生成 (Generating PDF)</em></a></dt>
+<dd>HTML 以外のコンテンツを Django で生成しましょう。</dd>
+</dl>
+<div class="section" id="s-id11">
+<h3>他にも:<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="howto/apache-auth.html#howto-apache-auth"><em>Authenticating in Apache</em></a></li>
+<li><a class="reference external" href="howto/custom-file-storage.html#howto-custom-file-storage"><em>カスタムのストレージシステムを作成する</em></a></li>
+<li><a class="reference external" href="howto/custom-management-commands.html#howto-custom-management-commands"><em>アクションを自作する</em></a></li>
+<li><a class="reference external" href="howto/custom-model-fields.html#howto-custom-model-fields"><em>カスタムのモデルフィールド</em></a></li>
+<li><a class="reference external" href="howto/error-reporting.html#howto-error-reporting"><em>電子メールによるエラー通知</em></a></li>
+<li><a class="reference external" href="howto/initial-data.html#howto-initial-data"><em>モデルに初期データを与える</em></a></li>
+<li><a class="reference external" href="howto/jython.html#howto-jython"><em>Jython 上で Django を動かす</em></a></li>
+<li><a class="reference external" href="howto/static-files.html#howto-static-files"><em>静的なファイルの提供方法</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-id12">
+<h2>リファレンス<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="ref/settings.html#ref-settings"><em>設定 (Settings)</em></a></dt>
+<dd>Django の全ての設定とその働きを理解しましょう。</dd>
+<dt><a class="reference external" href="ref/request-response.html#ref-request-response"><em>リクエストオブジェクトとレスポンスオブジェクト (Request &amp; response objects)</em></a></dt>
+<dd>Django が HTTP のリクエストとレスポンスの表現に使っているクラスを理解し
+ましょう。</dd>
+<dt><a class="reference external" href="ref/models/index.html#ref-models-index"><em>モデル API リファレンス</em></a></dt>
+<dd>Django のモデルシステムを骨の髄まであじわい尽くしましょう。</dd>
+<dt><a class="reference external" href="ref/forms/index.html#ref-forms-index"><em>フォーム API リファレンス</em></a></dt>
+<dd>フォームやフィールド、ウィジェットの詳細について学びましょう。</dd>
+</dl>
+<div class="section" id="s-id13">
+<h3>他にも:<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="ref/databases.html#ref-databases"><em>データベースのサポート状況</em></a></li>
+<li><a class="reference external" href="ref/django-admin.html#ref-django-admin"><em>django-admin.py と manage.py</em></a></li>
+<li><a class="reference external" href="ref/files/index.html#ref-files-index"><em>ファイル操作 API リファレンス</em></a></li>
+<li><a class="reference external" href="ref/generic-views.html#ref-generic-views"><em>汎用ビュー</em></a></li>
+<li><a class="reference external" href="ref/middleware.html#ref-middleware"><em>組み込みミドルウェアリファレンス</em></a></li>
+<li><a class="reference external" href="ref/templates/index.html#ref-templates-index"><em>テンプレートシステムリファレンス</em></a></li>
+<li><a class="reference external" href="ref/unicode.html#ref-unicode"><em>Django での Unicode の扱い</em></a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-id14">
+<h2>その他<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><a class="reference external" href="internals/index.html#internals-index"><em>仕組み (Internals)</em></a></dt>
+<dd>Django が背後でどのように動作しているかを学びましょう。また、プロジェク
+トへの参加方法を学びましょう。</dd>
+<dt><a class="reference external" href="releases/index.html#releases-index"><em>リリースノート (Release notes)</em></a></dt>
+<dd>それぞれのリリースで、何が新たに Django に登場したかを見ましょう。</dd>
+<dt><a class="reference external" href="misc/index.html#misc-index"><em>雑多 (Miscellany)</em></a></dt>
+<dd>分類しようのないドキュメントの置き場です。はさみや電池やテープの入った
+キッチンの引き出しのようなものです。</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    <a title="Django v1.0 documentation" href="" accesskey="U">上へ</a></div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

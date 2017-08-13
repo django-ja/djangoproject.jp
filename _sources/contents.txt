@@ -1,0 +1,38 @@
+.. _contents:
+
+=============================
+Django ドキュメント 目次
+=============================
+
+:revision-up-to: 8961 (1.0)
+
+.. toctree::
+   :maxdepth: 2
+
+   intro/index
+   topics/index
+   howto/index
+   faq/index
+   ref/index
+   misc/index
+   glossary
+   releases/index
+   internals/index
+
+索引、用語集、表一覧
+============================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`glossary`
+
+撤廃されたもの・古いドキュメント
+=================================
+
+以下は、撤廃されたり、現在の Django では他のものと置き換えられているドキュ
+メントです。
+
+.. toctree::
+   :maxdepth: 2
+   
+   obsolete/index

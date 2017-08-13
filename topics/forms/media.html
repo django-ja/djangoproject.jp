@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Form Media &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="フォームの操作" href="index.html" />
+    <link rel="next" title="モデルからフォームを生成する" href="modelforms.html" />
+    <link rel="prev" title="フォームセット (formsets)" href="formsets.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="formsets.html" title="フォームセット (formsets)">前へ</a> 
+     |
+    <a href="../index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="modelforms.html" title="モデルからフォームを生成する">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="topics-forms-media">
+            
+  
+  <div class="section" id="s-form-media">
+<span id="s-topics-forms-media"></span><h1>Form Media<a class="headerlink" href="#form-media" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>魅力的で使いやすい Web フォームをレンダしたいなら、 HTML だけでは能力不足で
+しょう。CSS スタイルシートが必要でしょうし、ファンシーな &#8220;Web2.0&#8221; 的ウィジェッ
+トを使いたければ、各ページに JavaScript を仕込む必要もあるでしょう。あるペー
+ジでどのCSS と JavaScript の組み合わせが必要かは、そのページで使われている
+ウィジェットによって異なります。</p>
+<p>そこで、 Django のメディア定義が登場します。 Django は様々なメディアファイ
+ルをそのメディアファイルを必要とするフォームやウィジェットに関連付けられる
+ようにしています。例えば、カレンダーを使って DateField をレンダしたいので、
+カスタムの Calendar ウィジェットを定義したとします。このウィジェットには、
+カレンダーをレンダするときに必要な CSS や JavaScript を関連付けておけます。
+Calendar ウィジェットをフォーム上で使うときに、 Django は必要な CSS や
+JavaScript ファイルを特定して、それらのファイル名のリストを Web ページに簡
+単に組み込める形式で提供します。</p>
+<div class="admonition-django-admin admonition">
+<p class="first admonition-title">Django admin とメディアファイル</p>
+<p>Django の admin アプリケーションは、カレンダーやフィルタ機能つきのセレ
+クタといった、様々なカスタムウィジェットを定義しています。これらのウィ
+ジェットは、それぞれが必要なメディアを定義していて、 Django は admin サ
+イトを表示するときに、デフォルトのウィジェットの代りにカスタムウィジェッ
+トを表示しています。 admin のテンプレートは、ページごとに必要なメディア
+ファイルだけを取り込み、ウィジェットをレンダするようになっています。</p>
+<p class="last">Django の admin アプリケーションのウィジェットを使いたいのなら、どうぞ
+ご自由に！ウィジェットは、全て <tt class="docutils literal"><span class="pre">django.contrib.admin.widgets</span></tt> で定義
+されています。</p>
+</div>
+<div class="admonition-javascript admonition">
+<p class="first admonition-title">どの JavaScript ツールキットを使えばいいの ?</p>
+<p class="last">JavaScript ツールキットは世の中に沢山あり、そのほとんどが（カレンダーの
+ような）アプリケーションの操作性を向上させられるウィジェットを定義して
+います。 Django は特定の JavaScript ツールキットを贔屓にしないよう慎重
+に設計されています。どのツールキットにも、お互いに長所や短所があります。
+自分にとって使いやすいツールキットを使ってください。 Django はどんな
+JavaScript ツールキットでも組み込めます。</p>
+</div>
+<div class="section" id="s-id1">
+<span id="s-media-as-a-static-definition"></span><h2>メディア定義を静的に行う<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>メディア定義の簡単な方法は、クラスで静的に行うというものです。この方法では、
+メディア定義を内部クラスとして宣言します。必要なメディアファイルの情報は、
+内部クラスのプロパティとして定義します。</p>
+<p>簡単な例を示しましょう:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">CalendarWidget</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Media</span><span class="p">:</span>
+        <span class="n">css</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;all&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pretty.css&#39;</span><span class="p">,)</span>
+        <span class="p">}</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;animations.js&#39;</span><span class="p">,</span> <span class="s">&#39;actions.js&#39;</span><span class="p">)</span>
+</pre></div>
+<p>このコードでは、 <tt class="docutils literal"><span class="pre">TextInput</span></tt> をベースにして <tt class="docutils literal"><span class="pre">CalendarWidget</span></tt> を定義して
+います。 <tt class="docutils literal"><span class="pre">CalendarWidget</span></tt> をフォーム内で使うと、フォームは CSS ファイル
+<tt class="docutils literal"><span class="pre">pretty.css</span></tt> と JavaScript ファイル <tt class="docutils literal"><span class="pre">animations.js</span></tt> および
+<tt class="docutils literal"><span class="pre">actions.js</span></tt> を組み込むよう指示を受けます。</p>
+<p>このような静的なメディア定義は、実行時に <tt class="docutils literal"><span class="pre">media</span></tt> というウィジェットのプロ
+パティに変換されます。 <tt class="docutils literal"><span class="pre">CalendarWidget</span></tt> インスタンスのメディア情報は、プ
+ロパティを介して以下のように取り出せます:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">CalendarWidget</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">w</span><span class="o">.</span><span class="n">media</span>
+<span class="go">&lt;link href=&quot;http://media.example.com/pretty.css&quot; type=&quot;text/css&quot; media=&quot;all&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+<span class="go">&lt;script type=&quot;text/javascript&quot; src=&quot;http://media.example.com/animations.js&quot;&gt;&lt;/script&gt;</span>
+<span class="go">&lt;script type=&quot;text/javascript&quot; src=&quot;http://media.example.com/actions.js&quot;&gt;&lt;/script&gt;</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">Media</span></tt> には、以下のようなオプションがあります。必須のものはありません。</p>
+<div class="section" id="s-css">
+<h3><tt class="docutils literal"><span class="pre">css</span></tt><a class="headerlink" href="#css" title="Permalink to this headline">¶</a></h3>
+<p>出力媒体ごとの CSS ファイル要件を定義した辞書です。</p>
+<p>この辞書の値はメディアファイル名を列挙したタプルまたはリストです。メディア
+ファイルのパスを指定する方法は <a class="reference internal" href="#paths-in-media-definitions">メディアパスの節</a> を参照してください。</p>
+<p>キーは出力媒体の名前です。このキーは、 CSS ファイルのメディアタイプ宣言で使
+われるのと同じ、すなわち  'all', 'aural', 'braille', 'embossed',
+'handheld', 'print', 'projection', 'screen', 'tty' そして 'tv' です。
+メディアタイプごとに別々のスタイルシートを使いたければ、各メディアごとに
+CSS ファイルのリストを指定してください。以下の例では、スクリーン (screen)
+と印刷 (print) 用の CSS オプションを定義しています:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Media</span><span class="p">:</span>
+    <span class="n">css</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;screen&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pretty.css&#39;</span><span class="p">,),</span>
+        <span class="s">&#39;print&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;newspaper.css&#39;</span><span class="p">,)</span>
+    <span class="p">}</span>
+</pre></div>
+<p>一つの CSS ファイルグループが複数のメディアタイプをカバーできる場合、辞書の
+キーにメディアタイプをカンマ区切りのリストにして指定してください。以下の例
+では、テレビ (tv) およびプロジェクタ (projector) に同じメディアファイル要件
+を指定しています:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Media</span><span class="p">:</span>
+    <span class="n">css</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;screen&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pretty.css&#39;</span><span class="p">,),</span>
+        <span class="s">&#39;tv,projector&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;lo_res.css&#39;</span><span class="p">,),</span>
+        <span class="s">&#39;print&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;newspaper.css&#39;</span><span class="p">,)</span>
+    <span class="p">}</span>
+</pre></div>
+<p>'print' の CSS 定義を使ってレンダリングを実行すると、以下のような HTML を出
+力します:</p>
+<pre>&lt;link href="http://media.example.com/pretty.css" type="text/css" media="screen" rel="stylesheet" /&gt;
+&lt;link href="http://media.example.com/lo_res.css" type="text/css" media="tv,projector" rel="stylesheet" /&gt;
+&lt;link href="http://media.example.com/newspaper.css" type="text/css" media="print" rel="stylesheet" /&gt;</pre>
+</div>
+<div class="section" id="s-js">
+<h3><tt class="docutils literal"><span class="pre">js</span></tt><a class="headerlink" href="#js" title="Permalink to this headline">¶</a></h3>
+<p>必要な JavaScript ファイルを列挙したタプルです。メディアファイルのパスを指
+定する方法は <a class="reference internal" href="#paths-in-media-definitions">メディアパスの節</a> を参照してください。</p>
+</div>
+<div class="section" id="s-extend">
+<h3><tt class="docutils literal"><span class="pre">extend</span></tt><a class="headerlink" href="#extend" title="Permalink to this headline">¶</a></h3>
+<p>メディア宣言を親クラスから継承するかどうかを決めるブール値です。</p>
+<p>デフォルトの設定では、静的メディア宣言を使うオブジェクトは全て、親クラスの
+ウィジェットで定義されているメディアを継承します。この継承は、親クラスでど
+んなメディアファイル要件を宣言したかに関係なく行われます。例えば、上の例の
+カレンダーウィジェットを、以下のように拡張したとします:</p>
+<pre>class FancyCalendarWidget(CalendarWidget):
+    class Media:
+        css = {
+            'all': ('fancy.css',)
+        }
+        js = ('whizbang.js',)
+
+&gt;&gt;&gt; w = FancyCalendarWidget()
+&gt;&gt;&gt; print w.media
+&lt;link href="http://media.example.com/pretty.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;link href="http://media.example.com/fancy.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;script type="text/javascript" src="http://media.example.com/animations.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/actions.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/whizbang.js"&gt;&lt;/script&gt;</pre>
+<p><tt class="docutils literal"><span class="pre">FancyCalendarWidget</span></tt> は、親ウィジェットの全てのメディアを継承します。こ
+のやり方で親モデルのメディア宣言を継承したくないのなら、 <tt class="docutils literal"><span class="pre">extend=False</span></tt>
+を <tt class="docutils literal"><span class="pre">Media</span></tt> クラスの宣言に追加します:</p>
+<pre>class FancyCalendar(Calendar):
+    class Media:
+        extend = False
+        css = {
+            'all': ('fancy.css',)
+        }
+        js = ('whizbang.js',)
+
+&gt;&gt;&gt; w = FancyCalendarWidget()
+&gt;&gt;&gt; print w.media
+&lt;link href="http://media.example.com/fancy.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;script type="text/javascript" src="http://media.example.com/whizbang.js"&gt;&lt;/script&gt;</pre>
+<p>メディア宣言の継承をより細かく制御したければ、 <a class="reference internal" href="#media-as-a-dynamic-property">動的なプロパティ</a> を使って
+メディア宣言を定義してください。動的プロパティを使えば、どのメディアファイ
+ルを継承し、どのファイルを継承しないかを完全に制御できます。</p>
+</div>
+</div>
+<div class="section" id="s-id4">
+<span id="s-media-as-a-dynamic-property"></span><h2>動的プロパティでのメディア定義<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">media</span></tt> プロパティを直接定義すれば、メディアファイル要件をより洗練された
+やり方で制御できます。この方法では、 <tt class="docutils literal"><span class="pre">forms.Media</span></tt> のインスタンスを
+返すようなプロパティを定義します。 <tt class="docutils literal"><span class="pre">forms.Media</span></tt> のコンストラクタは
+<tt class="docutils literal"><span class="pre">css</span></tt> や <tt class="docutils literal"><span class="pre">js</span></tt> といったキーワード引数をとり、それぞれ静的なメディア定義
+で使われているのと同じ形式の値を指定できます。</p>
+<p>例えば、先の <tt class="docutils literal"><span class="pre">CalendarWidget</span></tt> の静的メディア定義を動的なやり方で実現する
+と、以下のように書けます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">CalendarWidget</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_media</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">forms</span><span class="o">.</span><span class="n">Media</span><span class="p">(</span><span class="n">css</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;all&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;pretty.css&#39;</span><span class="p">,)},</span>
+                           <span class="n">js</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;animations.js&#39;</span><span class="p">,</span> <span class="s">&#39;actions.js&#39;</span><span class="p">))</span>
+    <span class="n">media</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_media</span><span class="p">)</span>
+</pre></div>
+<p>動的なメディアプロパティの戻り値を構築するための詳しい方法は、
+<a class="reference internal" href="#media">Media オブジェクト</a> の節を参照してください。</p>
+</div>
+<div class="section" id="s-id5">
+<span id="s-paths-in-media-definitions"></span><h2>メディア定義のパス<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>メディアファイルの場所を指定するためのパスは、相対でも絶対でもかまいません。
+パスが <tt class="docutils literal"><span class="pre">'/'</span></tt>, <tt class="docutils literal"><span class="pre">'http://'</span></tt>, <tt class="docutils literal"><span class="pre">'https://'</span></tt> のいずれかで開始していれば、
+絶対パス指定として、値をそのまま使います。それ以外のパスの前には
+<tt class="docutils literal"><span class="pre">settings.MEDIA_URL</span></tt> の値を付加します。例えば、 <tt class="docutils literal"><span class="pre">MEDIA_URL</span></tt> が
+<tt class="docutils literal"><span class="pre">http://media.example.com/</span></tt> の場合は、以下のウィジェット:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">CalendarWidget</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Media</span><span class="p">:</span>
+        <span class="n">css</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;all&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;/css/pretty.css&#39;</span><span class="p">,),</span>
+        <span class="p">}</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;animations.js&#39;</span><span class="p">,</span> <span class="s">&#39;http://othersite.com/actions.js&#39;</span><span class="p">)</span>
+</pre></div>
+<p>は、以下のように HTML を出力します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">CalendarWidget</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">w</span><span class="o">.</span><span class="n">media</span>
+<span class="go">&lt;link href=&quot;/css/pretty.css&quot; type=&quot;text/css&quot; media=&quot;all&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+<span class="go">&lt;script type=&quot;text/javascript&quot; src=&quot;http://media.example.com/animations.js&quot;&gt;&lt;/script&gt;</span>
+<span class="go">&lt;script type=&quot;text/javascript&quot; src=&quot;http://othersite.com/actions.js&quot;&gt;&lt;/script&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="s-media">
+<span id="s-media-objects"></span><h2><tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクト<a class="headerlink" href="#media" title="Permalink to this headline">¶</a></h2>
+<p>ウィジェットやフォームの media 属性を調べると、 <tt class="docutils literal"><span class="pre">forms.Media</span></tt> オブジェク
+トが返されます。すでに解説した通り、 <tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトの文字列表現は、
+HTML ページの <tt class="docutils literal"><span class="pre">&lt;head&gt;</span></tt> ブロックでメディアファイルを取り込むときに必要な
+HTML コードです。</p>
+<p>とはいえ、 <tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトには他にもいくつか興味深いプロパティがあり
+ます。</p>
+<div class="section" id="s-id6">
+<span id="s-media-subsets"></span><h3><tt class="docutils literal"><span class="pre">Media</span></tt> サブセット<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>特定のタイプのメディアファイル情報だけを出力したければ、添え字表記を使って
+以下のように欲しいメディアだけを指定できます:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">CalendarWidget</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">w</span><span class="o">.</span><span class="n">media</span>
+<span class="go">&lt;link href=&quot;http://media.example.com/pretty.css&quot; type=&quot;text/css&quot; media=&quot;all&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+<span class="go">&lt;script type=&quot;text/javascript&quot; src=&quot;http://media.example.com/animations.js&quot;&gt;&lt;/script&gt;</span>
+<span class="go">&lt;script type=&quot;text/javascript&quot; src=&quot;http://media.example.com/actions.js&quot;&gt;&lt;/script&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">w</span><span class="o">.</span><span class="n">media</span><span class="p">[</span><span class="s">&#39;css&#39;</span><span class="p">]</span>
+<span class="go">&lt;link href=&quot;http://media.example.com/pretty.css&quot; type=&quot;text/css&quot; media=&quot;all&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+</pre></div>
+<p>添え字表記を使ってアクセスすると、新たな <tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトが返されます。
+ただし、このオブジェクトには指定したメディアしか入っていません。</p>
+</div>
+<div class="section" id="s-id7">
+<span id="s-combining-media-objects"></span><h3><tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトを組み合わせる<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトは加算できます。二つの <tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトを加算す
+ると、結果の <tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトには両方のメディアファイル情報が入ります:</p>
+<pre>class CalendarWidget(forms.TextInput):
+    class Media:
+        css = {
+            'all': ('pretty.css',)
+        }
+        js = ('animations.js', 'actions.js')
+
+class OtherWidget(forms.TextInput):
+    class Media:
+        js = ('whizbang.js',)
+
+&gt;&gt;&gt; w1 = CalendarWidget()
+&gt;&gt;&gt; w2 = OtherWidget()
+&gt;&gt;&gt; print w1.media + w2.media
+&lt;link href="http://media.example.com/pretty.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;script type="text/javascript" src="http://media.example.com/animations.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/actions.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/whizbang.js"&gt;&lt;/script&gt;</pre>
+</div>
+</div>
+<div class="section" id="s-id8">
+<span id="s-media-on-forms"></span><h2>フォームのメディア<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>メディアファイル定義を持てるのはウィジェットだけではありません。フォームに
+もまた、メディアを定義できます。フォームのメディアファイル定義には、ウィジェ
+ットと同じ規則が適用されます。すなわち、静的・動的な宣言ができ、宣言内容に
+は絶対・相対パスの解釈や継承といった規則がウィジェット同様に当てはまります。</p>
+<p>どちらにメディア情報を定義したかに関係なく、フォームオブジェクトには
+<em>必ず</em>  <tt class="docutils literal"><span class="pre">media</span></tt> プロパティがあります。このプロパティのデフォルト値は、
+フォームを構成する全てのウィジェットのメディアファイル定義を加算したもので
+す:</p>
+<pre>class ContactForm(forms.Form):
+    date = DateField(widget=CalendarWidget)
+    name = CharField(max_length=40, widget=OtherWidget)
+
+&gt;&gt;&gt; f = ContactForm()
+&gt;&gt;&gt; f.media
+&lt;link href="http://media.example.com/pretty.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;script type="text/javascript" src="http://media.example.com/animations.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/actions.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/whizbang.js"&gt;&lt;/script&gt;</pre>
+<p>フォーム固有のメディア宣言を付加したい場合、例えば、フォームのレイアウトを
+決める CSS を指定したい場合には、以下のようにメディア定義を追加します:</p>
+<pre>class ContactForm(forms.Form):
+    date = DateField(widget=CalendarWidget)
+    name = CharField(max_length=40, widget=OtherWidget)
+
+    class Media:
+        css = {
+            'all': ('layout.css',)
+        }
+
+&gt;&gt;&gt; f = ContactForm()
+&gt;&gt;&gt; f.media
+&lt;link href="http://media.example.com/pretty.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;link href="http://media.example.com/layout.css" type="text/css" media="all" rel="stylesheet" /&gt;
+&lt;script type="text/javascript" src="http://media.example.com/animations.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/actions.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://media.example.com/whizbang.js"&gt;&lt;/script&gt;</pre>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Form Media</a><ul>
+<li><a class="reference external" href="#id1">メディア定義を静的に行う</a><ul>
+<li><a class="reference external" href="#css"><tt class="docutils literal"><span class="pre">css</span></tt></a></li>
+<li><a class="reference external" href="#js"><tt class="docutils literal"><span class="pre">js</span></tt></a></li>
+<li><a class="reference external" href="#extend"><tt class="docutils literal"><span class="pre">extend</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id4">動的プロパティでのメディア定義</a></li>
+<li><a class="reference external" href="#id5">メディア定義のパス</a></li>
+<li><a class="reference external" href="#media"><tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクト</a><ul>
+<li><a class="reference external" href="#id6"><tt class="docutils literal"><span class="pre">Media</span></tt> サブセット</a></li>
+<li><a class="reference external" href="#id7"><tt class="docutils literal"><span class="pre">Media</span></tt> オブジェクトを組み合わせる</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id8">フォームのメディア</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="formsets.html">フォームセット (formsets)</a></li>
+    
+    
+      <li>次: <a href="modelforms.html">モデルからフォームを生成する</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">Django を使う</a>
+        
+          <ul><li><a href="index.html">フォームの操作</a>
+        
+        <ul><li>Form Media</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/topics/forms/media.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="formsets.html" title="フォームセット (formsets)">前へ</a> 
+     |
+    <a href="../index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="modelforms.html" title="モデルからフォームを生成する">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

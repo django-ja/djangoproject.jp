@@ -1,0 +1,107 @@
+.. _glossary:
+
+========
+用語集
+========
+
+:revision-up-to: 8961 (1.0)
+
+.. glossary::
+
+    field
+        :term:`model` 内のアトリビュートです。通常、一つのフィールドが一つ
+        のデータベースカラムに対応しています。
+        
+        :ref:`topics-db-models` を参照してください。
+
+    generic view
+        ビューを開発するときによくある言い回しやパターンを抽象化する
+        :term:`ビュー` 関数です。
+        
+        :ref:`ref-generic-views` を参照してください。
+
+    model
+        アプリケーションのデータの保存に使われるクラスです。
+        
+        :ref:`topics-db-models` を参照してください。
+
+    MTV
+        :ref:`mtv` を参照してください。
+
+    MVC
+        ソフトウェアパターンの `Model-view-controller`__ です。
+	Django は :ref:`部分的に MVC です <mtv>` 。
+
+        __ http://en.wikipedia.org/wiki/Model-view-controller
+
+    project
+        Python のパッケージ、すなわちコードの入ったディレクトリです。プロジェ
+        クトには、一つの Django インスタンスを動かすために必要な全ての情報、
+	たとえばデータベースの設定、 Django 固有のオプション、アプリケーショ
+        ン固有の設定などが収められています。
+
+    property
+        Python バージョン 2.2 から導入された機能で、「マネージドアトリビュー
+        ト (managed attribute)」ともいいます。詳しくは
+	`プロパティのドキュメント`__ を参照してください。
+ 
+       プロパティは、アトリビュートのアクセス時に実際にはメソッド呼び出しを
+       行いたいような場合に便利な手法です。同じようなことは ``__getattr__``
+       と ``__setattr__`` のオーバライドでも実現できます。しかし、
+       ``__setattr__`` をオーバライドすると、全てのアトリビュートのアクセス
+       が遅くなりますし、 ``__getattr__`` をオーバライドして正しい動作を実
+       現するのはちょっと大変です。プロパティを使えば、 ``__getattr__`` や
+       ``__setattr__`` をオーバライドしなくても、望みのことを実現できます。 
+
+        __ http://www.python.org/download/releases/2.2/descrintro/#property
+
+    queryset
+        データベースから取り出したレコード行を表現するオブジェクトです。
+        
+        :ref:`topics-db-queries` を参照してください。
+
+    slug
+        英文字と数字、アンダースコア、ハイフンだけからなる短いラベル文字列
+        です。 URL の中で使われます。例えば、以下の URL :
+        
+        .. parsed-literal::
+        
+            http://www.djangoproject.com/weblog/2008/apr/12/**spring**/
+            
+        の中で、最後の部分 (``spring``) がスラグです。
+
+    template
+        ドキュメントのデータと表現を分離するためのテキストです。
+        
+        :ref:`topics-templates` を参照してください。
+        
+    view
+        ページのレンダリングを行う関数です。
+
+    クエリセット
+        :term:`queryset` を参照してください。
+
+    スラグ
+        :term:`slug` を参照してください。
+
+    テンプレート
+        :term:`template` を参照してください。
+
+    汎用ビュー
+        :term:`generic view` を参照してください。
+
+    ビュー
+        :term:`view` を参照してください。
+
+    フィールド
+        :term:`field` を参照してください。
+
+    プロジェクト
+        :term:`project` を参照してください。
+
+    プロパティ
+        :term:`property` を参照してください。
+
+    モデル
+        :term:`model` を参照してください。
+

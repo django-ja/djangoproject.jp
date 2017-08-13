@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FastCGI, SCGI, AJP で Django を使う &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Django のデプロイ" href="index.html" />
+    <link rel="next" title="電子メールによるエラー通知" href="../error-reporting.html" />
+    <link rel="prev" title="Apache と mod_python で Django を動かす" href="modpython.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="modpython.html" title="Apache と mod_python で Django を動かす">前へ</a> 
+     |
+    <a href="../index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="../error-reporting.html" title="電子メールによるエラー通知">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="howto-deployment-fastcgi">
+            
+  
+  <div class="section" id="s-fastcgi-scgi-ajp-django">
+<span id="s-howto-deployment-fastcgi"></span><h1>FastCGI, SCGI, AJP で Django を使う<a class="headerlink" href="#fastcgi-scgi-ajp-django" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django を動作させる構成として現在推奨されているのは、
+<a class="reference external" href="modpython.html#howto-deployment-modpython"><em>Apache と mod_python</em></a> の組合せですが、多
+くの人々が共有ホスティングサービスを使っており、そこでは FastCGI や SCGI,
+AJP といったプロトコルしか選択肢がない場合もあります。また、構成によっては、
+FastCGI は mod_python よりも安全であり、パフォーマンスの点で mod_python を
+しのぐ場合もあります。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">このドキュメントでは、 FastCGI に重点をおいて説明しています。 SCGI や
+AJP といったプロトコルも、Python パッケージ <tt class="docutils literal"><span class="pre">flup</span></tt> 経由でサポートして
+います。 SCGI や AJP 固有の設定は、後述の 「 <a class="reference internal" href="#id2">プロトコル</a> 」の節を参照し
+てください。</p>
+</div>
+<p>FastCGI の本質は、外部アプリケーションが効率的に Web サーバにページを提供で
+きるようにすることにあります。 Web サーバは (socket を介して) 受け取った
+Web リクエストの処理を FastCGI に肩代りさせます。 FastCGI はコードを実行し
+て、その応答を Web サーバに返します。 Web サーバはその内容をクライアントの
+Web ブラウザに返すというわけです。</p>
+<p>mod_python と同様、 FastCGI はコードをメモリ上に残して、起動時間なしでリク
+エストを処理できるようにします。 <a class="reference external" href="http://www.modpython.org/">mod_python</a> (や <a class="reference external" href="http://perl.apache.org/">mod_perl</a>) と違うのは、
+FastCGI プロセスは Web サーバプロセスの中ではなく、別の永続的プロセスの中で
+実行されるということです。</p>
+<div class="admonition- admonition">
+<p class="first admonition-title">なぜ別のプロセスでコードを実行するのですか？</p>
+<p>Apache における伝統的な <tt class="docutils literal"><span class="pre">mod_*</span></tt> の構成では、 Web サーバのプロセス空間
+内に様々なスクリプト言語 (有名なのは PHP, Python, Perl です) を埋め込ん
+で実行します。この構成は、リクエストのたびにプログラムコードをディスク
+から読み出さなくてもよくなるため、起動時間を減らせるという利点がありま
+す &#8212; その反面、メモリの消費は莫大になります。例えば、 mod_python の場
+合、 Apache の全てのプロセスに Python インタプリタの実行イメージが埋め
+込まれることになり、かなりの量の RAM を消費するのです。</p>
+<p class="last">FastCGI の性質上、Web サーバプロセスと別のユーザアカウントでプロセスを
+実行できます。この特徴は、自分のコードを他のユーザから守れるという点で、
+共有ホストにおいてセキュリティ上の利点になります。</p>
+</div>
+<div class="section" id="s-flup">
+<span id="s-prerequisite-flup"></span><h2>必要なもの: flup<a class="headerlink" href="#flup" title="Permalink to this headline">¶</a></h2>
+<p>Django で FastCGI を使うには、まず <a class="reference external" href="http://www.saddi.com/software/flup/">flup</a> をインストールせねばなりません。
+flup は FastCGI を使えるようにするための Python ライブラリです。 Django は
+バージョン0.5 以降の flup で動作します。</p>
+</div>
+<div class="section" id="s-fastcgi">
+<span id="s-starting-your-fastcgi-server"></span><h2>FastCGI サーバを起動する<a class="headerlink" href="#fastcgi" title="Permalink to this headline">¶</a></h2>
+<p>FastCGI はクライアントサーバモデルで動作します。ほとんどの場合、 FastCGI プ
+ロセスを自分で起動することになるでしょう。 Web サーバ (Apache、 lighttpd な
+ど) が Djagno の FastCGI プロセスにアクセスするのは、サーバが動的ページをロー
+ドするときだけです。デーモンは常にコードをメモリ上にロードしたまま動作して
+いるので、非常に高速に応答を返せるのです。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">共有ホスティングサービスを使っているなら、Web サーバで管理された
+FastCGI プロセスを使わざるを得ないかもしれません。 Django を Web サーバ
+で管理された FastCGI プロセスで使うには、後に出て来る節の説明を参照して
+ください。</p>
+</div>
+<p>Web サーバが FastCGI サーバにアクセスするには二つの方法があります。一つは
+Unix ドメインソケット (Win32 システムにおける「名前付きパイプ」) で、もう一
+つは TCP ソケットです。どちらを選ぶかは好みの問題です。パーミッションの問題
+から、通常は TCP ソケットの方が簡単です。</p>
+<p>サーバを起動するには、プロジェクトのあるディレクトリ (<tt class="docutils literal"><span class="pre">manage.py</span></tt> のある
+場所) に移動して、 <a class="reference external" href="../../ref/django-admin.html#ref-django-admin"><em>manage.py</em></a> の
+<tt class="xref docutils literal"><span class="pre">runfcgi</span></tt> コマンドを実行します:</p>
+<div class="highlight"><pre>./manage.py runfcgi <span class="o">[</span>options<span class="o">]</span>
+</pre></div>
+<p><tt class="xref docutils literal"><span class="pre">runfcgi</span></tt> に <tt class="docutils literal"><span class="pre">help</span></tt> オプションだけを指定すると、利用可能な全ての
+オプションを表示します。</p>
+<p>引数として、 <tt class="docutils literal"><span class="pre">socket</span></tt>, <tt class="docutils literal"><span class="pre">protocol</span></tt>, または、 <tt class="docutils literal"><span class="pre">host</span></tt> および <tt class="docutils literal"><span class="pre">port</span></tt> を
+指定せねばなりません。さらに、 Web サーバをセットアップする際に、FastCGI サー
+バを起動するときに使ったソケット名か、ホスト/ポート番号の組合せを指定せねば
+なりません。後述の <a class="reference internal" href="#id5">実行例</a> を参照してください。</p>
+<div class="section" id="s-id2">
+<span id="s-protocols"></span><h3>プロトコル<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Django は <a class="reference external" href="http://www.saddi.com/software/flup/">flup</a> のサポートしている全てのプロトコル、すなわち <a class="reference external" href="http://www.fastcgi.com/">fastcgi</a>,
+<a class="reference external" href="http://python.ca/scgi/protocol.txt">SCGI</a>, <a class="reference external" href="http://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html">AJP1.3</a> (Apache JServ プロトコルバージョン 1.3) をサポートしていま
+す。使いたいプロトコルを指定するには、 <tt class="docutils literal"><span class="pre">protocol=&lt;protocl_name&gt;</span></tt> を
+<tt class="docutils literal"><span class="pre">./manage.py</span> <span class="pre">runfcgi</span></tt> のオプションに指定します。 <tt class="docutils literal"><span class="pre">&lt;protocol_name&gt;</span></tt> は
+<tt class="docutils literal"><span class="pre">fcgi</span></tt> (デフォルト)、 <tt class="docutils literal"><span class="pre">scgi</span></tt> または <tt class="docutils literal"><span class="pre">ajp</span></tt> のいずれかです。例を以下に
+示します:</p>
+<div class="highlight"><pre>./manage.py runfcgi <span class="nv">protocol</span><span class="o">=</span>scgi
+</pre></div>
+</div>
+<div class="section" id="s-id5">
+<span id="s-examples"></span><h3>実行例<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>TCP ポートを使い、スレッドモードでサーバを起動する場合:</p>
+<div class="highlight"><pre>./manage.py runfcgi <span class="nv">method</span><span class="o">=</span>threaded <span class="nv">host</span><span class="o">=</span>127.0.0.1 <span class="nv">port</span><span class="o">=</span>3033
+</pre></div>
+<p>Unix ドメインソケットを使い、 prefork モードでサーバを起動する場合:</p>
+<div class="highlight"><pre>./manage.py runfcgi <span class="nv">method</span><span class="o">=</span>prefork <span class="nv">socket</span><span class="o">=</span>/home/user/mysite.sock <span class="nv">pidfile</span><span class="o">=</span>django.pid
+</pre></div>
+<p>デーモン化 (バックグラウンド化) させずにプロセスを起動する場合 (デバッグ時
+に便利です):</p>
+<div class="highlight"><pre>./manage.py runfcgi <span class="nv">daemonize</span><span class="o">=</span><span class="nb">false </span><span class="nv">socket</span><span class="o">=</span>/tmp/mysite.sock <span class="nv">maxrequests</span><span class="o">=</span>1
+</pre></div>
+</div>
+<div class="section" id="s-id6">
+<span id="s-stopping-the-fastcgi-daemon"></span><h3>FastCGI デーモンを止める<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>フォアグラウンドでプロセスを走らせているのなら、止めるのは簡単で、
+<tt class="docutils literal"><span class="pre">Ctrl-C</span></tt> を押して FastCGI サーバを止めるだけですみます。バックグラウンド
+プロセスを使っているのなら、 Unix の <tt class="docutils literal"><span class="pre">kill</span></tt> コマンドを使わねばなりません。</p>
+<p><tt class="docutils literal"><span class="pre">pidfile</span></tt> オプションを指定して <tt class="xref docutils literal"><span class="pre">runfcgi</span></tt> を起動しているのなら、
+以下のようにして起動中の FastCGI デーモンを殺せます:</p>
+<div class="highlight"><pre><span class="nb">kill</span> <span class="sb">`</span>cat <span class="nv">$PIDFILE</span><span class="sb">`</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">$PIDFILE</span></tt> は起動時に指定した <tt class="docutils literal"><span class="pre">pidfile</span></tt> の値です。</p>
+<p>Unix 上で FastCGI デーモンを簡単に再起動させたいなら、以下のようなシェルス
+クリプトを試してみましょう:</p>
+<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+
+<span class="c"># Replace these three settings.</span>
+<span class="nv">PROJDIR</span><span class="o">=</span><span class="s2">&quot;/home/user/myproject&quot;</span>
+<span class="nv">PIDFILE</span><span class="o">=</span><span class="s2">&quot;$PROJDIR/mysite.pid&quot;</span>
+<span class="nv">SOCKET</span><span class="o">=</span><span class="s2">&quot;$PROJDIR/mysite.sock&quot;</span>
+
+<span class="nb">cd</span> <span class="nv">$PROJDIR</span>
+<span class="k">if</span> <span class="o">[</span> -f <span class="nv">$PIDFILE</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">kill</span> <span class="sb">`</span>cat -- <span class="nv">$PIDFILE</span><span class="sb">`</span>
+    rm -f -- <span class="nv">$PIDFILE</span>
+<span class="k">fi</span>
+
+<span class="nb">exec</span> /usr/bin/env - <span class="se">\</span>
+  <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;../python:..&quot;</span> <span class="se">\</span>
+  ./manage.py runfcgi <span class="nv">socket</span><span class="o">=</span><span class="nv">$SOCKET</span> <span class="nv">pidfile</span><span class="o">=</span><span class="nv">$PIDFILE</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-apache-fastcgi">
+<span id="s-apache-setup"></span><h2>Apache での FastCGI 構成<a class="headerlink" href="#apache-fastcgi" title="Permalink to this headline">¶</a></h2>
+<p>Django を Apache と FastCGI の構成で使うには、 Apache をインストールして、
+<a class="reference external" href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html">mod_fastcgi</a> がインストールされ、有効になっているようにせねばなりません。
+詳しい手順は Apache のドキュメントを参照してください。</p>
+<p>mod_fastcgi の構成が終ったら、 <tt class="docutils literal"><span class="pre">httpd.conf</span></tt> ファイルを編集して、 Apache
+に Django の FastCGI インスタンスを教えます。以下の二つの設定を行わねばなり
+ません:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">FastCGIExternalServer</span></tt> ディレクティブを使って、 FastCGI サーバの場
+所を指定します。</li>
+<li><tt class="docutils literal"><span class="pre">mod_rewrite</span></tt> を使って、リクエストが適切な FastCGI に向くようにしま
+す。</li>
+</ul>
+<div class="section" id="s-id7">
+<span id="s-specifying-the-location-of-the-fastcgi-server"></span><h3>FastCGI サーバの場所を指定する<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">FastCGIExternalServer</span></tt> ディレクティブは、 Apache に FastCGI サーバの探し
+方を教えます。 <a class="reference external" href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html#FastCgiExternalServer">FastCGIExternalServer のドキュメント</a> にもある通り、
+<tt class="docutils literal"><span class="pre">socket</span></tt> または <tt class="docutils literal"><span class="pre">host</span></tt> のいずれかを指定せねばなりません。それぞれの例を
+以下に示します:</p>
+<div class="highlight"><pre><span class="c"># Connect to FastCGI via a socket / named pipe.</span>
+<span class="nb">FastCGIExternalServer</span> <span class="sx">/home/user/public_html/mysite.fcgi</span> -socket <span class="sx">/home/user/mysite.sock</span>
+
+<span class="c"># Connect to FastCGI via a TCP host/port.</span>
+<span class="nb">FastCGIExternalServer</span> <span class="sx">/home/user/public_html/mysite.fcgi</span> -host <span class="m">127.0.0.1</span>:3033
+</pre></div>
+<p>いずれのケースでも、 <tt class="docutils literal"><span class="pre">/home/user/public_html/mysite.fcgi</span></tt> は実際に存在し
+なくてもかまいません。このパスは Web サーバが内部的に使う URL に過ぎず、
+FastCGI で処理すべきリクエストを URL で区別するための単なるフックです。(次
+節で詳しく説明します)</p>
+</div>
+<div class="section" id="s-mod-rewrite-url-fastcgi">
+<span id="s-using-mod-rewrite-to-point-urls-at-fastcgi"></span><h3>mod_rewrite を使って URL が FastCGI を指すようにする<a class="headerlink" href="#mod-rewrite-url-fastcgi" title="Permalink to this headline">¶</a></h3>
+<p>第二ステップでは、特定のパターンに一致する URL では FastCGI を使うよう
+Apache に指示します。前節で述べたように、 <a class="reference external" href="http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html">mod_rewrite</a> モジュールを使って、
+URL を <tt class="docutils literal"><span class="pre">mysite.fcgi</span></tt> (または <tt class="docutils literal"><span class="pre">FastCGIExternalServer</span></tt> ディレクティブに指
+定した名前) に書き換えます。</p>
+<p>下記の例では、ファイルシステム上に存在せず、かつパスが <tt class="docutils literal"><span class="pre">/media/</span></tt> で始まら
+ないファイルに対するリクエストに対して FastCGI を使うよう Apache に指示して
+います。Django の admin サイトを使っているなら、これはよくある状況でしょう:</p>
+<div class="highlight"><pre>&lt;VirtualHost 12.34.56.78&gt;
+  ServerName example.com
+  DocumentRoot /home/user/public_html
+  Alias /media /home/user/python/django/contrib/admin/media
+  RewriteEngine On
+  RewriteRule ^/<span class="o">(</span>media.*<span class="o">)</span><span class="nv">$ </span>/<span class="nv">$1</span> <span class="o">[</span>QSA,L,PT<span class="o">]</span>
+  RewriteCond %<span class="o">{</span>REQUEST_FILENAME<span class="o">}</span> !-f
+  RewriteRule ^<span class="o">(</span>.*<span class="o">)</span><span class="nv">$ </span>mysite.fcgi/<span class="nv">$1</span> <span class="o">[</span>QSA,L<span class="o">]</span>
+&lt;/VirtualHost&gt;
+</pre></div>
+<p>Django は、 <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">url</span> <span class="pre">%}</span></tt> テンプレートタグ (や、同様のメソッド) で URL を構
+築する際、自動的にリライト前の URL を使います。</p>
+</div>
+</div>
+<div class="section" id="s-lighttpd-fastcgi">
+<span id="s-lighttpd-setup"></span><h2>lighttpd での FastCGI 構成<a class="headerlink" href="#lighttpd-fastcgi" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.lighttpd.net/">lighttpd</a> は静的ファイルのサービスによく使われている軽量な Web サーバです。
+<a class="reference external" href="http://www.lighttpd.net/">lighttpd</a> はネイティブの FastCGI サポートを持っているので、 Apache の縛りが
+ない場合、動的ページと静的ページの両方をサービスするには良い選択肢といえま
+す。</p>
+<p><tt class="docutils literal"><span class="pre">mod_fastcgi</span></tt> がモジュールリストに入っているようにしてください。このとき、
+<tt class="docutils literal"><span class="pre">mod_rewrite</span></tt> や <tt class="docutils literal"><span class="pre">mod_access</span></tt> よりも後ろにして、 <tt class="docutils literal"><span class="pre">mod_accesslog</span></tt> より
+も前にします。 admin メディアファイルを提供するなら、 <tt class="docutils literal"><span class="pre">mod_alias</span></tt> も必要
+になるでしょう。</p>
+<p>lighttpd 設定ファイルに以下の設定を追加してください:</p>
+<div class="highlight"><pre><span class="n">server</span><span class="p">.</span><span class="n">document</span><span class="o">-</span><span class="n">root</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">/home/user/public_html&quot;</span>
+<span class="n">fastcgi</span><span class="p">.</span><span class="n">server</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;</span><span class="s">/mysite.fcgi&quot;</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="s2">&quot;</span><span class="s">main&quot;</span> <span class="o">=&gt;</span> <span class="p">(</span>
+            <span class="o">#</span> <span class="n">Use</span> <span class="n">host</span> <span class="o">/</span> <span class="n">port</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">socket</span> <span class="k">for</span> <span class="n">TCP</span> <span class="n">fastcgi</span>
+            <span class="o">#</span> <span class="s2">&quot;</span><span class="s">host&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">127.0.0.1&quot;</span><span class="p">,</span>
+            <span class="o">#</span> <span class="s2">&quot;</span><span class="s">port&quot;</span> <span class="o">=&gt;</span> <span class="mi">3033</span><span class="p">,</span>
+            <span class="s2">&quot;</span><span class="s">socket&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">/home/user/mysite.sock&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;</span><span class="s">check-local&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">disable&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="n">alias</span><span class="p">.</span><span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;</span><span class="s">/media/&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">/home/user/django/contrib/admin/media/&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">url</span><span class="p">.</span><span class="n">rewrite</span><span class="o">-</span><span class="n">once</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;</span><span class="s">^(/media.*)$&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">$1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;</span><span class="s">^/favicon\.ico$&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">/media/favicon.ico&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;</span><span class="s">^(/.*)$&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="s">/mysite.fcgi$1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+<div class="section" id="s-lighttpd-django">
+<span id="s-running-multiple-django-sites-on-one-lighttpd"></span><h3>lighttpd を使って複数の Django サイトを駆動する<a class="headerlink" href="#lighttpd-django" title="Permalink to this headline">¶</a></h3>
+<p>lighttpd には、ホストごとに設定をカスタマイズするための「条件付き設定
+(conditional configuration)」があります。複数の FastCGI サイトを指定するに
+は、各サイトごとに FastCGI 設定を条件分岐のブロックにします:</p>
+<div class="highlight"><pre><span class="c"># If the hostname is &#39;www.example1.com&#39;...</span>
+<span class="nv">$HTTP</span><span class="o">[</span><span class="s2">&quot;host&quot;</span><span class="o">]</span> <span class="o">==</span> <span class="s2">&quot;www.example1.com&quot;</span> <span class="o">{</span>
+    server.document-root <span class="o">=</span> <span class="s2">&quot;/foo/site1&quot;</span>
+    fastcgi.server <span class="o">=</span> <span class="o">(</span>
+       ...
+    <span class="o">)</span>
+    ...
+<span class="o">}</span>
+
+<span class="c"># If the hostname is &#39;www.example2.com&#39;...</span>
+<span class="nv">$HTTP</span><span class="o">[</span><span class="s2">&quot;host&quot;</span><span class="o">]</span> <span class="o">==</span> <span class="s2">&quot;www.example2.com&quot;</span> <span class="o">{</span>
+    server.document-root <span class="o">=</span> <span class="s2">&quot;/foo/site2&quot;</span>
+    fastcgi.server <span class="o">=</span> <span class="o">(</span>
+       ...
+    <span class="o">)</span>
+    ...
+<span class="o">}</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">fastcgi.server</span></tt> ディレクティブに複数のエントリを追加すれば、複数の
+Django を同じサイトでも駆動できます。各エントリごとに FastCGI ホストを追加
+してください。</p>
+</div>
+</div>
+<div class="section" id="s-apache-django">
+<span id="s-running-django-on-a-shared-hosting-provider-with-apache"></span><h2>Apache を使っている共有ホスティングプロバイダ上で Django を使う<a class="headerlink" href="#apache-django" title="Permalink to this headline">¶</a></h2>
+<p>共有ホスティングプロバイダの多くでは、独自のサーバデーモンを起動できなかっ
+たり、 <tt class="docutils literal"><span class="pre">httpd.conf</span></tt> ファイルを編集できなかったりします。このような場合で
+も、サーバ起動プロセスを使えば Django を駆動できます。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">この章で説明するような方法で Web サーバ起動プロセスを使う場合、 FastCGI
+サーバを自分で起動する必要はありません。Apache が必要に応じて複数のプロ
+セスを起動してくれます。</p>
+</div>
+<p>Web コンテンツのルートディレクトリ下に、以下のような内容のファイルを
+<tt class="docutils literal"><span class="pre">.htaccess</span></tt> という名前で保存します:</p>
+<div class="highlight"><pre><span class="nb">AddHandler</span> fastcgi-script .fcgi
+<span class="nb">RewriteEngine</span> <span class="k">On</span>
+<span class="nb">RewriteCond</span> %{REQUEST_FILENAME} !-f
+<span class="nb">RewriteRule</span> ^/(.*)$ <span class="sx">/mysite.fcgi/</span>$1 [QSA,L]
+</pre></div>
+<p>次に、 Apache に FastCGI プログラムの起動方法を教える小さなスクリプトを作成
+します。 <tt class="docutils literal"><span class="pre">mysite.fcgi</span></tt> というファイルを作成して Web コンテンツディレクト
+リに置き、実行可能にします:</p>
+<div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="c"># Add a custom Python path.</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;/home/user/python&quot;</span><span class="p">)</span>
+
+<span class="c"># Switch to the directory of your project. (Optional.)</span>
+<span class="c"># os.chdir(&quot;/home/user/myproject&quot;)</span>
+
+<span class="c"># Set the DJANGO_SETTINGS_MODULE environment variable.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;DJANGO_SETTINGS_MODULE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;myproject.settings&quot;</span>
+
+<span class="kn">from</span> <span class="nn">django.core.servers.fastcgi</span> <span class="kn">import</span> <span class="n">runfastcgi</span>
+<span class="n">runfastcgi</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&quot;threaded&quot;</span><span class="p">,</span> <span class="n">daemonize</span><span class="o">=</span><span class="s">&quot;false&quot;</span><span class="p">)</span>
+</pre></div>
+<div class="section" id="s-id8">
+<span id="s-restarting-the-spawned-server"></span><h3>起動中のサーバを再起動する<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>サイトを構成する Python コードを変更した場合、 FastCGI にコードが変更された
+ことを教えねばなりません。しかし、 FastCGI の場合には Apache を再起動する必
+要はありません。その代わり、 <tt class="docutils literal"><span class="pre">mysite.fcgi</span></tt> を再度アップロードするか、ファ
+イルを編集して、タイムスタンプを更新してください。 Apache は、ファイルのタ
+イムスタンプが更新されていることを発見すると、Django アプリケーションを再起
+動してくれます。</p>
+<p>Unix システムでコマンドラインシェルへのアクセスが許されているなら、
+<tt class="docutils literal"><span class="pre">touch</span></tt> コマンドを使えば簡単にタイムスタンプを更新できます:</p>
+<div class="highlight"><pre>touch mysite.fcgi
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-admin">
+<span id="s-serving-admin-media-files"></span><h2>Admin メディアファイルの提供<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h2>
+<p>サーバやその設定がどうあれ、何らかの形で admin メディアファイルを提供する方
+法を考えておかねばなりません。 <a class="reference external" href="modpython.html#serving-the-admin-files"><em>modpython</em></a>
+での運用に関するドキュメントには、上記の構成でも使えるアドバイスがあります。</p>
+</div>
+<div class="section" id="s-url">
+<h2>URL のプレフィクス部分を特定の値にする<a class="headerlink" href="#url" title="Permalink to this headline">¶</a></h2>
+<p>FastCGI を使った設置方法は、ほとんどが URL をリライトしてウェブサーバ内部の
+別の場所を指すようにしています。このとき、 Django から見えるパス情報には、
+もともとの URL が反映されません。そのため、 Django アプリケーションを特定の
+プレフィクスの下で動かしていて、 <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">url</span> <span class="pre">%}</span></tt> タグで表示される URL を、
+<tt class="docutils literal"><span class="pre">mysite.fcgi</span></tt> のようなリライト後のものでなく、プレフィクスのついた URL に
+したいときに問題が生じます。</p>
+<p>Django は実際のスクリプト名プレフィクスが何だったかをそれなりにうまく調べよ
+うとします。特に、ウェブサーバが <tt class="docutils literal"><span class="pre">SCRIPT_URL</span></tt> を設定する場合(Apache の
+modo_rewrite 特有の機能です) や、 <tt class="docutils literal"><span class="pre">REDIRECT_URL</span></tt> を設定する場合 (Apache
+と mod_rewrite をある構成で使ったとき) には、もとのプレフィクスを自動的に
+見つけ出します。</p>
+<p>Django がプレフィクスを正しく見付けられない場合や、リライト前の値を URL に
+使いたい場合には、設定ファイル中で <tt class="xref docutils literal"><span class="pre">FORCE_SCRIPT_NAME</span></tt> を設定して
+ください。この変数には、全ての URL に共通なスクリプト名を指定します。したがっ
+て、別々のスクリプト名を持った URL に対応するには個別に設定ファイルを用意せ
+ねばなりませんが、そのようなケースは稀でしょう。</p>
+<p>例えば、全てのコンテンツを <tt class="docutils literal"><span class="pre">'/'</span></tt> 以下の URL で提供するように Django を構
+成しているなら、設定ファイルには <tt class="docutils literal"><span class="pre">FORCE_SCRIPT_NAME</span> <span class="pre">=</span> <span class="pre">''</span></tt> と指定してくだ
+さい。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">FastCGI, SCGI, AJP で Django を使う</a><ul>
+<li><a class="reference external" href="#flup">必要なもの: flup</a></li>
+<li><a class="reference external" href="#fastcgi">FastCGI サーバを起動する</a><ul>
+<li><a class="reference external" href="#id2">プロトコル</a></li>
+<li><a class="reference external" href="#id5">実行例</a></li>
+<li><a class="reference external" href="#id6">FastCGI デーモンを止める</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#apache-fastcgi">Apache での FastCGI 構成</a><ul>
+<li><a class="reference external" href="#id7">FastCGI サーバの場所を指定する</a></li>
+<li><a class="reference external" href="#mod-rewrite-url-fastcgi">mod_rewrite を使って URL が FastCGI を指すようにする</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#lighttpd-fastcgi">lighttpd での FastCGI 構成</a><ul>
+<li><a class="reference external" href="#lighttpd-django">lighttpd を使って複数の Django サイトを駆動する</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#apache-django">Apache を使っている共有ホスティングプロバイダ上で Django を使う</a><ul>
+<li><a class="reference external" href="#id8">起動中のサーバを再起動する</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#admin">Admin メディアファイルの提供</a></li>
+<li><a class="reference external" href="#url">URL のプレフィクス部分を特定の値にする</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="modpython.html">Apache と mod_python で Django を動かす</a></li>
+    
+    
+      <li>次: <a href="../error-reporting.html">電子メールによるエラー通知</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">HOWTO ガイド</a>
+        
+          <ul><li><a href="index.html">Django のデプロイ</a>
+        
+        <ul><li>FastCGI, SCGI, AJP で Django を使う</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/howto/deployment/fastcgi.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="modpython.html" title="Apache と mod_python で Django を動かす">前へ</a> 
+     |
+    <a href="../index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="../error-reporting.html" title="電子メールによるエラー通知">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,861 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>localflavor アドオン &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="redirects アプリケーション" href="redirects.html" />
+    <link rel="prev" title="django.contrib.humanize" href="humanize.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="humanize.html" title="django.contrib.humanize">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="redirects.html" title="redirects アプリケーション">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-localflavor">
+            
+  
+  <div class="section" id="s-module-django.contrib.localflavor">
+<span id="s-ref-contrib-localflavor"></span><h1>localflavor アドオン<a class="headerlink" href="#module-django.contrib.localflavor" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Python の「バッテリ入り (batteries included)」哲学に従って、 Django には様々
+な国や文化のための有用なコードが付属しています。こうしたコードは
+「localflavor アドオン」と呼ばれ、 <tt class="xref docutils literal"><span class="pre">django.contrib.localflavor</span></tt> パッケー
+ジに収められています。</p>
+<p><tt class="xref docutils literal"><span class="pre">localflavor</span></tt> パッケージは、各国、各文化圏のコードを、
+それぞれ <a class="reference external" href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/english_country_names_and_code_elements.htm">ISO 3166 国別コード</a> に従って名付けたサブパッケージにまとめてい
+ます。</p>
+<p><tt class="xref docutils literal"><span class="pre">localflavor</span></tt> アドオンの大部分は、
+<a class="reference external" href="../../topics/forms/index.html#topics-forms-index"><em>forms</em></a> フレームワークから導出された、ローカライ
+ズされたフォームコンポーネントで占められています。例えば、
+<a title="django.contrib.localflavor.us.forms.USStateField" class="reference internal" href="#django.contrib.localflavor.us.forms.USStateField"><tt class="xref docutils literal"><span class="pre">USStateField</span></tt></a> にはアメリカの州
+名略号を検証する方法が組み込まれていますし、
+<a title="django.contrib.localflavor.fi.forms.FISocialSecurityNumber" class="reference internal" href="#django.contrib.localflavor.fi.forms.FISocialSecurityNumber"><tt class="xref docutils literal"><span class="pre">FISocialSecurityNumber</span></tt></a> は、フィ
+ンランドの社会保障番号の検証方法が組み込まれています。</p>
+<p>ローカライズコンポーネントは、サブパッケージを import するだけで使えます。
+例えば、フランスの電話番号を入力するためのフィールドを生成したければ、以下
+のようにします:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.contrib.localflavor.fr.forms</span> <span class="kn">import</span> <span class="n">FRPhoneNumberField</span>
+
+<span class="k">class</span> <span class="nc">MyForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="n">my_french_phone_no</span> <span class="o">=</span> <span class="n">FRPhoneNumberField</span><span class="p">()</span>
+</pre></div>
+<div class="section" id="s-id1">
+<span id="s-supported-countries"></span><h2>localflavor でサポートされている国<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref docutils literal"><span class="pre">localflavor</span></tt> がサポートしている国や文化圏は、以下の通
+りです:</p>
+<ul class="simple">
+<li>アルゼンチン (<a class="reference internal" href="#argentina-ar">Argentina</a>)</li>
+<li>オーストラリア (<a class="reference internal" href="#australia-au">Australia</a>)</li>
+<li>オーストリア (<a class="reference internal" href="#austria-at">Austria</a>)</li>
+<li>ブラジル (<a class="reference internal" href="#brazil-br">Brazil</a>)</li>
+<li>カナダ (<a class="reference internal" href="#canada-ca">Canada</a>)</li>
+<li>チリ (<a class="reference internal" href="#chile-cl">Chile</a>)</li>
+<li>フィンランド (<a class="reference internal" href="#finland-fi">Finland</a>)</li>
+<li>フランス (<a class="reference internal" href="#france-fr">France</a>)</li>
+<li>ドイツ (<a class="reference internal" href="#germany-de">Germany</a>)</li>
+<li>オランダ (<a class="reference internal" href="#holland-nl">Holland</a>)</li>
+<li>アイスランド (<a class="reference internal" href="#iceland-is">Iceland</a>)</li>
+<li>インド (<a class="reference internal" href="#india-in">India</a>)</li>
+<li>イタリア (<a class="reference internal" href="#italy-it">Italy</a>)</li>
+<li>日本 (<a class="reference internal" href="#japan-jp">Japan</a>)</li>
+<li>メキシコ (<a class="reference internal" href="#mexico-mx">Mexico</a>)</li>
+<li>ノルウェー (<a class="reference internal" href="#norway-no">Norway</a>)</li>
+<li>ペルー (<a class="reference internal" href="#peru-pe">Peru</a>)</li>
+<li>ポーランド (<a class="reference internal" href="#poland-pl">Poland</a>)</li>
+<li>ルーマニア (<a class="reference internal" href="#romania-ro">Romania</a>)</li>
+<li>スロバキア (<a class="reference internal" href="#slovakia-sk">Slovakia</a>)</li>
+<li>南アフリカ (<a class="reference internal" href="#south-africa-za">South Africa</a>)</li>
+<li>スペイン (<a class="reference internal" href="#spain-es">Spain</a>)</li>
+<li>スイス (<a class="reference internal" href="#switzerland-ch">Switzerland</a>)</li>
+<li>イギリス (<a class="reference internal" href="#united-kingdom-uk">United Kingdom</a>)</li>
+<li>アメリカ (<a class="reference internal" href="#united-states-of-america-us">United States of America</a>)</li>
+</ul>
+<p><tt class="xref docutils literal"><span class="pre">django.contrib.localfravor</span></tt> パッケージ内には、 <tt class="docutils literal"><span class="pre">generic</span></tt> というサブ
+パッケージもあります。このパッケージは、複数の国や文化で便利なコードをまと
+めています。現状では、このモジュールには、アメリカの標準をデフォルトとしな
+い、 <a class="reference external" href="../../topics/forms/index.html#topics-forms-index"><em>forms</em></a> に基づいた日付や時刻の入力フィールド
+が入っています。使い方を以下に示します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.contrib.localflavor</span> <span class="kn">import</span> <span class="n">generic</span>
+
+<span class="k">class</span> <span class="nc">MyForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="n">my_date_field</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="s-id2">
+<span id="s-adding-flavors"></span><h2>新たなローカルフレーバを追加する<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>私達は、これからもローカルフレーバを充実させていきたいと考えています。ロー
+カルフレーバに取り込みたいコードがあるなら、 <a class="reference external" href="http://code.djangoproject.com/simpleticket">チケットを作成</a> してください。
+ローカルフレーバの作成でお願いしたいのは、文字列を Unicode リテラルで表現
+(<tt class="docutils literal"><span class="pre">u'mystring'</span></tt>) し、ファイルのエンコーディングに頼って指定しないで欲しい
+ということです。既にあるローカルフレーバのコードが参考になるでしょう。</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-argentina-ar"></span><h2>Argentina: アルゼンチン (<tt class="docutils literal"><span class="pre">ar</span></tt>)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.ar.forms.ARPostalCodeField">
+<!--[django.contrib.localflavor.ar.forms.ARPostalCodeField]-->class <tt class="descclassname">ar.forms.</tt><tt class="descname">ARPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.ar.forms.ARPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい旧形式のアルゼンチン郵便番号または <a class="reference external" href="http://www.correoargentino.com.ar/consulta_cpa/home.php">CPA</a> であるか検証するフォー
+ムフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ar.forms.ARDNIField">
+<!--[django.contrib.localflavor.ar.forms.ARDNIField]-->class <tt class="descclassname">ar.forms.</tt><tt class="descname">ARDNIField</tt><a class="headerlink" href="#django.contrib.localflavor.ar.forms.ARDNIField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい Documento Nacional de Identidad (DNI) であるか検証するフォー
+ムフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ar.forms.ARCUITField">
+<!--[django.contrib.localflavor.ar.forms.ARCUITField]-->class <tt class="descclassname">ar.forms.</tt><tt class="descname">ARCUITField</tt><a class="headerlink" href="#django.contrib.localflavor.ar.forms.ARCUITField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい Código Único de Identificación Tributaria (CUIT) 番号であ
+るかか検証するフォームフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ar.forms.ARProvinceSelect">
+<!--[django.contrib.localflavor.ar.forms.ARProvinceSelect]-->class <tt class="descclassname">ar.forms.</tt><tt class="descname">ARProvinceSelect</tt><a class="headerlink" href="#django.contrib.localflavor.ar.forms.ARProvinceSelect" title="Permalink to this definition">¶</a></dt>
+<dd>アルゼンチンの州および自治領を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id5">
+<span id="s-australia-au"></span><h2>Australia: オーストラリア (<tt class="docutils literal"><span class="pre">au</span></tt>)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.au.forms.AUPostCodeField">
+<!--[django.contrib.localflavor.au.forms.AUPostCodeField]-->class <tt class="descclassname">au.forms.</tt><tt class="descname">AUPostCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.au.forms.AUPostCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいオーストラリアの郵便番号であるか検証するフォームフィールド
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.au.forms.AUPhoneNumberField">
+<!--[django.contrib.localflavor.au.forms.AUPhoneNumberField]-->class <tt class="descclassname">au.forms.</tt><tt class="descname">AUPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.au.forms.AUPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力がオーストラリアの電話番号であるか検証するフォームフィールドです。
+有効な番号は 10 桁の数字からなります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.au.forms.AUStateSelect">
+<!--[django.contrib.localflavor.au.forms.AUStateSelect]-->class <tt class="descclassname">au.forms.</tt><tt class="descname">AUStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.au.forms.AUStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>オーストラリアの州や領を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id6">
+<span id="s-austria-at"></span><h2>Austria: オーストリア(<tt class="docutils literal"><span class="pre">at</span></tt>)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.at.forms.ATZipCodeField">
+<!--[django.contrib.localflavor.at.forms.ATZipCodeField]-->class <tt class="descclassname">at.forms.</tt><tt class="descname">ATZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.at.forms.ATZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいオーストリアの ZIP コードであるか検証するフォームフィールド
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.at.forms.ATStateSelect">
+<!--[django.contrib.localflavor.at.forms.ATStateSelect]-->class <tt class="descclassname">at.forms.</tt><tt class="descname">ATStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.at.forms.ATStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>選択肢のリストにオーストリアの州が設定された <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェット
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.at.forms.ATSocialSecurityNumberField">
+<!--[django.contrib.localflavor.at.forms.ATSocialSecurityNumberField]-->class <tt class="descclassname">at.forms.</tt><tt class="descname">ATSocialSecurityNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.at.forms.ATSocialSecurityNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいオーストリアの社会保障番号であるか検証するフォームフィール
+ドです。</dd></dl>
+
+</div>
+<div class="section" id="s-id7">
+<span id="s-brazil-br"></span><h2>Brazil: ブラジル (<tt class="docutils literal"><span class="pre">br</span></tt>)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.br.forms.BRPhoneNumberField">
+<!--[django.contrib.localflavor.br.forms.BRPhoneNumberField]-->class <tt class="descclassname">br.forms.</tt><tt class="descname">BRPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.br.forms.BRPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいブラジルの電話番号であるか検証するフォームフィールドです。
+正しい形式は XX-XXXX-XXXX です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.br.forms.BRZipCodeField">
+<!--[django.contrib.localflavor.br.forms.BRZipCodeField]-->class <tt class="descclassname">br.forms.</tt><tt class="descname">BRZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.br.forms.BRZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいブラジルのZIPコードであるか検証するフォームフィールドです。
+正しい形式はXXXXX-XXXです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.br.forms.BRStateSelect">
+<!--[django.contrib.localflavor.br.forms.BRStateSelect]-->class <tt class="descclassname">br.forms.</tt><tt class="descname">BRStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.br.forms.BRStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>ブラジルの州や領を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id8">
+<span id="s-canada-ca"></span><h2>Canada: カナダ (<tt class="docutils literal"><span class="pre">ca</span></tt>)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.ca.forms.CAPhoneNumberField">
+<!--[django.contrib.localflavor.ca.forms.CAPhoneNumberField]-->class <tt class="descclassname">ca.forms.</tt><tt class="descname">CAPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.ca.forms.CAPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいカナダの電話番号であるか検証するフォームフィールドです。
+正しい形式はXXX-XXX-XXXXです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ca.forms.CAPostalCodeField">
+<!--[django.contrib.localflavor.ca.forms.CAPostalCodeField]-->class <tt class="descclassname">ca.forms.</tt><tt class="descname">CAPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.ca.forms.CAPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいカナダの郵便番号であるか検証するフォームフィールドです。
+正しい形式はXXX XXXです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ca.forms.CAProvinceField">
+<!--[django.contrib.localflavor.ca.forms.CAProvinceField]-->class <tt class="descclassname">ca.forms.</tt><tt class="descname">CAProvinceField</tt><a class="headerlink" href="#django.contrib.localflavor.ca.forms.CAProvinceField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいカナダの州名か、州名略号であるか検証するフォームフィールド
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ca.forms.CASocialInsuranceNumberField">
+<!--[django.contrib.localflavor.ca.forms.CASocialInsuranceNumberField]-->class <tt class="descclassname">ca.forms.</tt><tt class="descname">CASocialInsuranceNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.ca.forms.CASocialInsuranceNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいカナダ社会保障番号 (SIN) であるか検証するフォームフィールド
+です。正しい SIN は、XXX-XXX-XXX の形式で、 <a class="reference external" href="http://en.wikipedia.org/wiki/Luhn_algorithm">Luhn mod-10 checksum</a>
+検証をパスします。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ca.forms.CAProvinceSelect">
+<!--[django.contrib.localflavor.ca.forms.CAProvinceSelect]-->class <tt class="descclassname">ca.forms.</tt><tt class="descname">CAProvinceSelect</tt><a class="headerlink" href="#django.contrib.localflavor.ca.forms.CAProvinceSelect" title="Permalink to this definition">¶</a></dt>
+<dd>カナダの州や領を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id9">
+<span id="s-chile-cl"></span><h2>Chile: チリ (<tt class="docutils literal"><span class="pre">cl</span></tt>)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.cl.forms.CLRutField">
+<!--[django.contrib.localflavor.cl.forms.CLRutField]-->class <tt class="descclassname">cl.forms.</tt><tt class="descname">CLRutField</tt><a class="headerlink" href="#django.contrib.localflavor.cl.forms.CLRutField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいチリ国民識別番号 ('Rol Unico Tributario' or RUT) であるか検
+証するフォームフィールドです。正しい形式は XX.XXX.XXX-X です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.cl.forms.CLRegionSelect">
+<!--[django.contrib.localflavor.cl.forms.CLRegionSelect]-->class <tt class="descclassname">cl.forms.</tt><tt class="descname">CLRegionSelect</tt><a class="headerlink" href="#django.contrib.localflavor.cl.forms.CLRegionSelect" title="Permalink to this definition">¶</a></dt>
+<dd>チリの地域 (Regiones) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id10">
+<span id="s-finland-fi"></span><h2>Finland: フィンランド (<tt class="docutils literal"><span class="pre">fi</span></tt>)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.fi.forms.FISocialSecurityNumber">
+<!--[django.contrib.localflavor.fi.forms.FISocialSecurityNumber]-->class <tt class="descclassname">fi.forms.</tt><tt class="descname">FISocialSecurityNumber</tt><a class="headerlink" href="#django.contrib.localflavor.fi.forms.FISocialSecurityNumber" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいフィンランド社会保障番号であるか検証するフォームフィールド
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.fi.forms.FIZipCodeField">
+<!--[django.contrib.localflavor.fi.forms.FIZipCodeField]-->class <tt class="descclassname">fi.forms.</tt><tt class="descname">FIZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.fi.forms.FIZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいフィンランドのZIPコードであるか検証するフォームフィールドで
+す。正しいコードは 5 桁の数字からなります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.fi.forms.FIMunicipalitySelect">
+<!--[django.contrib.localflavor.fi.forms.FIMunicipalitySelect]-->class <tt class="descclassname">fi.forms.</tt><tt class="descname">FIMunicipalitySelect</tt><a class="headerlink" href="#django.contrib.localflavor.fi.forms.FIMunicipalitySelect" title="Permalink to this definition">¶</a></dt>
+<dd>フィンランドの市名 (municipality) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id11">
+<span id="s-france-fr"></span><h2>France: フランス (<tt class="docutils literal"><span class="pre">fr</span></tt>)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.fr.forms.FRPhoneNumberField">
+<!--[django.contrib.localflavor.fr.forms.FRPhoneNumberField]-->class <tt class="descclassname">fr.forms.</tt><tt class="descname">FRPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.fr.forms.FRPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいフランスの電話番号であるか検証するフォームフィールドです。
+正しい形式は、 0X XX XX XX XX, 0X.XX.XX.XX.XX, または 0XXXXXXXXX です。
+入力は 0X XX XX XX XX 形式に正規化されます。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.fr.forms.FRZipCodeField">
+<!--[django.contrib.localflavor.fr.forms.FRZipCodeField]-->class <tt class="descclassname">fr.forms.</tt><tt class="descname">FRZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.fr.forms.FRZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいフランスのZIPコードであるか検証するフォームフィールドです。
+正しいZIPコードは5桁の数字からなります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.fr.forms.FRDepartmentSelect">
+<!--[django.contrib.localflavor.fr.forms.FRDepartmentSelect]-->class <tt class="descclassname">fr.forms.</tt><tt class="descname">FRDepartmentSelect</tt><a class="headerlink" href="#django.contrib.localflavor.fr.forms.FRDepartmentSelect" title="Permalink to this definition">¶</a></dt>
+<dd>フランスの県名 (department) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id12">
+<span id="s-germany-de"></span><h2>Germany: ドイツ (<tt class="docutils literal"><span class="pre">de</span></tt>)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.de.forms.DEIdentityCardNumberField">
+<!--[django.contrib.localflavor.de.forms.DEIdentityCardNumberField]-->class <tt class="descclassname">de.forms.</tt><tt class="descname">DEIdentityCardNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.de.forms.DEIdentityCardNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいドイツの身分保障番号 (<a class="reference external" href="http://de.wikipedia.org/wiki/Personalausweis">Personalausweis</a>) であるか検証するフォー
+ムフィールドです。正しい番号は XXXXXXXXXXX-XXXXXXX-XXXXXXX-X で、どの桁
+グループもゼロだけで構成されていてはなりません。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.de.forms.DEZipCodeField">
+<!--[django.contrib.localflavor.de.forms.DEZipCodeField]-->class <tt class="descclassname">de.forms.</tt><tt class="descname">DEZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.de.forms.DEZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいドイツのZIPコードであるか検証するフォームフィールドです。正
+しいコードは5桁の数字からなります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.de.forms.DEStateSelect">
+<!--[django.contrib.localflavor.de.forms.DEStateSelect]-->class <tt class="descclassname">de.forms.</tt><tt class="descname">DEStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.de.forms.DEStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>ドイツの州を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id13">
+<span id="s-holland-nl"></span><h2>Holland: オランダ (<tt class="docutils literal"><span class="pre">nl</span></tt>)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.nl.forms.NLPhoneNumberField">
+<!--[django.contrib.localflavor.nl.forms.NLPhoneNumberField]-->class <tt class="descclassname">nl.forms.</tt><tt class="descname">NLPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.nl.forms.NLPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいオランダの電話番号であるか検証するフォームフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.nl.forms.NLSofiNumberField">
+<!--[django.contrib.localflavor.nl.forms.NLSofiNumberField]-->class <tt class="descclassname">nl.forms.</tt><tt class="descname">NLSofiNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.nl.forms.NLSofiNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいオランダ社会保障番号 (SoFI/BSN) であるか検証するフォームフィー
+ルドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.nl.forms.NLZipCodeField">
+<!--[django.contrib.localflavor.nl.forms.NLZipCodeField]-->class <tt class="descclassname">nl.forms.</tt><tt class="descname">NLZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.nl.forms.NLZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいオランダのZIPコードであるか検証するフォームフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.nl.forms.NLProvinceSelect">
+<!--[django.contrib.localflavor.nl.forms.NLProvinceSelect]-->class <tt class="descclassname">nl.forms.</tt><tt class="descname">NLProvinceSelect</tt><a class="headerlink" href="#django.contrib.localflavor.nl.forms.NLProvinceSelect" title="Permalink to this definition">¶</a></dt>
+<dd>オランダの県 (province) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id14">
+<span id="s-iceland-is"></span><h2>Iceland: アイスランド (<tt class="docutils literal"><span class="pre">is_</span></tt>)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.is_.forms.ISIdNumberField">
+<!--[django.contrib.localflavor.is_.forms.ISIdNumberField]-->class <tt class="descclassname">is_.forms.</tt><tt class="descname">ISIdNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.is_.forms.ISIdNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいアイスランドの身分証明番号 (kennitala) であるか検証するフォー
+ムフィールドです。形式は XXXXXX-XXXX です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.is_.forms.ISPhoneNumberField">
+<!--[django.contrib.localflavor.is_.forms.ISPhoneNumberField]-->class <tt class="descclassname">is_.forms.</tt><tt class="descname">ISPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.is_.forms.ISPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいアイスランド電話番号 (7 桁の数字で、最初の3桁以後にハイフン
+やスペースが入っていてもよい) であるか検証するフォームフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.is_.forms.ISPostalCodeSelect">
+<!--[django.contrib.localflavor.is_.forms.ISPostalCodeSelect]-->class <tt class="descclassname">is_.forms.</tt><tt class="descname">ISPostalCodeSelect</tt><a class="headerlink" href="#django.contrib.localflavor.is_.forms.ISPostalCodeSelect" title="Permalink to this definition">¶</a></dt>
+<dd>アイスランドの郵便番号を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id15">
+<span id="s-india-in"></span><h2>India: インド (<tt class="docutils literal"><span class="pre">in_</span></tt>)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.in.forms.INStateField">
+<!--[django.contrib.localflavor.in.forms.INStateField]-->class <tt class="descclassname">in.forms.</tt><tt class="descname">INStateField</tt><a class="headerlink" href="#django.contrib.localflavor.in.forms.INStateField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいインドの州・領名または略号であるか検証するフォームフィール
+ドです。入力は車両番号登録に使われる標準の 2 文字略号形式に正規化されま
+す。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.in.forms.INZipCodeField">
+<!--[django.contrib.localflavor.in.forms.INZipCodeField]-->class <tt class="descclassname">in.forms.</tt><tt class="descname">INZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.in.forms.INZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいインドのZIPコードであるか検証するフォームフィールドです。形
+式は XXXXXXX です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.in.forms.INStateSelect">
+<!--[django.contrib.localflavor.in.forms.INStateSelect]-->class <tt class="descclassname">in.forms.</tt><tt class="descname">INStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.in.forms.INStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>インドの州や領を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id16">
+<span id="s-italy-it"></span><h2>Italy: イタリア (<tt class="docutils literal"><span class="pre">it</span></tt>)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.it.forms.ITSocialSecurityNumberField">
+<!--[django.contrib.localflavor.it.forms.ITSocialSecurityNumberField]-->class <tt class="descclassname">it.forms.</tt><tt class="descname">ITSocialSecurityNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.it.forms.ITSocialSecurityNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいイタリア社会保障番号 (<a class="reference external" href="http://www.agenziaentrate.it/ilwwcm/connect/Nsi/Servizi/Codice+fiscale+-+tessera+sanitaria/Codice+fiscale/NSI+Informazioni+sulla+codificazione+delle+persone+fisiche">codice fiscale</a>) であるか検証する
+フォームフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.it.forms.ITVatNumberField">
+<!--[django.contrib.localflavor.it.forms.ITVatNumberField]-->class <tt class="descclassname">it.forms.</tt><tt class="descname">ITVatNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.it.forms.ITVatNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいイタリアの VAT 番号 (partita IVA) であるか検証するフォーム
+フィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.it.forms.ITZipCodeField">
+<!--[django.contrib.localflavor.it.forms.ITZipCodeField]-->class <tt class="descclassname">it.forms.</tt><tt class="descname">ITZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.it.forms.ITZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいイタリアのZIPコードであるか検証するフォームフィールドです。
+正しいコードは 5 桁の数字です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.it.forms.ITProvinceSelect">
+<!--[django.contrib.localflavor.it.forms.ITProvinceSelect]-->class <tt class="descclassname">it.forms.</tt><tt class="descname">ITProvinceSelect</tt><a class="headerlink" href="#django.contrib.localflavor.it.forms.ITProvinceSelect" title="Permalink to this definition">¶</a></dt>
+<dd>イタリアの県 (province) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.it.forms.ITRegionSelect">
+<!--[django.contrib.localflavor.it.forms.ITRegionSelect]-->class <tt class="descclassname">it.forms.</tt><tt class="descname">ITRegionSelect</tt><a class="headerlink" href="#django.contrib.localflavor.it.forms.ITRegionSelect" title="Permalink to this definition">¶</a></dt>
+<dd>イタリアの地域名 (region) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id17">
+<span id="s-japan-jp"></span><h2>Japan: 日本 (<tt class="docutils literal"><span class="pre">jp</span></tt>)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.jp.forms.JPPostalCodeField">
+<!--[django.contrib.localflavor.jp.forms.JPPostalCodeField]-->class <tt class="descclassname">jp.forms.</tt><tt class="descname">JPPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.jp.forms.JPPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい日本の郵便番号であるか検証するフォームフィールドです。7 桁
+の数字で、ハイフンはあってもなくても構いません。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.jp.forms.JPPrefectureSelect">
+<!--[django.contrib.localflavor.jp.forms.JPPrefectureSelect]-->class <tt class="descclassname">jp.forms.</tt><tt class="descname">JPPrefectureSelect</tt><a class="headerlink" href="#django.contrib.localflavor.jp.forms.JPPrefectureSelect" title="Permalink to this definition">¶</a></dt>
+<dd>日本の県を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id18">
+<span id="s-mexico-mx"></span><h2>Mexico: メキシコ (<tt class="docutils literal"><span class="pre">mx</span></tt>)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.mx.forms.MXStateSelect">
+<!--[django.contrib.localflavor.mx.forms.MXStateSelect]-->class <tt class="descclassname">mx.forms.</tt><tt class="descname">MXStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.mx.forms.MXStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>メキシコの州を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id19">
+<span id="s-norway-no"></span><h2>Norway: ノルウェー (<tt class="docutils literal"><span class="pre">no</span></tt>)<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.no.forms.NOSocialSecurityNumber">
+<!--[django.contrib.localflavor.no.forms.NOSocialSecurityNumber]-->class <tt class="descclassname">no.forms.</tt><tt class="descname">NOSocialSecurityNumber</tt><a class="headerlink" href="#django.contrib.localflavor.no.forms.NOSocialSecurityNumber" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいノルウェー社会保証番号 (<a class="reference external" href="http://no.wikipedia.org/wiki/Personnummer">personnummer</a>) であるか検証するフォー
+ムフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.no.forms.NOZipCodeField">
+<!--[django.contrib.localflavor.no.forms.NOZipCodeField]-->class <tt class="descclassname">no.forms.</tt><tt class="descname">NOZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.no.forms.NOZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいノルウェーのZIPコードであるか検証するフォームフィールドです。
+正しいコードは 4 桁の数字です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.no.forms.NOMunicipalitySelect">
+<!--[django.contrib.localflavor.no.forms.NOMunicipalitySelect]-->class <tt class="descclassname">no.forms.</tt><tt class="descname">NOMunicipalitySelect</tt><a class="headerlink" href="#django.contrib.localflavor.no.forms.NOMunicipalitySelect" title="Permalink to this definition">¶</a></dt>
+<dd>ノルウェーの市名 (municipality, fylker) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェッ
+トです。</dd></dl>
+
+</div>
+<div class="section" id="s-id20">
+<span id="s-peru-pe"></span><h2>Peru: ペルー (<tt class="docutils literal"><span class="pre">pe</span></tt>)<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.pe.forms.PEDNIField">
+<!--[django.contrib.localflavor.pe.forms.PEDNIField]-->class <tt class="descclassname">pe.forms.</tt><tt class="descname">PEDNIField</tt><a class="headerlink" href="#django.contrib.localflavor.pe.forms.PEDNIField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいペルー国民識別番号 (DNI) であるか検証するフォームフィールド
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pe.forms.PERUCField">
+<!--[django.contrib.localflavor.pe.forms.PERUCField]-->class <tt class="descclassname">pe.forms.</tt><tt class="descname">PERUCField</tt><a class="headerlink" href="#django.contrib.localflavor.pe.forms.PERUCField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい納税登録番号 (Registro Unico de Contribuyentes, RUC) である
+か検証するフォームフィールドです。正しい RUC 番号は 11 桁の数字形式です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pe.forms.PEDepartmentSelect">
+<!--[django.contrib.localflavor.pe.forms.PEDepartmentSelect]-->class <tt class="descclassname">pe.forms.</tt><tt class="descname">PEDepartmentSelect</tt><a class="headerlink" href="#django.contrib.localflavor.pe.forms.PEDepartmentSelect" title="Permalink to this definition">¶</a></dt>
+<dd>ペルーの県 (department) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id21">
+<span id="s-poland-pl"></span><h2>Poland: ポーランド (<tt class="docutils literal"><span class="pre">pl</span></tt>)<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.pl.forms.PLNationalIdentificationNumberField">
+<!--[django.contrib.localflavor.pl.forms.PLNationalIdentificationNumberField]-->class <tt class="descclassname">pl.forms.</tt><tt class="descname">PLNationalIdentificationNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.pl.forms.PLNationalIdentificationNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいポーランド国民識別番号 (<a class="reference external" href="http://en.wikipedia.org/wiki/PESEL">PESEL</a>) であるか検証するフォームフィー
+ルドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pl.forms.PLNationalBusinessRegisterField">
+<!--[django.contrib.localflavor.pl.forms.PLNationalBusinessRegisterField]-->class <tt class="descclassname">pl.forms.</tt><tt class="descname">PLNationalBusinessRegisterField</tt><a class="headerlink" href="#django.contrib.localflavor.pl.forms.PLNationalBusinessRegisterField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいポーランド法人登記番号 (<a class="reference external" href="http://www.stat.gov.pl/bip/regon_ENG_HTML.htm">REGON</a>) であるか検証するフォームフィー
+ルドです。REGON は 7 桁または 9 桁の数字で、
+<a class="reference external" href="http://wipos.p.lodz.pl/zylla/ut/nip-rego.html">http://wipos.p.lodz.pl/zylla/ut/nip-rego.html</a> のチェックサムアルゴリズ
+ムに従います。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pl.forms.PLPostalCodeField">
+<!--[django.contrib.localflavor.pl.forms.PLPostalCodeField]-->class <tt class="descclassname">pl.forms.</tt><tt class="descname">PLPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.pl.forms.PLPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいポーランドの郵便番号であるか検証するフォームフィールドです。
+正しい郵便番号は XX-XXX 形式の数字です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pl.forms.PLTaxNumberField">
+<!--[django.contrib.localflavor.pl.forms.PLTaxNumberField]-->class <tt class="descclassname">pl.forms.</tt><tt class="descname">PLTaxNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.pl.forms.PLTaxNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいポーランド納税者番号 (NIP) であるか検証するフォームフィール
+ドです。正しい形式は XXX-XXX-XX-XX または XX-XX-XXX-XXX です。NIP に使
+われるチェックサムアルゴリズムは
+<a class="reference external" href="http://wipos.p.lodz.pl/zylla/ut/nip-rego.html">http://wipos.p.lodz.pl/zylla/ut/nip-rego.html</a> で定義されています。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pl.forms.PLAdministrativeUnitSelect">
+<!--[django.contrib.localflavor.pl.forms.PLAdministrativeUnitSelect]-->class <tt class="descclassname">pl.forms.</tt><tt class="descname">PLAdministrativeUnitSelect</tt><a class="headerlink" href="#django.contrib.localflavor.pl.forms.PLAdministrativeUnitSelect" title="Permalink to this definition">¶</a></dt>
+<dd>ポーランドの行政単位 (administrative unit) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェッ
+トです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.pl.forms.PLVoivodeshipSelect">
+<!--[django.contrib.localflavor.pl.forms.PLVoivodeshipSelect]-->class <tt class="descclassname">pl.forms.</tt><tt class="descname">PLVoivodeshipSelect</tt><a class="headerlink" href="#django.contrib.localflavor.pl.forms.PLVoivodeshipSelect" title="Permalink to this definition">¶</a></dt>
+<dd>ポーランドの郡 (voivodeship, 行政州) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットで
+す。</dd></dl>
+
+</div>
+<div class="section" id="s-id22">
+<span id="s-romania-ro"></span><h2>Romania: ルーマニア (<tt class="docutils literal"><span class="pre">ro</span></tt>)<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROCIFField">
+<!--[django.contrib.localflavor.ro.forms.ROCIFField]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROCIFField</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROCIFField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいルーマニア社会保障番号 (CIF) であるか検証するフォームフィー
+ルドです。入力の先頭に <tt class="docutils literal"><span class="pre">RO</span></tt> がついていた場合、戻り値からは除去します。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROCNPField">
+<!--[django.contrib.localflavor.ro.forms.ROCNPField]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROCNPField</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROCNPField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいルーマニア個人番号 (CNP) であるか検証するフォームフィールド
+です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROCountyField">
+<!--[django.contrib.localflavor.ro.forms.ROCountyField]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROCountyField</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROCountyField" title="Permalink to this definition">¶</a></dt>
+<dd>入力をルーマニアの地域 (judet) またはその略号として検証するフォームフィー
+ルドです。このフィールドは、入力値の示す地域名を、標準の車両登録番号で
+使われる略号に正規化して返します。このフィールドは、分音符号で書かれた
+名前しか解釈できません。正しい値を入力させるのが難しいときは、
+<tt class="docutils literal"><span class="pre">ROCountySelect</span></tt> の利用を検討してください。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROCountySelect">
+<!--[django.contrib.localflavor.ro.forms.ROCountySelect]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROCountySelect</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROCountySelect" title="Permalink to this definition">¶</a></dt>
+<dd>ルーマニアの地域 (judete) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウイジェットです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROIBANField">
+<!--[django.contrib.localflavor.ro.forms.ROIBANField]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROIBANField</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROIBANField" title="Permalink to this definition">¶</a></dt>
+<dd>入力がルーマニア国際銀行の正しい口座番号であるか検証するフォームフィー
+ルドです。正しい口座番号の形式は ROXX-XXXX-XXXX-XXXX-XXXX-XXXX で、ハイ
+フンはあってもなくてもかまいません。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROPhoneNumberField">
+<!--[django.contrib.localflavor.ro.forms.ROPhoneNumberField]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいルーマニアの電話番号であるか検証するフォームフィールドです。
+このフィールドは、いくつかの特殊な番号を排除します。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ro.forms.ROPostalCodeField">
+<!--[django.contrib.localflavor.ro.forms.ROPostalCodeField]-->class <tt class="descclassname">ro.forms.</tt><tt class="descname">ROPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.ro.forms.ROPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいルーマニアの郵便番号であるか検証するフォームフィールドです。</dd></dl>
+
+</div>
+<div class="section" id="s-id23">
+<span id="s-slovakia-sk"></span><h2>Slovakia (<tt class="docutils literal"><span class="pre">sk</span></tt>)<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.sk.forms.SKPostalCodeField">
+<!--[django.contrib.localflavor.sk.forms.SKPostalCodeField]-->class <tt class="descclassname">sk.forms.</tt><tt class="descname">SKPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.sk.forms.SKPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスロバキアの郵便番号であるか検証するフォームフィールドです。
+正しい番号は、 XXXXX または XXX XX の形式をとります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.sk.forms.SKDistrictSelect">
+<!--[django.contrib.localflavor.sk.forms.SKDistrictSelect]-->class <tt class="descclassname">sk.forms.</tt><tt class="descname">SKDistrictSelect</tt><a class="headerlink" href="#django.contrib.localflavor.sk.forms.SKDistrictSelect" title="Permalink to this definition">¶</a></dt>
+<dd>スロバキアの州 (district) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.sk.forms.SKRegionSelect">
+<!--[django.contrib.localflavor.sk.forms.SKRegionSelect]-->class <tt class="descclassname">sk.forms.</tt><tt class="descname">SKRegionSelect</tt><a class="headerlink" href="#django.contrib.localflavor.sk.forms.SKRegionSelect" title="Permalink to this definition">¶</a></dt>
+<dd>スロバキアの地域 (region) を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id24">
+<span id="s-south-africa-za"></span><h2>South Africa (<tt class="docutils literal"><span class="pre">za</span></tt>)<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.za.forms.ZAIDField">
+<!--[django.contrib.localflavor.za.forms.ZAIDField]-->class <tt class="descclassname">za.forms.</tt><tt class="descname">ZAIDField</tt><a class="headerlink" href="#django.contrib.localflavor.za.forms.ZAIDField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい南アフリカ身分証明番号であるか検証するフォームフィールドで
+す。検証では、 Luhn チェックサムと、簡単な (完全に厳密ではない) 誕生日
+のチェックを行います。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.za.forms.ZAPostCodeField">
+<!--[django.contrib.localflavor.za.forms.ZAPostCodeField]-->class <tt class="descclassname">za.forms.</tt><tt class="descname">ZAPostCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.za.forms.ZAPostCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しい南アフリカの郵便番号であるか検証するフォームフィールドです。
+正しい郵便番号は 4 桁からなります。</dd></dl>
+
+</div>
+<div class="section" id="s-id25">
+<span id="s-spain-es"></span><h2>Spain (<tt class="docutils literal"><span class="pre">es</span></tt>)<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.es.forms.ESIdentityCardNumberField">
+<!--[django.contrib.localflavor.es.forms.ESIdentityCardNumberField]-->class <tt class="descclassname">es.forms.</tt><tt class="descname">ESIdentityCardNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.es.forms.ESIdentityCardNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスペインの NIF/NIE/CIF (納税者識別番号) であるか検証するフォー
+ムフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.es.forms.ESCCCField">
+<!--[django.contrib.localflavor.es.forms.ESCCCField]-->class <tt class="descclassname">es.forms.</tt><tt class="descname">ESCCCField</tt><a class="headerlink" href="#django.contrib.localflavor.es.forms.ESCCCField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスペイン銀行口座番号 (Codigo Cuenta Cliente, CCC) であるか
+検証するフォームフィールドです。正しい CCC 番号は、
+EEEE-OOOO-CC-AAAAAAAAAA の形式であり、 E, O, C および A はそれぞれ組織、
+支店、チェックサムおよび口座番号を示しています。チェックサムの上下の桁
+は、それぞれ支店番号および口座番号のチェックサム値です。区切り文字にス
+ペースを使ってもよく、区切り文字がなくてもかまいません。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.es.forms.ESPhoneNumberField">
+<!--[django.contrib.localflavor.es.forms.ESPhoneNumberField]-->class <tt class="descclassname">es.forms.</tt><tt class="descname">ESPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.es.forms.ESPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスペインの電話番号であるか検証するフォームフィールドです。
+正しい番号は、 9 桁からなり、先頭の番号は 6, 8, または 9 です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.es.forms.ESPostalCodeField">
+<!--[django.contrib.localflavor.es.forms.ESPostalCodeField]-->class <tt class="descclassname">es.forms.</tt><tt class="descname">ESPostalCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.es.forms.ESPostalCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスペインの郵便番号であるか検証するフォームフィールドです。
+正しい番号は 5 桁の数字からなり、先頭の二桁が州を表す 01 から 52 の間の
+値をとります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.es.forms.ESProvinceSelect">
+<!--[django.contrib.localflavor.es.forms.ESProvinceSelect]-->class <tt class="descclassname">es.forms.</tt><tt class="descname">ESProvinceSelect</tt><a class="headerlink" href="#django.contrib.localflavor.es.forms.ESProvinceSelect" title="Permalink to this definition">¶</a></dt>
+<dd>スペインの州名を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.es.forms.ESRegionSelect">
+<!--[django.contrib.localflavor.es.forms.ESRegionSelect]-->class <tt class="descclassname">es.forms.</tt><tt class="descname">ESRegionSelect</tt><a class="headerlink" href="#django.contrib.localflavor.es.forms.ESRegionSelect" title="Permalink to this definition">¶</a></dt>
+<dd>スペインの領名を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id26">
+<span id="s-switzerland-ch"></span><h2>Switzerland (<tt class="docutils literal"><span class="pre">ch</span></tt>)<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.ch.forms.CHIdentityCardNumberField">
+<!--[django.contrib.localflavor.ch.forms.CHIdentityCardNumberField]-->class <tt class="descclassname">ch.forms.</tt><tt class="descname">CHIdentityCardNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.ch.forms.CHIdentityCardNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスイスの身分証明書番号であるか検証するフォームフィールドで
+す。正しい番号は、 X1234567&lt;0 または 1234567890 の形式であり、正しいチェッ
+クサム値を持たねばなりません。 <a class="reference external" href="http://adi.kousz.ch/artikel/IDCHE.htm">http://adi.kousz.ch/artikel/IDCHE.htm</a> を
+参照してください。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ch.forms.CHPhoneNumberField">
+<!--[django.contrib.localflavor.ch.forms.CHPhoneNumberField]-->class <tt class="descclassname">ch.forms.</tt><tt class="descname">CHPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.ch.forms.CHPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスイスの電話番号であるか検証するフォームフィールドです。正
+しい電話番号の形式とは、 0XX XXX XX XX, 0XX.XXX.XX.XX, および
+0XXXXXXXXX です。番号は 0XX XXX XX XX 形式に正規化されます。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ch.forms.CHZipCodeField">
+<!--[django.contrib.localflavor.ch.forms.CHZipCodeField]-->class <tt class="descclassname">ch.forms.</tt><tt class="descname">CHZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.ch.forms.CHZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいスイスのZIPコードであるかフォームフィールドです。正しいコー
+ドは 4 桁からなります。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.ch.forms.CHStateSelect">
+<!--[django.contrib.localflavor.ch.forms.CHStateSelect]-->class <tt class="descclassname">ch.forms.</tt><tt class="descname">CHStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.ch.forms.CHStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>スイスの州名を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id27">
+<span id="s-united-kingdom-uk"></span><h2>United Kingdom (<tt class="docutils literal"><span class="pre">uk</span></tt>)<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.uk.forms.UKPostcodeField">
+<!--[django.contrib.localflavor.uk.forms.UKPostcodeField]-->class <tt class="descclassname">uk.forms.</tt><tt class="descname">UKPostcodeField</tt><a class="headerlink" href="#django.contrib.localflavor.uk.forms.UKPostcodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいイギリスの郵便番号であるか検証するフォームフィールドです。
+検証に使われている正規表現は、
+<a class="reference external" href="http://www.govtalk.gov.uk/gdsc/schemas/bs7666-v2-0.xsd">http://www.govtalk.gov.uk/gdsc/schemas/bs7666-v2-0.xsd</a>
+で定義されている British Standard BS7666 address types をもとにしていま
+す。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.uk.forms.UKCountySelect">
+<!--[django.contrib.localflavor.uk.forms.UKCountySelect]-->class <tt class="descclassname">uk.forms.</tt><tt class="descname">UKCountySelect</tt><a class="headerlink" href="#django.contrib.localflavor.uk.forms.UKCountySelect" title="Permalink to this definition">¶</a></dt>
+<dd>イギリスの地域名を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.uk.forms.UKNationSelect">
+<!--[django.contrib.localflavor.uk.forms.UKNationSelect]-->class <tt class="descclassname">uk.forms.</tt><tt class="descname">UKNationSelect</tt><a class="headerlink" href="#django.contrib.localflavor.uk.forms.UKNationSelect" title="Permalink to this definition">¶</a></dt>
+<dd>イギリスの地方名を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+</div>
+<div class="section" id="s-id28">
+<span id="s-united-states-of-america-us"></span><h2>United States of America (<tt class="docutils literal"><span class="pre">us</span></tt>)<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.localflavor.us.forms.USPhoneNumberField">
+<!--[django.contrib.localflavor.us.forms.USPhoneNumberField]-->class <tt class="descclassname">us.forms.</tt><tt class="descname">USPhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.us.forms.USPhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいアメリカの電話番号であるか検証するフォームフィールドです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.us.forms.USSocialSecurityNumberField">
+<!--[django.contrib.localflavor.us.forms.USSocialSecurityNumberField]-->class <tt class="descclassname">us.forms.</tt><tt class="descname">USSocialSecurityNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.us.forms.USSocialSecurityNumberField" title="Permalink to this definition">¶</a></dt>
+<dd><p>入力がアメリカの社会保障番号 (SSN) であるか検証するフォームフィールドで
+す。正しい SSN 番号は、以下の規則に従います:</p>
+<ul class="simple">
+<li>XXX-XX-XXXX 形式であること</li>
+<li>0 ばかりでできた桁グループがないこと</li>
+<li>先頭の桁グループが 666 でないこと</li>
+<li>広報に使われるブロック (987-65-4320 から 987-65-4329) の範囲内で
+ないこと</li>
+<li>広報で使われているために、明らかに無効であると知られている番号
+(Woolworth 番号、または 1962 promotional number) でないこと</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.us.forms.USStateField">
+<!--[django.contrib.localflavor.us.forms.USStateField]-->class <tt class="descclassname">us.forms.</tt><tt class="descname">USStateField</tt><a class="headerlink" href="#django.contrib.localflavor.us.forms.USStateField" title="Permalink to this definition">¶</a></dt>
+<dd>入力がアメリカの州名または州名略号であるか検証するフォームフィールドで
+す。入力を郵便向けの標準 2 文字州名略号に正規化します。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.us.forms.USZipCodeField">
+<!--[django.contrib.localflavor.us.forms.USZipCodeField]-->class <tt class="descclassname">us.forms.</tt><tt class="descname">USZipCodeField</tt><a class="headerlink" href="#django.contrib.localflavor.us.forms.USZipCodeField" title="Permalink to this definition">¶</a></dt>
+<dd>入力が正しいアメリカの郵便番号であるか検証するフォームフィールドです。
+XXXXX または XXXXX-XXXX 形式の番号が有効です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.us.forms.USStateSelect">
+<!--[django.contrib.localflavor.us.forms.USStateSelect]-->class <tt class="descclassname">us.forms.</tt><tt class="descname">USStateSelect</tt><a class="headerlink" href="#django.contrib.localflavor.us.forms.USStateSelect" title="Permalink to this definition">¶</a></dt>
+<dd>アメリカの州や領を選べる <tt class="docutils literal"><span class="pre">Select</span></tt> ウィジェットです。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.us.models.PhoneNumberField">
+<!--[django.contrib.localflavor.us.models.PhoneNumberField]-->class <tt class="descclassname">us.models.</tt><tt class="descname">PhoneNumberField</tt><a class="headerlink" href="#django.contrib.localflavor.us.models.PhoneNumberField" title="Permalink to this definition">¶</a></dt>
+<dd>入力がアメリカ合州国の電話番号形式 (<tt class="docutils literal"><span class="pre">XXX-XXX-XXXX</span></tt>) に従っているかを
+チェックする <tt class="xref docutils literal"><span class="pre">CharField</span></tt> です。</dd></dl>
+
+<dl class="class">
+<dt id="django.contrib.localflavor.us.models.USStateField">
+<!--[django.contrib.localflavor.us.models.USStateField]-->class <tt class="descclassname">us.models.</tt><tt class="descname">USStateField</tt><a class="headerlink" href="#django.contrib.localflavor.us.models.USStateField" title="Permalink to this definition">¶</a></dt>
+<dd>アメリカ合州国の州名を二文字の略号でデータベースに保存するモデルフィー
+ルドです。 <tt class="docutils literal"><span class="pre">forms.USStateField</span></tt> モデルフィールドとして表示されます。</dd></dl>
+
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">localflavor アドオン</a><ul>
+<li><a class="reference external" href="#id1">localflavor でサポートされている国</a></li>
+<li><a class="reference external" href="#id2">新たなローカルフレーバを追加する</a></li>
+<li><a class="reference external" href="#id4">Argentina: アルゼンチン (<tt class="docutils literal"><span class="pre">ar</span></tt>)</a></li>
+<li><a class="reference external" href="#id5">Australia: オーストラリア (<tt class="docutils literal"><span class="pre">au</span></tt>)</a></li>
+<li><a class="reference external" href="#id6">Austria: オーストリア(<tt class="docutils literal"><span class="pre">at</span></tt>)</a></li>
+<li><a class="reference external" href="#id7">Brazil: ブラジル (<tt class="docutils literal"><span class="pre">br</span></tt>)</a></li>
+<li><a class="reference external" href="#id8">Canada: カナダ (<tt class="docutils literal"><span class="pre">ca</span></tt>)</a></li>
+<li><a class="reference external" href="#id9">Chile: チリ (<tt class="docutils literal"><span class="pre">cl</span></tt>)</a></li>
+<li><a class="reference external" href="#id10">Finland: フィンランド (<tt class="docutils literal"><span class="pre">fi</span></tt>)</a></li>
+<li><a class="reference external" href="#id11">France: フランス (<tt class="docutils literal"><span class="pre">fr</span></tt>)</a></li>
+<li><a class="reference external" href="#id12">Germany: ドイツ (<tt class="docutils literal"><span class="pre">de</span></tt>)</a></li>
+<li><a class="reference external" href="#id13">Holland: オランダ (<tt class="docutils literal"><span class="pre">nl</span></tt>)</a></li>
+<li><a class="reference external" href="#id14">Iceland: アイスランド (<tt class="docutils literal"><span class="pre">is_</span></tt>)</a></li>
+<li><a class="reference external" href="#id15">India: インド (<tt class="docutils literal"><span class="pre">in_</span></tt>)</a></li>
+<li><a class="reference external" href="#id16">Italy: イタリア (<tt class="docutils literal"><span class="pre">it</span></tt>)</a></li>
+<li><a class="reference external" href="#id17">Japan: 日本 (<tt class="docutils literal"><span class="pre">jp</span></tt>)</a></li>
+<li><a class="reference external" href="#id18">Mexico: メキシコ (<tt class="docutils literal"><span class="pre">mx</span></tt>)</a></li>
+<li><a class="reference external" href="#id19">Norway: ノルウェー (<tt class="docutils literal"><span class="pre">no</span></tt>)</a></li>
+<li><a class="reference external" href="#id20">Peru: ペルー (<tt class="docutils literal"><span class="pre">pe</span></tt>)</a></li>
+<li><a class="reference external" href="#id21">Poland: ポーランド (<tt class="docutils literal"><span class="pre">pl</span></tt>)</a></li>
+<li><a class="reference external" href="#id22">Romania: ルーマニア (<tt class="docutils literal"><span class="pre">ro</span></tt>)</a></li>
+<li><a class="reference external" href="#id23">Slovakia (<tt class="docutils literal"><span class="pre">sk</span></tt>)</a></li>
+<li><a class="reference external" href="#id24">South Africa (<tt class="docutils literal"><span class="pre">za</span></tt>)</a></li>
+<li><a class="reference external" href="#id25">Spain (<tt class="docutils literal"><span class="pre">es</span></tt>)</a></li>
+<li><a class="reference external" href="#id26">Switzerland (<tt class="docutils literal"><span class="pre">ch</span></tt>)</a></li>
+<li><a class="reference external" href="#id27">United Kingdom (<tt class="docutils literal"><span class="pre">uk</span></tt>)</a></li>
+<li><a class="reference external" href="#id28">United States of America (<tt class="docutils literal"><span class="pre">us</span></tt>)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="humanize.html">django.contrib.humanize</a></li>
+    
+    
+      <li>次: <a href="redirects.html">redirects アプリケーション</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>localflavor アドオン</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/localflavor.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="humanize.html" title="django.contrib.humanize">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="redirects.html" title="redirects アプリケーション">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

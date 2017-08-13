@@ -1,0 +1,473 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>contenttypes フレームワーク &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="クロスサイトリクエストフォージェリ (CSRF) 対策" href="csrf.html" />
+    <link rel="prev" title="Django の以前のコメントシステムからの移行" href="comments/upgrade.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="comments/upgrade.html" title="Django の以前のコメントシステムからの移行">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="csrf.html" title="クロスサイトリクエストフォージェリ (CSRF) 対策">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-contenttypes">
+            
+  
+  <div class="section" id="s-module-django.contrib.contenttypes">
+<span id="s-ref-contrib-contenttypes"></span><h1>contenttypes フレームワーク<a class="headerlink" href="#module-django.contrib.contenttypes" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django には、 <tt class="xref docutils literal"><span class="pre">contenttypes</span></tt> アプリケーションが付属しています。
+このアプリケーションを使うと、 Django で作成したプロジェクト中に存在する全
+てのモデルを追跡できます。また、 <tt class="docutils literal"><span class="pre">contenttypes</span></tt> では、モデルを扱うための
+高水準かつ汎用的なインタフェースを提供しています。</p>
+<div class="section" id="s-id1">
+<h2>概要<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">contenttypes</span></tt>  アプリケーションの心臓部は、
+<tt class="xref docutils literal"><span class="pre">django.contrib.contenttypes.models</span></tt> で定義されている
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a> モデルです。
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">django.contrib.contenttypes.models.ContentType</span></tt></a> のインスタンスは、
+プロジェクト上にインストールされているモデルの情報を表現したり保存したりし
+ています。 <a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a> のイン
+スタンスは、新たにモデルをインストールすると自動的に生成されます。</p>
+<p><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a> のインスタンスは、
+インスタンスの表現するモデルクラスを返したり、そのモデルクラスに対してオブ
+ジェクトをクエリするためのメソッドを提供しています。また、
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a> モデルは
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  を扱ったり、特定
+のモデルの <a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  を取り
+出すための <a class="reference external" href="../../topics/db/managers.html#custom-managers"><em>カスタムマネジャ</em></a> を持っています。</p>
+<p>あるモデルから <a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  に
+リレーションを張れば、そのモデルからインストール済みの任意のモデルのインス
+タンスとの間に、「一般化リレーション(generic relation)」を張れます。</p>
+</div>
+<div class="section" id="s-id2">
+<span id="s-installing-the-contenttypes-framework"></span><h2><tt class="docutils literal"><span class="pre">contenttypes</span></tt> フレームワークのインストール<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">contenttypes</span></tt> フレームワークは、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">startproject</span></tt>
+の生成するデフォルトの <tt class="docutils literal"><span class="pre">settings.py</span></tt> の <a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> リスト
+に入っています。リストから除外してしまっている場合や、
+<a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> を自分で設定した場合には、
+<a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> に <tt class="docutils literal"><span class="pre">'django.contrib.contenttypes'</span></tt> を追加してフ
+レームワークをインストールしてください。</p>
+<p>通常は、 <tt class="docutils literal"><span class="pre">contenttypes</span></tt> フレームワークをインストールしておいた方がよいで
+しょう。 Django にバンドルされている以下のアプリケーションには、
+<tt class="docutils literal"><span class="pre">contenttypes</span></tt> フレームワークが必要だからです:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">admin</span></tt> アプリケーションは、管理インタフェース上で追加変更したオブ
+ジェクトの履歴を管理するために <tt class="docutils literal"><span class="pre">contenttypes</span></tt> を使います。</li>
+<li>Django の <a title="Django の認証フレームワークです。" class="reference external" href="../../topics/auth.html"><tt class="xref docutils literal"><span class="pre">認証フレームワーク</span></tt></a> は、ユーザ
+パーミッションをモデルに結びつけるために <tt class="docutils literal"><span class="pre">contenttypes</span></tt> を使います。</li>
+<li>Django のコメントシステム (<a title="Django のコメントフレームワークです。" class="reference external" href="comments/index.html"><tt class="xref docutils literal"><span class="pre">django.contrib.comments</span></tt></a>) は、インス
+トールされている任意のモデルに対してコメントを付けられる機能を
+<tt class="docutils literal"><span class="pre">contenttypes</span></tt> で実現しています。</li>
+</ul>
+</div>
+<div class="section" id="s-contenttype">
+<span id="s-the-contenttype-model"></span><h2><tt class="docutils literal"><span class="pre">ContentType</span></tt>  モデル<a class="headerlink" href="#contenttype" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="django.contrib.contenttypes.models.ContentType">
+<!--[django.contrib.contenttypes.models.ContentType]-->class <tt class="descclassname">models.</tt><tt class="descname">ContentType</tt><a class="headerlink" href="#django.contrib.contenttypes.models.ContentType" title="Permalink to this definition">¶</a></dt>
+<dd><p><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  のインスタン
+スには 3 つのフィールドがあり、 3 つを組み合わせると、インストールされ
+ているモデルを一意に表現できます:</p>
+<dl class="attribute">
+<dt id="django.contrib.contenttypes.models.ContentType.app_label">
+<!--[django.contrib.contenttypes.models.ContentType.app_label]--><tt class="descname">app_label</tt><a class="headerlink" href="#django.contrib.contenttypes.models.ContentType.app_label" title="Permalink to this definition">¶</a></dt>
+<dd>モデルの入っているアプリケーションの名前です。この名前はモデルの
+<a title="django.contrib.contenttypes.models.ContentType.app_label" class="reference internal" href="#django.contrib.contenttypes.models.ContentType.app_label"><tt class="xref docutils literal"><span class="pre">app_label</span></tt></a> 属性から取り出され、通常は Python の import パス
+の <em>末尾</em> の部分が入っています。例えば、アプリケーションが
+<tt class="docutils literal"><span class="pre">django.contrib.contenttypes</span></tt> なら、 <a title="django.contrib.contenttypes.models.ContentType.app_label" class="reference internal" href="#django.contrib.contenttypes.models.ContentType.app_label"><tt class="xref docutils literal"><span class="pre">app_label</span></tt></a> は
+<tt class="docutils literal"><span class="pre">contenttypes</span></tt> です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.contrib.contenttypes.models.ContentType.model">
+<!--[django.contrib.contenttypes.models.ContentType.model]--><tt class="descname">model</tt><a class="headerlink" href="#django.contrib.contenttypes.models.ContentType.model" title="Permalink to this definition">¶</a></dt>
+<dd>モデルクラスの名前です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.contrib.contenttypes.models.ContentType.name">
+<!--[django.contrib.contenttypes.models.ContentType.name]--><tt class="descname">name</tt><a class="headerlink" href="#django.contrib.contenttypes.models.ContentType.name" title="Permalink to this definition">¶</a></dt>
+<dd>人間可読なモデル名です。この値は、モデルの
+<tt class="xref docutils literal"><span class="pre">verbose_name</span></tt>
+から取り出されます。</dd></dl>
+
+</dd></dl>
+
+<p>例を挙げて、 <tt class="docutils literal"><span class="pre">contenttypes</span></tt> の仕組みを見てみましょう。 <tt class="docutils literal"><span class="pre">contenttypes</span></tt>
+アプリケーションをインストールしておき、 <a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> 設定に
+<a title="複数のウェブサイトを一つのデータベースと Django プロジェクト で操作できるようにします。" class="reference external" href="sites.html"><tt class="xref docutils literal"><span class="pre">sites</span> <span class="pre">アプリケーション</span></tt></a> を追加してから、
+<tt class="docutils literal"><span class="pre">manage.py</span> <span class="pre">syncdb</span></tt> を実行してみてください。
+<tt class="docutils literal"><span class="pre">django.contrib.sites.models.Site</span></tt> モデルがデータベースにインストールされ
+るはずです。それに伴って、以下の値がセットされた
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  の新たなインスタ
+ンスが生成されているはずです:</p>
+<ul class="simple">
+<li><tt class="xref docutils literal"><span class="pre">app_label</span></tt> は <tt class="docutils literal"><span class="pre">'sites'</span></tt> (<tt class="docutils literal"><span class="pre">django.contrib.sites</span></tt> の末尾) に設定
+されています。</li>
+<li><tt class="xref docutils literal"><span class="pre">model</span></tt> は <tt class="docutils literal"><span class="pre">'site'</span></tt> に設定されています。</li>
+<li><tt class="xref docutils literal"><span class="pre">name</span></tt> は <tt class="docutils literal"><span class="pre">'site'</span></tt> に設定されています。</li>
+</ul>
+</div>
+<div class="section" id="s-id3">
+<span id="s-methods-on-contenttype-instances"></span><h2><tt class="docutils literal"><span class="pre">ContentType</span></tt>  インスタンスのメソッド<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+class <tt class="descclassname">models.</tt><tt class="descname">ContentType</tt></dt>
+<dd><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  インスタンス
+には、インスタンスの表現しているモデルクラスを取得したり、モデルクラス
+のインスタンスを取り出したりするためのメソッドがあります:</dd></dl>
+
+<dl class="method">
+<dt id="django.contrib.contenttypes.models.ContentType.get_object_for_this_type">
+<!--[django.contrib.contenttypes.models.ContentType.get_object_for_this_type]--><tt class="descclassname">models.ContentType.</tt><tt class="descname">get_object_for_this_type</tt>(<em>**kwargs</em>)<a class="headerlink" href="#django.contrib.contenttypes.models.ContentType.get_object_for_this_type" title="Permalink to this definition">¶</a></dt>
+<dd><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  インスタンス
+の表現しているモデルでサポートされている
+<cite>照合メソッドの引数 &lt;field-lookups-intro&gt;</cite> を取り、モデルインスタンスの
+<cite>get() 照合 &lt;get-kwargs&gt;</cite> を行って、対応するオブジェクトを返します。</dd></dl>
+
+<dl class="method">
+<dt id="django.contrib.contenttypes.models.ContentType.model_class">
+<!--[django.contrib.contenttypes.models.ContentType.model_class]--><tt class="descclassname">models.ContentType.</tt><tt class="descname">model_class</tt>()<a class="headerlink" href="#django.contrib.contenttypes.models.ContentType.model_class" title="Permalink to this definition">¶</a></dt>
+<dd><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  インスタンス
+の表現しているモデルクラスを返します。</dd></dl>
+
+<p>例を挙げましょう。まず、 <a title="django.contrib.auth.models.User" class="reference external" href="../../topics/auth.html#django.contrib.auth.models.User"><tt class="xref docutils literal"><span class="pre">User</span></tt></a> モデル
+の <a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  インスタンスを
+照合します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">user_type</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_label</span><span class="o">=</span><span class="s">&quot;auth&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s">&quot;user&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">user_type</span>
+<span class="go">&lt;ContentType: user&gt;</span>
+</pre></div>
+<p>取り出した <tt class="docutils literal"><span class="pre">User</span></tt> の
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  から、 <tt class="docutils literal"><span class="pre">User</span></tt>
+モデルクラスを取り出したり、 <tt class="docutils literal"><span class="pre">User</span></tt> インスタンスを照合したりできます:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">user_type</span><span class="o">.</span><span class="n">model_class</span><span class="p">()</span>
+<span class="go">&lt;class &#39;django.contrib.auth.models.User&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">user_type</span><span class="o">.</span><span class="n">get_object_for_this_type</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;Guido&#39;</span><span class="p">)</span>
+<span class="go">&lt;User: Guido&gt;</span>
+</pre></div>
+<p><a title="django.contrib.contenttypes.models.ContentType.get_object_for_this_type" class="reference internal" href="#django.contrib.contenttypes.models.ContentType.get_object_for_this_type"><tt class="xref docutils literal"><span class="pre">get_object_for_this_type()</span></tt></a>
+と <a title="django.contrib.contenttypes.models.ContentType.model_class" class="reference internal" href="#django.contrib.contenttypes.models.ContentType.model_class"><tt class="xref docutils literal"><span class="pre">model_class()</span></tt></a> を組
+み合わせると、非常に重要なユースケースを実現できます:</p>
+<ol class="arabic simple">
+<li>二つのメソッドを使えば、特定のモデルクラスを import して使うのではな
+く、インストールされている全てのモデルに対して操作を行えるような一般
+化された高水準のコードを書けます。実行時に <tt class="xref docutils literal"><span class="pre">app_label</span></tt> と
+<tt class="docutils literal"><span class="pre">model</span></tt> を指定して
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  を照合し、
+得られたモデルクラスからオブジェクトを取り出せるのです。</li>
+<li>別のモデルから
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  にリレーショ
+ンを張って、モデルのインスタンスと、
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  の表すモデ
+ルクラスを結び付け、モデルクラスのメソッドにアクセスできます。</li>
+</ol>
+<p>Django にバンドルされているアプリケーションには、後者のテクニックを使ってい
+るものがいくつかあります。例えば、 Django の認証フレームワークに入っている
+<a title="django.contrib.auth.models.Permission" class="reference external" href="../../topics/auth.html#django.contrib.auth.models.Permission"><tt class="xref docutils literal"><span class="pre">パーミッションのシステム</span></tt></a>
+では、 <a title="django.contrib.auth.models.Permission" class="reference external" href="../../topics/auth.html#django.contrib.auth.models.Permission"><tt class="xref docutils literal"><span class="pre">Permission</span></tt></a> モデルの中で、
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  への外部キー
+を張っています。そうすることで、
+<a title="django.contrib.auth.models.Permission" class="reference external" href="../../topics/auth.html#django.contrib.auth.models.Permission"><tt class="xref docutils literal"><span class="pre">Permission</span></tt></a>  は「ブログにエントリを追加」
+や「ニュースストーリーを削除」といった権限を表現できます。</p>
+<div class="section" id="s-contenttypemanager">
+<span id="s-the-contenttypemanager"></span><h3><tt class="docutils literal"><span class="pre">ContentTypeManager</span></tt> カスタムマネジャ<a class="headerlink" href="#contenttypemanager" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.contrib.contenttypes.models.ContentTypeManager">
+<!--[django.contrib.contenttypes.models.ContentTypeManager]-->class <tt class="descclassname">models.</tt><tt class="descname">ContentTypeManager</tt><a class="headerlink" href="#django.contrib.contenttypes.models.ContentTypeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  には
+<tt class="xref docutils literal"><span class="pre">ContentTypeManager`</span></tt> という
+カスタムマネジャがあります。このカスタムマネジャには、以下のメソッドが
+あります:</p>
+<dl class="method">
+<dt id="django.contrib.contenttypes.models.ContentTypeManager.clear_cache">
+<!--[django.contrib.contenttypes.models.ContentTypeManager.clear_cache]--><tt class="descname">clear_cache</tt>()<a class="headerlink" href="#django.contrib.contenttypes.models.ContentTypeManager.clear_cache" title="Permalink to this definition">¶</a></dt>
+<dd>ロード済みの
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  インスタ
+ンスを保持しておくための内部キャッシュをクリアします。このメソッド
+を自分で呼ぶことはほとんどないでしょう。 Django は必要に応じて自動
+的にメソッドを呼び出します。</dd></dl>
+
+<dl class="method">
+<dt id="django.contrib.contenttypes.models.ContentTypeManager.get_for_model">
+<!--[django.contrib.contenttypes.models.ContentTypeManager.get_for_model]--><tt class="descname">get_for_model</tt>(<em>model</em>)<a class="headerlink" href="#django.contrib.contenttypes.models.ContentTypeManager.get_for_model" title="Permalink to this definition">¶</a></dt>
+<dd>モデルクラスやモデルのインスタンスを引数にとり、そのモデルを表す
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  インスタ
+ンスを返します。</dd></dl>
+
+</dd></dl>
+
+<p><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  を扱いたいけれど
+も、わざわざモデルのメタデータを取り出して
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  を手動で照合する
+のが面倒な場合には <a title="django.contrib.contenttypes.models.ContentTypeManager.get_for_model" class="reference internal" href="#django.contrib.contenttypes.models.ContentTypeManager.get_for_model"><tt class="xref docutils literal"><span class="pre">get_for_model()</span></tt></a> メソッ
+ドが特に便利です:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">user_type</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">user_type</span>
+<span class="go">&lt;ContentType: user&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-id5">
+<span id="s-id4"></span><span id="s-generic-relations"></span><h2>一般化リレーション<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>上で述べた <a title="django.contrib.auth.models.Permission" class="reference external" href="../../topics/auth.html#django.contrib.auth.models.Permission"><tt class="xref docutils literal"><span class="pre">Permission</span></tt></a> モデルの例のよう
+に、自作のモデルから
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  に外部キーを張れ
+ば、モデルを別のモデルクラスに結び付けられます。しかし、もう一歩踏み込めば、
+<a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  を使って真の一般
+化リレーション (または多態性: polymorphic リレーション) を実現できます。</p>
+<p>簡単な例として、以下のようなタグシステムを挙げましょう:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="kn">from</span> <span class="nn">django.contrib.contenttypes</span> <span class="kn">import</span> <span class="n">generic</span>
+
+<span class="k">class</span> <span class="nc">TaggedItem</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">()</span>
+    <span class="n">content_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ContentType</span><span class="p">)</span>
+    <span class="n">object_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">()</span>
+    <span class="n">content_object</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericForeignKey</span><span class="p">(</span><span class="s">&#39;content_type&#39;</span><span class="p">,</span> <span class="s">&#39;object_id&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span>
+</pre></div>
+<p>通常の <tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> は、他のモデル
+を「指し示す」だけに過ぎません。従って、 <tt class="docutils literal"><span class="pre">TaggedItem</span></tt> モデルで
+<tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> を使う場合、ただ一つの
+モデルに対してしかタグを保存できません。この問題を解決し、任意のモデルにリ
+レーションを張れるようにするために、 <tt class="docutils literal"><span class="pre">contenttypes</span></tt> アプリケーションでは、
+特殊なフィールドタイプ、
+<tt class="xref docutils literal"><span class="pre">django.contrib.contenttypes.generic.GenericForeignKey</span></tt> を提供してい
+ます。 <tt class="xref docutils literal"><span class="pre">GenericForeignKey</span></tt> のセッ
+トアップは、以下の 3 つのパートに分かれています:</p>
+<ol class="arabic">
+<li><p class="first"><a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>  への
+<tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> を定義します。</p>
+</li>
+<li><p class="first">リレーション先のモデルインスタンスの主キー値を保存するためのモデル
+フィールドを定義します (ほとんどのモデルでは、
+<tt class="xref docutils literal"><span class="pre">IntegerField</span></tt> または
+<tt class="xref docutils literal"><span class="pre">PositiveIntegerField</span></tt> です)。</p>
+<blockquote>
+<p>このフィールドは、 GeneicRelation の対象モデルの主キーと同じ型でな
+ければなりません。例えば、モデルフィールドに
+<tt class="xref docutils literal"><span class="pre">IntegerField</span></tt> を使っ
+ているなら、対象モデルの主キーに
+<tt class="xref docutils literal"><span class="pre">CharField</span></tt> を使うことはできません。</p>
+</blockquote>
+</li>
+<li><p class="first"><tt class="xref docutils literal"><span class="pre">GenericForeignKey</span></tt> を定
+義します。
+<tt class="xref docutils literal"><span class="pre">GenericForeignKey</span></tt> の引
+数に、上で定義したフィールドの名前を指定します。フィールド名が
+<tt class="xref docutils literal"><span class="pre">GenericForeignKey</span></tt> の探
+すデフォルトの名前である <tt class="docutils literal"><span class="pre">content_type</span></tt> や <tt class="docutils literal"><span class="pre">object_id</span></tt> の場合に
+は、引数を省略してかまいません。</p>
+</li>
+</ol>
+<p>これで、通常の <tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> に似た
+API を実現できます。 <tt class="docutils literal"><span class="pre">TaggedItem</span></tt> はリレーションを張っている対象のモデル
+インスタンスを返す <tt class="docutils literal"><span class="pre">content_object</span></tt> フィールドを持つようになります。
+<tt class="docutils literal"><span class="pre">content_object</span></tt> の値は、 <tt class="docutils literal"><span class="pre">TaggedItem</span></tt> を生成するときに指定できます:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">guido</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;Guido&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">TaggedItem</span><span class="p">(</span><span class="n">content_object</span><span class="o">=</span><span class="n">guido</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s">&#39;bdfl&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">content_object</span>
+<span class="go">&lt;User: Guido&gt;</span>
+</pre></div>
+<div class="section" id="s-id6">
+<span id="s-reverse-generic-relations"></span><h3>逆方向の一般化リレーション<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>リレーション対象にどのモデルがよく使われるのかが分かっていれば、
+「逆方向の」一般化リレーションを張って、 API を追加できます。例を挙げましょ
+う:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Bookmark</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericRelation</span><span class="p">(</span><span class="n">TaggedItem</span><span class="p">)</span>
+</pre></div>
+<p>これで、 <tt class="docutils literal"><span class="pre">Bookmark</span></tt> インスタンスは <tt class="docutils literal"><span class="pre">tags</span></tt> 属性をそなえます。この属性を
+使うと、インスタンスにリレーションを張っている <tt class="docutils literal"><span class="pre">TaggedItems</span></tt> を取り出せま
+す:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Bookmark</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s">&#39;http://www.djangoproject.com/&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t1</span> <span class="o">=</span> <span class="n">TaggedItem</span><span class="p">(</span><span class="n">content_object</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s">&#39;django&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t2</span> <span class="o">=</span> <span class="n">TaggedItem</span><span class="p">(</span><span class="n">content_object</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s">&#39;python&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t2</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="go">[&lt;TaggedItem: django&gt;, &lt;TaggedItem: python&gt;]</span>
+</pre></div>
+<p>逆方向のリレーションを張らなければ、手動で照合する必要があります:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Bookmark</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s">&#39;http://www.djangoproject.com/)</span><span class="gp">&gt;&gt;&gt; </span>
+<span class="n">bookmark_type</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TaggedItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">content_type__pk</span><span class="o">=</span><span class="n">bookmark_type</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">object_id</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="go">[&lt;TaggedItem: django&gt;, &lt;TaggedItem: python&gt;]</span>
+</pre></div>
+<p><tt class="xref docutils literal"><span class="pre">GenericRelation`</span></tt> を持つオブジェ
+クトを削除すると、このオブジェクトに
+<tt class="xref docutils literal"><span class="pre">GenericForeignKey</span></tt> でリレーショ
+ンを張っているオブジェクトも全て削除されるので注意してください。つまり、上
+の例では、 <tt class="docutils literal"><span class="pre">Bookmark</span></tt> オブジェクト <tt class="docutils literal"><span class="pre">b</span></tt> を削除すると、 <tt class="docutils literal"><span class="pre">b</span></tt> にリレーショ
+ンを張っている <tt class="docutils literal"><span class="pre">t1</span></tt> や <tt class="docutils literal"><span class="pre">t2</span></tt> といった <tt class="docutils literal"><span class="pre">TaggedItem</span></tt>  も同時に削除される
+のです。</p>
+</div>
+<div class="section" id="s-admin">
+<span id="s-generic-relations-in-forms-and-admin"></span><h3>フォームや admin で一般化リレーションを扱う<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h3>
+<p><tt class="xref docutils literal"><span class="pre">django.contrib.contenttypes.generic</span></tt> では、二つのクラス、
+<tt class="xref docutils literal"><span class="pre">GenericInlineFormSet</span></tt> と
+<a title="django.contrib.contenttypes.generic.GenericInlineModelAdmin" class="reference internal" href="#django.contrib.contenttypes.generic.GenericInlineModelAdmin"><tt class="xref docutils literal"><span class="pre">GenericInlineModelAdmin</span></tt></a>
+を提供しています。これらのクラスを使うと、フォームや admin で一般化リレーショ
+ンを扱えます。詳しくは <a class="reference external" href="../../topics/forms/modelforms.html#topics-forms-modelforms"><em>モデルフォームセット</em></a>
+や <a class="reference external" href="admin.html#ref-contrib-admin"><em>admin</em></a> のドキュメントを参照してください。</p>
+<dl class="class">
+<dt id="django.contrib.contenttypes.generic.GenericInlineModelAdmin">
+<!--[django.contrib.contenttypes.generic.GenericInlineModelAdmin]-->class <tt class="descclassname">generic.</tt><tt class="descname">GenericInlineModelAdmin</tt><a class="headerlink" href="#django.contrib.contenttypes.generic.GenericInlineModelAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p><a title="django.contrib.contenttypes.generic.GenericInlineModelAdmin" class="reference internal" href="#django.contrib.contenttypes.generic.GenericInlineModelAdmin"><tt class="xref docutils literal"><span class="pre">GenericInlineModelAdmin</span></tt></a>
+クラスは、 <tt class="xref docutils literal"><span class="pre">InlineModelAdmin</span></tt>
+の全てのプロパティを継承していますが、一般化リレーションを扱うために、
+以下の二つの属性を備えています:</p>
+<dl class="attribute">
+<dt id="django.contrib.contenttypes.generic.GenericInlineModelAdmin.ct_field">
+<!--[django.contrib.contenttypes.generic.GenericInlineModelAdmin.ct_field]--><tt class="descname">ct_field</tt><a class="headerlink" href="#django.contrib.contenttypes.generic.GenericInlineModelAdmin.ct_field" title="Permalink to this definition">¶</a></dt>
+<dd>モデル内の <a title="django.contrib.contenttypes.models.ContentType" class="reference internal" href="#django.contrib.contenttypes.models.ContentType"><tt class="xref docutils literal"><span class="pre">ContentType</span></tt></a>
+の外部キーフィールド名です。デフォルトの値は <tt class="docutils literal"><span class="pre">content_type</span></tt> です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.contrib.contenttypes.generic.GenericInlineModelAdmin.ct_fk_field">
+<!--[django.contrib.contenttypes.generic.GenericInlineModelAdmin.ct_fk_field]--><tt class="descname">ct_fk_field</tt><a class="headerlink" href="#django.contrib.contenttypes.generic.GenericInlineModelAdmin.ct_fk_field" title="Permalink to this definition">¶</a></dt>
+<dd>リレーション先オブジェクトの ID を表す整数フィールドの名前です。
+デフォルトの値は <tt class="docutils literal"><span class="pre">object_id</span></tt> です。</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">contenttypes フレームワーク</a><ul>
+<li><a class="reference external" href="#id1">概要</a></li>
+<li><a class="reference external" href="#id2"><tt class="docutils literal"><span class="pre">contenttypes</span></tt> フレームワークのインストール</a></li>
+<li><a class="reference external" href="#contenttype"><tt class="docutils literal"><span class="pre">ContentType</span></tt>  モデル</a></li>
+<li><a class="reference external" href="#id3"><tt class="docutils literal"><span class="pre">ContentType</span></tt>  インスタンスのメソッド</a><ul>
+<li><a class="reference external" href="#contenttypemanager"><tt class="docutils literal"><span class="pre">ContentTypeManager</span></tt> カスタムマネジャ</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id5">一般化リレーション</a><ul>
+<li><a class="reference external" href="#id6">逆方向の一般化リレーション</a></li>
+<li><a class="reference external" href="#admin">フォームや admin で一般化リレーションを扱う</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="comments/upgrade.html">Django の以前のコメントシステムからの移行</a></li>
+    
+    
+      <li>次: <a href="csrf.html">クロスサイトリクエストフォージェリ (CSRF) 対策</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>contenttypes フレームワーク</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/contenttypes.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="comments/upgrade.html" title="Django の以前のコメントシステムからの移行">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="csrf.html" title="クロスサイトリクエストフォージェリ (CSRF) 対策">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

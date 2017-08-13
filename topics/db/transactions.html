@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>データベーストランザクションの管理 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="モデルとデータベース" href="index.html" />
+    <link rel="next" title="HTTP リクエストの処理" href="../http/index.html" />
+    <link rel="prev" title="SQL クエリの直接実行" href="sql.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="sql.html" title="SQL クエリの直接実行">前へ</a> 
+     |
+    <a href="../index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="../http/index.html" title="HTTP リクエストの処理">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="topics-db-transactions">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-topics-db-transactions"></span><h1>データベーストランザクションの管理<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django はトランザクションをサポートしているデータベース向けに、トランザクショ
+ン管理を制御する方法をいくつか提供しています。</p>
+<div class="section" id="s-id2">
+<span id="s-django-s-default-transaction-behavior"></span><h2>デフォルトのトランザクション処理<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Django のデフォルトの挙動では、組み込みのデータ変更に関わるモデル関数を呼び
+出したときにはいつでも自動的に commit を行います。例えば、 <tt class="docutils literal"><span class="pre">model.save()</span></tt>
+や <tt class="docutils literal"><span class="pre">model.delete()</span></tt> を呼び出すと、変更は即座にコミットされます。</p>
+<p>これはほとんどのデータベースにおける自動コミット設定とほとんど同じ挙動です。
+すなわち、ユーザがデータベースへの書き込みを必要とするような操作を行うと、
+Django はすぐに <tt class="docutils literal"><span class="pre">INSERT</span></tt>/<tt class="docutils literal"><span class="pre">UPDATE</span></tt>/<tt class="docutils literal"><span class="pre">DELETE</span></tt> 文を実行し、次いで
+<tt class="docutils literal"><span class="pre">COMMIT</span></tt> を実行します。暗黙のロールバックは行いません。</p>
+</div>
+<div class="section" id="s-http">
+<span id="s-tying-transactions-to-http-requests"></span><h2>HTTP リクエストとトランザクションを結び付ける<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">TransactionMiddleware</span></tt> を介してリクエストとレスポンスのフェイズにトラン
+ザクションを結び付けるというものです。</p>
+<p>このトランザクション処理は次のように行われます: まず、リクエスト処理の開始
+時にトランザクションを開始します。レスポンスを問題なく生成できたら、全ての
+トランザクションをコミットします。ビュー関数が例外を送出したら、ロールバッ
+クを起こします。</p>
+<p>この機能を有効にするには、 <tt class="docutils literal"><span class="pre">TransactionMiddleware</span></tt> ミドルウェアを
+<tt class="docutils literal"><span class="pre">MIDDLEWARE_CLASSES</span></tt> 設定に追加します:</p>
+<div class="highlight"><pre><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s">&#39;django.contrib.sessions.middleware.SessionMiddleware&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.middleware.common.CommonMiddleware&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.middleware.cache.CacheMiddleware&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.middleware.transaction.TransactionMiddleware&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+<p>スタックの配置順はとても重要です。トランザクションミドルウェアは呼び出され
+るビュー関数だけでなく、後続のミドルウェアモジュール全てに影響します。従っ
+て、セッションミドルウェアをトランザクションミドルウェアの後ろに配置すると、
+セッションの生成はトランザクションの一部に入ってしまいます。</p>
+<p>例外は <tt class="docutils literal"><span class="pre">CacheMiddleware</span></tt> です。このミドルウェアは影響を受けません。
+キャッシュミドルウェア自体は独自のデータベースカーソル (このカーソルは、内
+部的には独自のデータベース接続上にあります) を使います。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-controlling-transaction-management-in-views"></span><h2>ビュー内でトランザクションを管理する<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>ほとんどのユーザにとって、非明示的なリクエストベースのトランザクションは素
+晴らしい働きをすることでしょう。しかしながら、トランザクションの管理方法を
+より詳細に制御したい場合、Python の関数デコレータを使って特定の関数のトラン
+ザクション処理を変更できます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">下記ではビュー関数を例に取ってはいますが、以下に述べるデコレータはビュー
+関数でないものにも適用できます。</p>
+</div>
+<div class="section" id="s-django-db-transaction-autocommit">
+<h3><tt class="docutils literal"><span class="pre">django.db.transaction.autocommit</span></tt><a class="headerlink" href="#django-db-transaction-autocommit" title="Permalink to this headline">¶</a></h3>
+<p>ビュー関数のトランザクションの挙動を、グローバルな設定に関係なく Django の
+デフォルトの挙動にスイッチするには、 <tt class="docutils literal"><span class="pre">autocommit</span></tt> デコレータを使います。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">transaction</span>
+
+<span class="nd">@transaction.autocommit</span>
+<span class="k">def</span> <span class="nf">viewfunc</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="o">....</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">viewfunc()</span></tt> の中では、 <tt class="docutils literal"><span class="pre">model.save()</span></tt> や <tt class="docutils literal"><span class="pre">model.delete()</span></tt> 、その他デー
+タベースに書き込みを行う全ての関数でトランザクションを commit します。</p>
+</div>
+<div class="section" id="s-django-db-transaction-commit-on-success">
+<h3><tt class="docutils literal"><span class="pre">django.db.transaction.commit_on_success</span></tt><a class="headerlink" href="#django-db-transaction-commit-on-success" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">commit_on_success</span></tt> デコレータを使うと、関数内の全ての処理にわたるトラン
+ザクションを使えます:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">transaction</span>
+
+<span class="nd">@transaction.commit_on_success</span>
+<span class="k">def</span> <span class="nf">viewfunc</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="o">....</span>
+</pre></div>
+<p>関数の実行に成功すると、 Django はそれまでの全ての作業を commit します。関
+数が例外を送出すると、 Django はトランザクションを rollback します。</p>
+</div>
+<div class="section" id="s-django-db-transaction-commit-manually">
+<h3><tt class="docutils literal"><span class="pre">django.db.transaction.commit_manually</span></tt><a class="headerlink" href="#django-db-transaction-commit-manually" title="Permalink to this headline">¶</a></h3>
+<p>トランザクションを完全に管理したい場合には、 <tt class="docutils literal"><span class="pre">commit_manually</span></tt> デコレータ
+を使います。このデコレータは Django にユーザが自分でトランザクションを管理
+しようとしていることを知らせます。</p>
+<p><tt class="docutils literal"><span class="pre">commit()</span></tt> や <tt class="docutils literal"><span class="pre">rollback()</span></tt> を行わずにデータを変更した場合は
+<tt class="docutils literal"><span class="pre">TransactionManagementError</span></tt> 例外を送出します。</p>
+<p>手動のトランザクション管理は以下のようになります:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">transaction</span>
+
+<span class="nd">@transaction.commit_manually</span>
+<span class="k">def</span> <span class="nf">viewfunc</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="c"># commit/rollback を好きなタイミングで行えます</span>
+    <span class="n">transaction</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="o">...</span>
+
+    <span class="c"># ただし、自分でちゃんとやっておくのを忘れないように!</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+<div class="admonition-django admonition">
+<p class="first admonition-title">以前の Django リリースを使っていたユーザへの重要なお知らせ:</p>
+<p class="last">データベースの <tt class="docutils literal"><span class="pre">connection.commit()</span></tt> や <tt class="docutils literal"><span class="pre">connection.rollback()</span></tt> と
+いった関数 (0.91 以前では <tt class="docutils literal"><span class="pre">db.commit()</span></tt> や <tt class="docutils literal"><span class="pre">db.rollback()</span></tt> と呼ばれ
+ていました) はなくなり、 <tt class="docutils literal"><span class="pre">transaction.commit()</span></tt> および
+<tt class="docutils literal"><span class="pre">transaction.rollback()</span></tt> コマンドに置き換わりました。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-id4">
+<span id="s-how-to-globally-deactivate-transaction-management"></span><h2>トランザクション管理をグローバルに無効化する方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>制御マニアの人は、 Django 設定ファイルで <tt class="docutils literal"><span class="pre">DISABLE_TRANSACTION_MANAGEMENT</span></tt>
+を <tt class="xref docutils literal"><span class="pre">True</span></tt> に設定すれば、全ての自動トランザクション管理を無効にし、自分で
+トランザクションを管理できます。</p>
+<p>この場合、 Django はいかなるトランザクション管理も行わなくなります。ミドル
+ウェアが非明示的にトランザクションを commit することはなくなり、自分でロー
+ル管理を行わねばなりません。さらに、何らかのミドルウェアで変更の commit を
+自分で行わねばならなくなります。</p>
+<p>従って、トランザクションの無効化は、自作のトランザクション制御ミドルウェア
+を実行したい場合や、本当に変わったことをやりたい場合向けです。ほとんどの状
+況では、デフォルトの挙動かトランザクションミドルウェアで十分で、必要に応じ
+て特定の関数だけを変更すればよいでしょう。</p>
+</div>
+<div class="section" id="s-mysql">
+<span id="s-transactions-in-mysql"></span><h2>MySQL でのトランザクション<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h2>
+<p>MySQL を使っている場合、MySQL のバージョンと使っているテーブルの形式に応じ
+て、テーブルがトランザクションをサポートする場合としない場合があります。
+(「テーブルの形式」とは、&quot;InnoDB&quot; や &quot;MyISAM&quot; などを指します。) このドキュ
+メントでは MySQL のトランザクションにまつわる説明はしませんが、 MySQL のサ
+イトには <a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/sql-syntax-transactions.html">トランザクションに関する情報</a> が掲載されています。</p>
+<p>MySQL 構成がトランザクションをサポート <em>していない</em> 場合、 Django は自動コ
+ミットモードで動作します。すなわち、 SQL 文は呼び出されたその場で実行され、
+コミットされます。 MySQL 構成がトランザクションをサポートしている場合、
+Django はこのドキュメントの説明通りにトランザクションを処理します。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">データベーストランザクションの管理</a><ul>
+<li><a class="reference external" href="#id2">デフォルトのトランザクション処理</a></li>
+<li><a class="reference external" href="#http">HTTP リクエストとトランザクションを結び付ける</a></li>
+<li><a class="reference external" href="#id3">ビュー内でトランザクションを管理する</a><ul>
+<li><a class="reference external" href="#django-db-transaction-autocommit"><tt class="docutils literal"><span class="pre">django.db.transaction.autocommit</span></tt></a></li>
+<li><a class="reference external" href="#django-db-transaction-commit-on-success"><tt class="docutils literal"><span class="pre">django.db.transaction.commit_on_success</span></tt></a></li>
+<li><a class="reference external" href="#django-db-transaction-commit-manually"><tt class="docutils literal"><span class="pre">django.db.transaction.commit_manually</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id4">トランザクション管理をグローバルに無効化する方法</a></li>
+<li><a class="reference external" href="#mysql">MySQL でのトランザクション</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="sql.html">SQL クエリの直接実行</a></li>
+    
+    
+      <li>次: <a href="../http/index.html">HTTP リクエストの処理</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">Django を使う</a>
+        
+          <ul><li><a href="index.html">モデルとデータベース</a>
+        
+        <ul><li>データベーストランザクションの管理</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/topics/db/transactions.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="sql.html" title="SQL クエリの直接実行">前へ</a> 
+     |
+    <a href="../index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="../http/index.html" title="HTTP リクエストの処理">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FAQ: 全般 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="Django FAQ" href="index.html" />
+    <link rel="next" title="FAQ: インストール" href="install.html" />
+    <link rel="prev" title="Django FAQ" href="index.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="Django FAQ">前へ</a> 
+     |
+    <a href="index.html" title="Django FAQ" accesskey="U">上へ</a>
+   |
+    <a href="install.html" title="FAQ: インストール">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="faq-general">
+            
+  
+  <span class="target" id="faq-general"></span><div class="section" id="s-faq">
+<h1>FAQ: 全般<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="s-id1">
+<h2>なぜこんなプロジェクトがあるのですか？<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Django は極めて実践的な要請のもとで成長してきました。 Web 新聞を発行している
+WorldOnline では、効果的な Web アプリケーションを、ジャーナリズムとして成立
+する締め切りに間に合うように構築せねばなりません。変転の激しいニュースルー
+ムにおいて、 WorldOnline は複雑な Web アプリケーションをコンセプトから立ち
+上げ公開にもっていくまでの時間を唯一の課題としているのです。</p>
+<p>同時に、 WorldOnline の Web 開発者たちは、こと Web 開発の王道に関しては一貫
+して完璧主義者です。</p>
+<p>こうした理由から Django は Web アプリケーションをただ素早く作れるだけではな
+く、Web 開発の <em>王道</em> に従って作成できるように設計されているのです。
+2003 年、WorldOnline の開発者 (Adrian Holovaty と Simon Willison) は PHP に
+見切りをつけ、 Python による Web 開発に取り組みはじめました。集約的で高い双
+方向性を備えた Lawrence.com のようなサイト開発の中で、彼らは Web アプリケー
+ションをより迅速に開発できるように、サイトのコードから汎用の Web 開発フレー
+ムワークを切り出し、 2 年近くの間ずっと改良を加えながら使い込んできました。</p>
+<p>2005 年の夏、 World Online はこれまでの開発の成果を Django としてオープンソー
+ス化する決定を下しました。 Django は <a class="reference external" href="http://httpd.apache.org/">Apache</a>, <a class="reference external" href="http://www.python.org/">Python</a>, そして
+<a class="reference external" href="http://www.postgresql.org/">PostgreSQL</a> をはじめとする様々なオープンソースプロジェクトなしでは実現し
+ませんでした。そして今、私達はオープンソースコミュニティに多少なりともお返
+しできることにワクワクしているのです。</p>
+</div>
+<div class="section" id="s-django">
+<h2>&#8220;Django&#8221; とはどういう意味で、どのように発音するのですか？<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h2>
+<p>Django は 1930 年代から 1950 年代初期にかけて活躍したジプシージャズのギタリ
+スト、 <a class="reference external" href="http://ja.wikipedia.org/wiki/%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%B4%E3%83%BB%E3%83%A9%E3%82%A4%E3%83%B3%E3%83%8F%E3%83%AB%E3%83%88">ジャンゴ・ラインハルト</a> (<a class="reference external" href="http://en.wikipedia.org/wiki/Django_Reinhardt">Django Reinhardt</a>) にちなんで名付けられ
+ました。今日では、ジャンゴは歴史上最も優れたギタリストの一人に数えられてい
+ます。</p>
+<p>彼の曲を聞いてみてください。きっと気に入ることでしょう。</p>
+<p>Django は <strong>JANG</strong>-oh (&#8216;a&#8217; は伸ばす) と発音します。韻は FANG-oh と
+同じです。 &#8220;D&#8221; は発音しません。</p>
+<p><a class="reference external" href="http://red-bean.com/~adrian/django_pronunciation.mp3">正しい発音の音声ファイル</a> を作成してあるので参考にしてください。</p>
+</div>
+<div class="section" id="s-id4">
+<h2>Django は安定していますか？<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>はい。 World Online は私達は 3 年以上にわたって Django を使ってきました。
+Django で構築したサイトは、これまでに 100 万ヒット／時を超えるトラフィック
+スパイクに見舞われたことがあり、何度もスラッシュドット効果を喰らっています。
+そうですね。きわめて安定です。</p>
+</div>
+<div class="section" id="s-id5">
+<h2>Django はスケールしますか？<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>はい。ハードウェアというものは、開発時間に比べて安いものですし、それゆえ
+Django はユーザが投入可能なハードウェアをできるだけ活用するべく設計されてい
+ます。</p>
+<p>Django は「レイヤ間で何も共有しない (shared-nothing)」アーキテクチャなので、
+データベースサーバ、キャッシュサーバ、 Web/アプリケーションサーバのどのレベ
+ルにハードウェアを追加してもかまいません。</p>
+<p>Django はアプリケーションレイヤからのデータベースレイヤを分離し、シン
+プルながら強力な  <a class="reference external" href="../topics/cache.html#topics-cache"><em>キャッシュフレームワーク</em></a> を備えてい
+ます。</p>
+</div>
+<div class="section" id="s-id6">
+<h2>Django の舞台裏には誰がいるのですか？<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Django は米国カンザス州ローレンス (Lawrence, Kansas, USA) のとある新聞の
+Web 部門である World Online で開発されました。今では、 Django は国際的な
+ボランティアのチームによって開発されています。 開発者たちの人となりは
+<a class="reference external" href="../internals/committers.html#internals-committers"><em>コミッタ一覧</em></a> で読めます。</p>
+</div>
+<div class="section" id="s-id7">
+<h2>どんなサイトが Django を使っているのですか？<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>Django wiki には <a class="reference external" href="http://code.djangoproject.com/wiki/DjangoPoweredSites">Django で作られたサイト一覧</a> という特集ページがあり、
+日々内容が増えています。自分の Django サイトもどうぞ自由に追加してください。</p>
+</div>
+<div class="section" id="s-django-mvc-controller-view-view-template">
+<span id="s-mtv"></span><h2>Django は MVC フレームワークのようですが、コントローラ (Controller) を「ビュー (view)」と呼び、ビュー (View) を「テンプレート (template)」と呼んでいます。どうして標準的な呼び方をしないのですか？<a class="headerlink" href="#django-mvc-controller-view-view-template" title="Permalink to this headline">¶</a></h2>
+<p>そうですね、呼び名には議論の余地があるでしょう。</p>
+<p>我々の MVC の解釈では、「ビュー」とはユーザに提示されるデータのことをいいま
+す。つまり、データが <em>どのように見えるか</em> ということではなく、むしろ <em>どの
+データを提示するか</em> です。ビューは <em>どのデータを見せるか</em> であり、
+<em>どう見せるか</em> ではありません。この二つは明らかに違います。</p>
+<p>というわけで、我々のケースでは、「ビュー」は特定の URL に対する Python コー
+ルバック関数になります。なぜなら、コールバック関数はどのデータを提示するか
+を決めているからです。</p>
+<p>さらに、テンプレートによってコンテンツとプレゼンテーションの分離がはっきり
+しています。Django では、ビューはどのデータを提示するかを決めていますが、
+ビューは通常、 <em>どのように</em> データを提示するかをテンプレートに委ねます。</p>
+<p>では、「コントローラ」はどこに入るのでしょうか。 Django の場合、おそらくフ
+レームワーク、すなわち URL 設定にしたがってリクエストを適切なビューに送信す
+る機構自体がコントローラにあたるといえるでしょう。</p>
+<p>略語がお好みなら、 Django を &#8220;MTV&#8221; フレームワークと呼んでもよいでしょう。つ
+まり、モデル (Model)、テンプレート (Template)、そしてビュー (View) です。
+こっちの方がよりしっくりきます。</p>
+<p>最後に、結局重要なのは問題を解決することです。そして、呼び方は何であれ、
+Django はわれわれにとって最も理にかなった方法で問題を解決しているのです。</p>
+</div>
+<div class="section" id="s-x-y-django">
+<h2>&lt;フレームワーク X&gt; には &lt;機能 Y&gt; があります &#8211; どうして Django にないのですか？<a class="headerlink" href="#x-y-django" title="Permalink to this headline">¶</a></h2>
+<p>世の中には他にも素晴らしい Web フレームワークがあるのは良く知っていますし、
+必要であればそこからアイデアを借りるのにやぶさかではありません。とはいえ、
+Django はまさに私達が旧態然の Web フレームワークに不満だったからこそ開発さ
+れたのであって、「&lt;Framework X&gt; だとできるから」という理由は Django に機能
+を追加する十分な理由にはならないということに注意して下さい。</p>
+</div>
+<div class="section" id="s-python-django">
+<h2>なぜ既存の Python ライブラリを使わずスクラッチで Django を作ったのですか？<a class="headerlink" href="#python-django" title="Permalink to this headline">¶</a></h2>
+<p>Django を書き始めた約 2 年前、 Adrian と Simon は少し時間を取って当時利用で
+きた様々な Python ウェブフレームワークを試してみました。</p>
+<p>その結果、十分な出来具合のものは一つもないという結論に達したのです。</p>
+<p>私達は好みにうるさいのです。(締め切りを守る) 完璧主義者と呼んでもいいでしょ
+う。</p>
+<p>これまでずっと、私達は自分たちがすでに実装済みの機能を実現するオープンソー
+スライブラリに出会ってきました。そうしたライブラリに、他の人達が同じ問題を
+同じ方法で解決しようとしているのを見ては元気づけられる思いでしたが、自分た
+ちのコードの外側に組み込むにはもう遅すぎました。私達はすでにいくつもの運用
+環境で独自のフレームワークを書き上げ、テストし、実装してきており、できたコー
+ドは快適なまでに要求を満たしていたのです。</p>
+<p>一方、ほとんどの場合、既存のフレームワークやツールは明らかにある主の根本的、
+致命的な欠陥があり、私達を神経質にさせました。結局、私達の哲学に 100% 合う
+ものはなかったのです。</p>
+<p>繰り返していいますが、私達は好みにうるさいのです。</p>
+<p>私達の設計哲学は <a class="reference external" href="../misc/design-philosophies.html#misc-design-philosophies"><em>設計哲学のページ</em></a> に詳し
+く書いてあります。</p>
+</div>
+<div class="section" id="s-id9">
+<h2>かっこいい「スクリーンキャスト」か何かがありますか？<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>現在進行中だということだけは断言できます。がしかし、私達はまだ Django を改
+良している真最中なので、現状ではなく、 Django 1.0 になったときの最終的な状態
+を反映させたいと思っています。言い方を変えれば、 Django API はまだ変化する
+かもしれないので、それまではスクリーンキャストにまださほどエネルギーを使い
+たくないということです。</p>
+</div>
+<div class="section" id="s-django-cms">
+<h2>Django はコンテンツ管理システム (CMS) なのでしょうか?<a class="headerlink" href="#django-cms" title="Permalink to this headline">¶</a></h2>
+<p>いいえ。 Django は CMS ではありませんし、いわゆる「ターンキーシステム」のよ
+うなものでもありません。 Django は Web フレームワークであり、 Web サイトを
+構築する際に使えるプログラミングツールにすぎません。</p>
+<p>例えば、 Django を <a class="reference external" href="http://drupal.org/">Drupal</a> のようなシステムと比較するのは無意味です。という
+のも、 Django はまさに Drupal のようなシステムを <em>作る</em> ためのものだからで
+す。</p>
+<p>もちろん、 Django の自動 admin サイトはすばらしく、開発時間の節約になります。
+しかし、 admin サイトは Django というフレームワークのいちモジュールに過ぎま
+せん。もっと言うなら、 Django が「 CMS 的な」アプリケーションを作成する上で
+とりわけ便利な点を持ってはいますが、そのことが「 CMS 的でない」アプリケーショ
+ンの開発に向いていない、なんてことにつながったりはしないのです。</p>
+</div>
+<div class="section" id="s-django-1-0">
+<h2>いつになったら Django 1.0 をリリースするのですか？<a class="headerlink" href="#django-1-0" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://code.djangoproject.com/wiki/VersionOneRoadmap">バージョン 1 へのロードマップ</a> を見てください。2008 年 9 月 2 を目標にし
+ています。</p>
+</div>
+<div class="section" id="s-id11">
+<h2>どうやれば Django のドキュメントをダウンロードしてオフラインで読めますか？<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>Django のドキュメントは Django tarball リリースの <tt class="docutils literal"><span class="pre">docs</span></tt> ディレクトリに
+あります。これらのドキュメントは ReST (ReStructuredText) 形式で書かれており、
+各テキストファイルが Django 公式サイトのページに対応しています。</p>
+<p>ドキュメントは <a class="reference external" href="http://code.djangoproject.com/browser/django/trunk/docs">バージョン管理システム下にある</a> ので、コードの変更状況を閲
+覧するのと同じようにしてドキュメントの変更状況を閲覧できます。</p>
+<p>技術的には、 Django サイトのドキュメントは最新の開発版の ReST ドキュメント
+から生成されます、従って、 Django サイトにあるドキュメントの方が、最新の
+Django リリースのドキュメントよりも多くの情報を提供していることがあります。</p>
+</div>
+<div class="section" id="s-id13">
+<h2>Django 開発者はどこで雇えますか？<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://code.djangoproject.com/wiki/DevelopersForHire">求職中の開発者リスト</a> には、喜んであなたの力になってくれる Django 開発者
+のリストがあります。</p>
+<p>また、求人を <a class="reference external" href="http://djangogigs.com/">http://djangogigs.com/</a> に出してみるのもよいでしょう。
+地元で Django を扱える人を探しているなら、 <a class="reference external" href="http://djangopeople.net/">http://djangopeople.net/</a> を調べ
+てみてください。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">FAQ: 全般</a><ul>
+<li><a class="reference external" href="#id1">なぜこんなプロジェクトがあるのですか？</a></li>
+<li><a class="reference external" href="#django">&#8220;Django&#8221; とはどういう意味で、どのように発音するのですか？</a></li>
+<li><a class="reference external" href="#id4">Django は安定していますか？</a></li>
+<li><a class="reference external" href="#id5">Django はスケールしますか？</a></li>
+<li><a class="reference external" href="#id6">Django の舞台裏には誰がいるのですか？</a></li>
+<li><a class="reference external" href="#id7">どんなサイトが Django を使っているのですか？</a></li>
+<li><a class="reference external" href="#django-mvc-controller-view-view-template">Django は MVC フレームワークのようですが、コントローラ (Controller) を「ビュー (view)」と呼び、ビュー (View) を「テンプレート (template)」と呼んでいます。どうして標準的な呼び方をしないのですか？</a></li>
+<li><a class="reference external" href="#x-y-django">&lt;フレームワーク X&gt; には &lt;機能 Y&gt; があります &#8211; どうして Django にないのですか？</a></li>
+<li><a class="reference external" href="#python-django">なぜ既存の Python ライブラリを使わずスクラッチで Django を作ったのですか？</a></li>
+<li><a class="reference external" href="#id9">かっこいい「スクリーンキャスト」か何かがありますか？</a></li>
+<li><a class="reference external" href="#django-cms">Django はコンテンツ管理システム (CMS) なのでしょうか?</a></li>
+<li><a class="reference external" href="#django-1-0">いつになったら Django 1.0 をリリースするのですか？</a></li>
+<li><a class="reference external" href="#id11">どうやれば Django のドキュメントをダウンロードしてオフラインで読めますか？</a></li>
+<li><a class="reference external" href="#id13">Django 開発者はどこで雇えますか？</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">Django FAQ</a></li>
+    
+    
+      <li>次: <a href="install.html">FAQ: インストール</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">Django FAQ</a>
+        
+        <ul><li>FAQ: 全般</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/faq/general.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="Django FAQ">前へ</a> 
+     |
+    <a href="index.html" title="Django FAQ" accesskey="U">上へ</a>
+   |
+    <a href="install.html" title="FAQ: インストール">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>QuerySet API リファレンス &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="モデル" href="index.html" />
+    <link rel="next" title="リクエストオブジェクトとレスポンスオブジェクト" href="../request-response.html" />
+    <link rel="prev" title="Model instance reference" href="instances.html" />
+  </head>
+  <body>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="instances.html" title="Model instance reference">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="../request-response.html" title="リクエストオブジェクトとレスポンスオブジェクト">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-models-querysets">
+            
+  
+  <div class="section" id="s-queryset-api">
+<span id="s-queryset-api-reference"></span><span id="s-ref-models-querysets"></span><h1>QuerySet API リファレンス<a class="headerlink" href="#queryset-api" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントでは、 クエリセット(<tt class="docutils literal"><span class="pre">QuerySet</span></tt>) API について詳しく解説し
+ます。このドキュメントは、 <a class="reference external" href="../../topics/db/models.html#topics-db-models"><em>モデル</em></a> と
+<a class="reference external" href="../../topics/db/queries.html#topics-db-queries"><em>データベースクエリ</em></a> に基づいて書かれているので、
+あらかじめ読んでおくよう勧めます。</p>
+<p>このリファレンスを通じて、例題には <a class="reference external" href="../../topics/db/queries.html#topics-db-queries"><em>データベースクエリガイド</em></a> で取り上げた <a class="reference external" href="../../topics/db/queries.html#queryset-model-example"><em>ブログのモデル例</em></a> を使います。</p>
+<div class="section" id="s-id2">
+<span id="s-id1"></span><span id="s-when-querysets-are-evaluated"></span><h2>クエリセットはいつ評価されるのか<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>内部的には、クエリセットの生成、フィルタ操作、スライス、コード間の受渡しは、
+データベースを操作することなく行えます。クエリセットを何らかの形で評価しな
+い限り、データベースの操作は実際には起こらないのです。</p>
+<p>以下の方法を使うと、クエリセットを評価できます:</p>
+<ul>
+<li><p class="first"><strong>イテレーション。</strong> クエリセットはイテレーション可能オブジェクトであ
+り、オブジェクトに対して最初にイテレーション操作を行ったときにデータ
+ベースクエリを実行します。例えば、以下の例はデータベース中の全てのエ
+ントリのヘッドラインを出力します:</p>
+<div class="highlight"><pre><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+    <span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">headline</span>
+</pre></div>
+</li>
+<li><p class="first"><strong>スライス。</strong> <a class="reference external" href="../../topics/db/queries.html#limiting-querysets"><em>クエリセットに制約を課す</em></a> で説明しているように、
+Python の配列スライス表記を使うとクエリセットをスライスできます。通常、
+クエリセットに対するスライスは (未評価の) 別のクエリセットを返します
+が、スライス表記に「ステップ (step)」パラメタを使った場合には、データ
+ベースクエリを実行します。</p>
+</li>
+<li><p class="first"><strong>repr().</strong> クエリセットに対して <tt class="docutils literal"><span class="pre">repr()</span></tt> を呼び出すと、クエリセッ
+トは値評価されます。これは Python 対話インタプリタでの利便性のための
+仕様で、 API を対話的に使うときに結果を即座に見られるようにしています。</p>
+</li>
+<li><p class="first"><strong>len().</strong> クエリセットに対して <tt class="docutils literal"><span class="pre">len()</span></tt> を呼び出すと、クエリセッ
+トは値評価されます。予想に違わず、 <tt class="docutils literal"><span class="pre">len()</span></tt> はクエリ結果リストの長さ
+を返します。</p>
+<p>注意: クエリセット中のレコードの数を知りたいだけなら、 <tt class="docutils literal"><span class="pre">len()</span></tt> は
+<em>使わないでください</em> 。レコード数の計算はデータベース上で SQL 文の
+<tt class="docutils literal"><span class="pre">SELECT</span> <span class="pre">COUNT(*)</span></tt> 使って行う方が遥かに効率的であり、まさにその理由
+から Django では <tt class="docutils literal"><span class="pre">count()</span></tt> メソッドを提供しています。後述の
+<tt class="docutils literal"><span class="pre">count()</span></tt> を参照してください。</p>
+</li>
+<li><p class="first"><strong>list().</strong> クエリセットに対して <tt class="docutils literal"><span class="pre">list()</span></tt> を呼び出すと、値評価を強
+制できます。例えば:</p>
+<div class="highlight"><pre><span class="n">entry_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+</pre></div>
+<p>とはいえ、この方法を使うと、Django が全ての要素のリストをメモリ上にロー
+ドするため、巨大なメモリオーバヘッドを引き起こす可能性があるので十分
+注意してください。これに対し、クエリセットに対するイテレーション操作
+では、必要な分だけデータをロードしてオブジェクトをインスタンス化する
+という利点があります。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="s-api">
+<span id="s-id3"></span><h2>クエリセット API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>クエリセットは手動で作成できません (<a title="django.db.models.Manager" class="reference external" href="../../topics/db/managers.html#django.db.models.Manager"><tt class="xref docutils literal"><span class="pre">Manager</span></tt></a> を介してしか生成できま
+せん) が、 <tt class="docutils literal"><span class="pre">QuerysSet</span></tt> クラスのコンストラクタの正式な定義は以下の通りです:</p>
+<dl class="class">
+<dt id="django.db.models.QuerySet">
+<!--[django.db.models.QuerySet]-->class <tt class="descname">QuerySet</tt>(<span class="optional">[</span><em>model=None</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.QuerySet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>通常、クエリセットを操作するときには、 <a class="reference external" href="../../topics/db/queries.html#chaining-filters"><em>フィルタを連鎖</em></a> させます。クエリセットに対するフィルタ操作は、ほとんど
+が新たなクエリセットを返します。</p>
+<div class="section" id="s-id4">
+<span id="s-queryset-methods-that-return-new-querysets"></span><h3>新たなクエリセットを返すクエリセットメソッド<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Django は、クエリセットの返す結果の形式や、 SQL クエリの実行方法を変更する
+ためのリファインメソッドを幅広く提供しています。</p>
+<div class="section" id="s-filter-kwargs">
+<h4><tt class="docutils literal"><span class="pre">filter(**kwargs)</span></tt><a class="headerlink" href="#filter-kwargs" title="Permalink to this headline">¶</a></h4>
+<p>指定の照合パラメタに一致するオブジェクトの入った新たなクエリセットを返しま
+す。</p>
+<p>照合パラメタ (<tt class="docutils literal"><span class="pre">**kwargs</span></tt>) は後述の <a class="reference internal" href="#id10">フィールドの照合</a> で説明するフォーマッ
+トにします。複数のパラメタを指定すると、背後の SQL 文では <tt class="docutils literal"><span class="pre">AND</span></tt> で結合さ
+れます。</p>
+</div>
+<div class="section" id="s-exclude-kwargs">
+<h4><tt class="docutils literal"><span class="pre">exclude(**kwargs)</span></tt><a class="headerlink" href="#exclude-kwargs" title="Permalink to this headline">¶</a></h4>
+<p>指定の照合パラメタに一致 <em>しない</em> オブジェクトの入った新たなクエリセットを
+返します。</p>
+<p>照合パラメタ (<tt class="docutils literal"><span class="pre">**kwargs</span></tt>) は後述の <a class="reference internal" href="#id10">フィールドの照合</a> で説明するフォーマッ
+トにします。複数のパラメタを指定すると、背後の SQL 文では <tt class="docutils literal"><span class="pre">AND</span></tt> で結合さ
+れ、制約条件節全体を <tt class="docutils literal"><span class="pre">NOT()</span></tt> で囲みます。</p>
+<p>以下の例では、 <tt class="docutils literal"><span class="pre">pub_date</span></tt> が 2005 年 1 月 3 日より未来の日時になっていて、
+<em>かつ</em> <tt class="docutils literal"><span class="pre">headline</span></tt> が &quot;Hello&quot; で始まる全てのエントリを除外します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pub_date__gt</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">headline</span><span class="o">=</span><span class="s">&#39;Hello&#39;</span><span class="p">)</span>
+</pre></div>
+<p>SQL では以下のようなクエリの評価と同じです:</p>
+<pre>SELECT ...
+WHERE NOT (pub_date &gt; '2005-1-3' AND headline = 'Hello')</pre>
+<p>また、以下の例では、 <tt class="docutils literal"><span class="pre">pub_date</span></tt> が 2005 年 1 月 3 日より未来の日時で
+あるか、 <em>または</em> <tt class="docutils literal"><span class="pre">headline</span></tt> が &quot;Hello&quot; で始まる全てのエントリを除外しま
+す:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">pub_date__gt</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s">&#39;Hello&#39;</span><span class="p">)</span>
+</pre></div>
+<p>SQL では以下のようなクエリの評価と同じです:</p>
+<pre>SELECT ...
+WHERE NOT pub_date &gt; '2005-1-3'
+AND NOT headline = 'Hello'</pre>
+<p>二つ目の例の方が制約が厳しいことに注意して下さい。</p>
+</div>
+<div class="section" id="s-order-by-fields">
+<h4><tt class="docutils literal"><span class="pre">order_by(*fields)</span></tt><a class="headerlink" href="#order-by-fields" title="Permalink to this headline">¶</a></h4>
+<p>デフォルトでは、 <tt class="docutils literal"><span class="pre">QuerySet</span></tt> の返す結果はモデルの <tt class="docutils literal"><span class="pre">Meta</span></tt> の <tt class="docutils literal"><span class="pre">ordering</span></tt>
+オプションに指定した整列条件のタプルに従って整列されます。 <tt class="docutils literal"><span class="pre">order_by</span></tt> を
+使うと、この挙動を <tt class="docutils literal"><span class="pre">QuerySet</span></tt> 単位でオーバライドできます。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__year</span><span class="o">=</span><span class="mi">2005</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;-pub_date&#39;</span><span class="p">,</span> <span class="s">&#39;headline&#39;</span><span class="p">)</span>
+</pre></div>
+<p>このクエリを実行すると、検索結果はまず <tt class="docutils literal"><span class="pre">pub_date</span></tt> で降順に並べられ、次い
+で <tt class="docutils literal"><span class="pre">headline</span></tt> で昇順に並べられます。 <tt class="docutils literal"><span class="pre">&quot;-pub_date&quot;</span></tt> の先頭にあるマイナス
+記号が  <em>降順</em> を表しています。何も指定しないと昇順です。整列をランダムにし
+たければ、以下のように &quot;?&quot; を使います:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;?&#39;</span><span class="p">)</span>
+</pre></div>
+<p>注意: <tt class="docutils literal"><span class="pre">order_by('?')</span></tt> を使うと、使っているバックエンドによってはコストの
+かかる低速なクエリを実行してしまいます。</p>
+<p>別のモデル内のフィールドを使ってモデルを整列させるには、モデルのリレーショ
+ン追跡と同じ構文を使ってフィールドを指定します。すなわち、フィールド名の後
+ろにアンダースコア 2 つ (<tt class="docutils literal"><span class="pre">__</span></tt>) 、さらに新たなモデルのフィールド名を続けま
+す。この調子で、任意の深さまでモデルを追跡できます。例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;blog__name&#39;</span><span class="p">,</span> <span class="s">&#39;headline&#39;</span><span class="p">)</span>
+</pre></div>
+<p>他のモデルへのリレーションを使ってモデルインスタンスを整列しようとすると、
+Django はリレーション先のモデルのデフォルトの整列順 (<tt class="docutils literal"><span class="pre">Meta.ordering</span></tt> が指
+定されていなければプライマリキー) を使います。例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;blog&#39;</span><span class="p">)</span>
+</pre></div>
+<p>は、 <tt class="docutils literal"><span class="pre">Blog</span></tt> モデルにデフォルトの整列順が指定されていないので、以下のコー
+ドと同じです:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;blog__id&#39;</span><span class="p">)</span>
+</pre></div>
+<p>リレーション先のモデルのフィールドを使った整列と <tt class="docutils literal"><span class="pre">distinct()</span></tt> を組み合わ
+せる場合は注意が必要です。リレーション先のモデルの整列が、 <tt class="docutils literal"><span class="pre">distinct()</span></tt>
+によってどのように影響を受けるかは、 <a class="reference internal" href="#distinct">distinct()</a> の説明を参照してください。</p>
+<p>クエリ結果の整列には、 (<tt class="docutils literal"><span class="pre">ManyToMany</span></tt> のような)複数の値で構成されるフィー
+ルドも指定できます。通常、こうした指定にはあまり意味がなく、本当に高度な使
+い方です。しかし、クエリセットをフィルタした結果や、もともとのデータにおい
+て、リレーション元のオブジェクトから参照しているオブジェクトが一つしかない
+ことが暗黙的に決まっているとはっきりしていれば、整列結果は期待通りになるで
+しょう。複数の値で構成されるフィールドで整列を行う場合には、十分注意して、
+期待通りの結果が得られるか確認してください。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>クエリをデフォルトの整列も含めて一切整列させたくない場合には、
+<tt class="docutils literal"><span class="pre">order_by()</span></tt> を引数なしで呼び出してください。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>リレーションをまたいでモデルを整列する際の構文が変更されました。以前の動作
+仕様は <a class="reference external" href="http://www.djangoproject.com/documentation/0.96/model-api/#floatfield">Django 0.96 のドキュメント</a> を参照してください。</p>
+<p>大小文字の区別を考慮して整列するかどうかを指定する方法はありません。大小文
+字の区別については、 Django は現在使っているデータベースバックエンドの整列
+方法に従います。</p>
+<p>また、 <tt class="docutils literal"><span class="pre">reverse()</span></tt> は一般に、すでに整列方法の定義されているクエリセット
+(デフォルトの整列順の定義されたモデルから取り出したクエリセットや、
+<tt class="docutils literal"><span class="pre">order_by()</span></tt> で整列されたもの) に対して呼びだすべきものです。整列方法の定
+義されていないクエリセットに対して  <tt class="docutils literal"><span class="pre">reverse()</span></tt> を呼び出しても、何ら効果
+をもたらしません (<tt class="docutils literal"><span class="pre">reverse()</span></tt> を呼び出す前に整列方法が定義されていなけれ
+ば、呼び出した後の整列方法も未定義のままです)。</p>
+</div>
+<div class="section" id="s-distinct">
+<h4><tt class="docutils literal"><span class="pre">distinct()</span></tt><a class="headerlink" href="#distinct" title="Permalink to this headline">¶</a></h4>
+<p>SQL クエリに <tt class="docutils literal"><span class="pre">SELECT</span> <span class="pre">DISTINCT</span></tt> を使う新たな <tt class="docutils literal"><span class="pre">QuerySet</span></tt> を返します。
+<tt class="docutils literal"><span class="pre">distinct()</span></tt> を使うと、クエリ結果から重複する行をなくします。</p>
+<p>デフォルトでは、 <tt class="docutils literal"><span class="pre">QuerySet</span></tt> は重複する行を除去しません。通常は、
+<tt class="docutils literal"><span class="pre">Blog.objects.all()</span></tt> のような単純なクエリは重複する行を含むような結果にな
+らないため、これはあまり問題ではありません。しかし、クエリが複数のテーブル
+にわたる場合、 <tt class="docutils literal"><span class="pre">QuerySet</span></tt> の評価結果に重複する結果が入る場合があります。
+その場合には <tt class="docutils literal"><span class="pre">distinct()</span></tt> を使って下さい。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><tt class="docutils literal"><span class="pre">order_by(*fields)</span></tt> に指定したフィールドは、 SQL レベルで <tt class="docutils literal"><span class="pre">SELECT</span></tt>
+されます。そのため、 <tt class="docutils literal"><span class="pre">order_by()</span></tt> と <tt class="docutils literal"><span class="pre">distinct()</span></tt> と組み合わせると
+予期しない結果を生むことがあります。例えば、リレーション先のモデルフィー
+ルドを使って整列を行うと、それらのフィールドも <tt class="docutils literal"><span class="pre">SELECT</span></tt> されるため、
+リレーション元のオブジェクトは同じ値で、リレーション先のフィールド値だ
+けが違うレコードは異なる (distinct) レコードとみなされます。リレーショ
+ン先のレコードカラムは (順序を制御するために使われるだけなので) 返され
+ず、その結果、distinct 制約を満たしていないクエリ結果が返されるように見
+えてしまいます。</p>
+<p>同様に、 <tt class="docutils literal"><span class="pre">values()</span></tt> クエリを使って <tt class="docutils literal"><span class="pre">SELECT</span></tt> 対象のカラムを制約する
+場合も、 <tt class="docutils literal"><span class="pre">order_by()</span></tt> に指定したカラム (またはモデルのデフォルトの順
+序制御カラム) が自動的にクエリ結果に含められ、結果の一意性に影響を及ぼ
+します。</p>
+<p class="last"><tt class="docutils literal"><span class="pre">distinct()</span></tt> を使う場合、リレーション先のフィールドを使った並べ替えに
+はよく注意しましょう。同様に、 <tt class="docutils literal"><span class="pre">distinct()</span></tt> と <tt class="docutils literal"><span class="pre">values()</span></tt> を同時に
+使うときにも、 <tt class="docutils literal"><span class="pre">values()</span></tt> の対象とするフィールドに順序カラムが入って
+いない場合はよく注意してください。</p>
+</div>
+</div>
+<div class="section" id="s-values-fields">
+<h4><tt class="docutils literal"><span class="pre">values(*fields)</span></tt><a class="headerlink" href="#values-fields" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">ValueQuerySet</span></tt> を返します。 <tt class="docutils literal"><span class="pre">ValueQuerySet</span></tt> は <tt class="docutils literal"><span class="pre">QuerySet</span></tt> のサブクラ
+スで、評価結果としてモデルインスタンスオブジェクトの代りに辞書のリストを返
+す <tt class="docutils literal"><span class="pre">QuerySet</span></tt> です。</p>
+<p>リスト中の各辞書は個々のオブジェクトを表現しており、キーがモデルオブジェク
+トの各属性名に、対応しています。</p>
+<p>以下の例では、 <tt class="docutils literal"><span class="pre">values()</span></tt> の辞書と通常のモデルオブジェクトを比較していま
+す:</p>
+<pre># Blog オブジェクトのリストを返します。
+&gt;&gt;&gt; Blog.objects.filter(name__startswith='Beatles')
+[&lt;Blog: Beatles Blog&gt;]
+
+# 辞書のリストを返します。
+&gt;&gt;&gt; Blog.objects.filter(name__startswith='Beatles').values()
+[{'id': 1, 'name': 'Beatles Blog', 'tagline': 'All the latest Beatles news.'}]</pre>
+<p><tt class="docutils literal"><span class="pre">values()</span></tt> オプションの可変長の引数 <tt class="docutils literal"><span class="pre">*fields</span></tt> を取れます。このオプションは
+<tt class="docutils literal"><span class="pre">SELECT</span></tt> の制限に使うフィールド名を列挙したものです。 <tt class="docutils literal"><span class="pre">fields</span></tt> を指定し
+た場合、辞書には指定した名前のフィールドのキーと値だけが入ります。
+<tt class="docutils literal"><span class="pre">*fields</span></tt> を指定しなければ、辞書にはテーブルの全てのフィールドのキーと値
+が入ります。</p>
+<p>例を示します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+<span class="go">[{&#39;id&#39;: 1, &#39;name&#39;: &#39;Beatles Blog&#39;, &#39;tagline&#39;: &#39;All the latest Beatles news.&#39;}],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">)</span>
+<span class="go">[{&#39;id&#39;: 1, &#39;name&#39;: &#39;Beatles Blog&#39;}]</span>
+</pre></div>
+<p>注意すべき点が 2 つほどあります:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">values()</span></tt> メソッドは <a title="django.db.models.ManyToManyField" class="reference external" href="fields.html#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> の
+内容を返しません。 <a title="django.db.models.ManyToManyField" class="reference external" href="fields.html#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> 型のフィー
+ルド名を渡すと、エラーを送出します。</p>
+</li>
+<li><p class="first"><a title="django.db.models.ForeignKey" class="reference external" href="fields.html#django.db.models.ForeignKey"><tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt></a> <tt class="docutils literal"><span class="pre">foo</span></tt> がモデルに入っている場
+合、 <tt class="docutils literal"><span class="pre">values()</span></tt> がデフォルトで返す辞書には、 <tt class="docutils literal"><span class="pre">foo_id</span></tt> というキー
+が入ります。これは、リレーションの実際の値が入っているモデル内部の隠
+しフィールドの名前です (<tt class="docutils literal"><span class="pre">foo</span></tt> はリレーション先のモデルインスタンス
+への参照です)。一方、 <tt class="docutils literal"><span class="pre">values()</span></tt> にフィールド名を指定して呼び出す
+場合は、 <tt class="docutils literal"><span class="pre">foo</span></tt> と <tt class="docutils literal"><span class="pre">foo_id</span></tt> のどちらでも渡せますが、得られる結果は
+同じ (辞書のキーは渡したフィールド名と同じ) で、リレーションの実際の
+値です。</p>
+<p>例を以下に示します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+<span class="go">[{&#39;blog_id: 1, &#39;headline&#39;: u&#39;First Entry&#39;, ...}, ...]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;blog&#39;</span><span class="p">)</span>
+<span class="go">[{&#39;blog&#39;: 1}, ...]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;blog_id&#39;</span><span class="p">)</span>
+<span class="go">[{&#39;blog_id&#39;: 1}, ...]</span>
+</pre></div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">values()</span></tt> と <tt class="docutils literal"><span class="pre">distinct()</span></tt> を組み合わせて使う場合、カラム値による
+並べ替えが結果に思わぬ影響をもたらすことがあります。詳しくは
+<a class="reference internal" href="#distinct">distinct()</a> の節を参照してください。</p>
+</li>
+</ul>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>以前は、 <tt class="docutils literal"><span class="pre">values()</span></tt> に渡せるのは <tt class="docutils literal"><span class="pre">blog</span></tt> だけで、 <tt class="docutils literal"><span class="pre">blog_id</span></tt> は使えませ
+んでした。</p>
+<p><tt class="docutils literal"><span class="pre">ValuesQuerySet</span></tt> が便利なのは、わずかな数のフィールドの値しか必要でなく、
+モデルインスタンスオブジェクトの機能が必要でないと分かっている場合です。
+必要なフィールドだけを選択すると、さらに効率的です。</p>
+<p>最後に、 <tt class="docutils literal"><span class="pre">ValuesQuerySet</span></tt> は <tt class="docutils literal"><span class="pre">QuerySet</span></tt> のサブクラスなので、
+<tt class="docutils literal"><span class="pre">QuerySet</span></tt> の全てのメソッドを持っている点に注意してください。
+<tt class="docutils literal"><span class="pre">ValuesQuerySet</span></tt> に対して <tt class="docutils literal"><span class="pre">filter()</span></tt> や <tt class="docutils literal"><span class="pre">order_by()</span></tt> といった操作を行
+えます。つまり、以下の二つの呼び出しは等価です:</p>
+<div class="highlight"><pre><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+<span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</pre></div>
+<p>Django の作者たちは、全ての SQL 関係のメソッドを先に配置し、その後に (必要
+なら) 出力関係のメソッド (<tt class="docutils literal"><span class="pre">values()</span></tt> など) を配置するやり方を好んでいます。
+とはいえ、これは実際上問題ではないので、個人的な信条を反映させてかまいませ
+ん。</p>
+</div>
+<div class="section" id="s-values-list-fields">
+<h4><tt class="docutils literal"><span class="pre">values_list(*fields)</span></tt><a class="headerlink" href="#values-list-fields" title="Permalink to this headline">¶</a></h4>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p><tt class="docutils literal"><span class="pre">values()</span></tt> に似ていますが、辞書のリストを返すのではなく、タプルのリストを
+返します。各タプルには <tt class="docutils literal"><span class="pre">values_list()</span></tt> の引数に渡したフィールドの値が、引
+数の順番に一致して入っています。例えば:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;headline&#39;</span><span class="p">)</span>
+<span class="go">[(1, u&#39;First entry&#39;), ...]</span>
+</pre></div>
+<p>フィールドを一つだけ指定する場合、 <tt class="docutils literal"><span class="pre">flat</span></tt> というパラメタも指定できます。
+このパラメタを <tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、結果は 1 要素のタプルではなく一つの値とし
+て返されます。以下の例を見れば、違いがはっきりするでしょう:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+<span class="go">[(1,), (2,), (3,), ...]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+<span class="go">[1, 2, 3, ...]</span>
+</pre></div>
+<p>複数のフィールドを指定しているときに <tt class="docutils literal"><span class="pre">flat</span></tt> を渡すとエラーを送出します。</p>
+<p><tt class="docutils literal"><span class="pre">values_list()</span></tt> に引数を渡さなければ、モデルの全てのフィールドを定義順に
+並べたタプルのリストを返します。</p>
+</div>
+<div class="section" id="s-dates-field-kind-order-asc">
+<h4><tt class="docutils literal"><span class="pre">dates(field,</span> <span class="pre">kind,</span> <span class="pre">order='ASC')</span></tt><a class="headerlink" href="#dates-field-kind-order-asc" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">DateQuerySet</span></tt> を返します。 <tt class="docutils literal"><span class="pre">DateQuerySet</span></tt> は <tt class="docutils literal"><span class="pre">QuerySet</span></tt> のサブクラス
+で、評価結果としてクエリセット内のコンテンツの全日付を
+<tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> オブジェクトとして返します。</p>
+<p><tt class="docutils literal"><span class="pre">field</span></tt> はモデルの <tt class="docutils literal"><span class="pre">DateField</span></tt> または <tt class="docutils literal"><span class="pre">DateTimeField</span></tt> の名前です。</p>
+<p><tt class="docutils literal"><span class="pre">kind</span></tt> は <tt class="docutils literal"><span class="pre">&quot;year&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;month&quot;</span></tt> または <tt class="docutils literal"><span class="pre">&quot;day&quot;</span></tt> です。
+結果リスト中の各 <tt class="docutils literal"><span class="pre">datetime.datetime</span></tt> オブジェクトは <tt class="docutils literal"><span class="pre">type</span></tt> の指定に従っ
+て切り詰められます。</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">&quot;year&quot;</span></tt> を指定すると、フィールドの年部分の値の重複しないリストを返
+します。</li>
+<li><tt class="docutils literal"><span class="pre">&quot;month&quot;</span></tt> を指定すると、フィールドの年／月部分の値の重複しないリス
+トを返します。</li>
+<li><tt class="docutils literal"><span class="pre">&quot;day&quot;</span></tt> を指定すると、フィールドの年／月／日部分の値の重複しないリ
+ストを返します。</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">order</span></tt> には結果の並び順を指定します。デフォルト値は <tt class="docutils literal"><span class="pre">'ASC'</span></tt> で、
+<tt class="docutils literal"><span class="pre">&quot;ASC&quot;</span></tt> または <tt class="docutils literal"><span class="pre">&quot;DESC&quot;</span></tt> にできます。</p>
+<p>例を示します:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">dates</span><span class="p">(</span><span class="s">&#39;pub_date&#39;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="p">)</span>
+<span class="go">[datetime.datetime(2005, 1, 1)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">dates</span><span class="p">(</span><span class="s">&#39;pub_date&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">)</span>
+<span class="go">[datetime.datetime(2005, 2, 1), datetime.datetime(2005, 3, 1)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">dates</span><span class="p">(</span><span class="s">&#39;pub_date&#39;</span><span class="p">,</span> <span class="s">&#39;day&#39;</span><span class="p">)</span>
+<span class="go">[datetime.datetime(2005, 2, 20), datetime.datetime(2005, 3, 20)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">dates</span><span class="p">(</span><span class="s">&#39;pub_date&#39;</span><span class="p">,</span> <span class="s">&#39;day&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;DESC&#39;</span><span class="p">)</span>
+<span class="go">[datetime.datetime(2005, 3, 20), datetime.datetime(2005, 2, 20)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">headline__contains</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dates</span><span class="p">(</span><span class="s">&#39;pub_date&#39;</span><span class="p">,</span> <span class="s">&#39;day&#39;</span><span class="p">)</span>
+<span class="go">[datetime.datetime(2005, 3, 20)]</span>
+</pre></div>
+</div>
+<div class="section" id="s-none">
+<h4><tt class="docutils literal"><span class="pre">none()</span></tt><a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h4>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p><tt class="docutils literal"><span class="pre">EmptyQuerySet</span></tt> を返します。 <tt class="docutils literal"><span class="pre">EmptyQuerySet</span></tt> とは、評価結果が常に空の
+リストであるクエリセットです。関数の戻り値などで空の照合結果を返したいけれ
+ども、呼び出し側が (空のリストなどではなく) クエリセットオブジェクトの戻り
+値を期待しているような場合に便利です。</p>
+<p>例:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<div class="section" id="s-id5">
+<span id="s-select-related"></span><h4><tt class="docutils literal"><span class="pre">select_related()</span></tt><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>自動的に外部キーのリレーションを「追跡」し、クエリを実行したときにリレーショ
+ン先のオブジェクトも加えて選択するような <tt class="docutils literal"><span class="pre">QuerySet</span></tt> を返します。
+これはパフォーマンスを向上させるための機構で、クエリは (ときに非常に) 巨大
+になりますが、以後の外部キーへのリレーションでデータベースクエリが必要なく
+なります。</p>
+<p>以下の例では、通常の照合と <tt class="docutils literal"><span class="pre">select_related()</span></tt> を使った照合との違いを比較
+しています。通常の照合では:</p>
+<div class="highlight"><pre><span class="c"># データベースを操作します。</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c"># リレーション先の Blog オブジェクトを取得するために再度データベースを</span>
+<span class="c"># 操作します。</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">blog</span>
+</pre></div>
+<p>一方、 <tt class="docutils literal"><span class="pre">select_related()</span></tt> を使った照合では:</p>
+<div class="highlight"><pre><span class="c"># データベースを操作します。</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c"># e.blog は上のクエリで取得済みなので、データベースを操作しません。</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">blog</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">select_related</span></tt> は可能な限り外部キーを追跡することに注意してください。以
+下のようなモデル:</p>
+<pre>class City(models.Model):
+    # ...
+
+class Person(models.Model):
+    # ...
+    hometown = models.ForeignKey(City)
+
+class Book(models.Model):
+    # ...
+    author = models.ForeignKey(Person)</pre>
+<p>の場合、 <tt class="docutils literal"><span class="pre">Book.objects.select_related().get(id=4)</span></tt>
+を実行すると、リレーションの張られた <tt class="docutils literal"><span class="pre">Person</span></tt> <em>に加えて</em>  <tt class="docutils literal"><span class="pre">City</span></tt> もキャッ
+シュします:</p>
+<div class="highlight"><pre><span class="n">b</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">author</span>         <span class="c"># データベースを操作しません。</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">hometown</span>       <span class="c"># データベースを操作しません。</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="c"># select_related() しない場合</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">author</span>         <span class="c"># データベースを操作します。</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">hometown</span>       <span class="c"># データベースを操作します。</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">select_related()</span></tt> は、デフォルトの状態では <tt class="docutils literal"><span class="pre">null=True</span></tt> であるような外
+部キーカラムを追跡しないので注意してください。</p>
+<p>通常、 <tt class="docutils literal"><span class="pre">select_related()</span></tt> を使うと、データベースの呼び出し回数を減らせる
+ので、大幅にパフォーマンスを向上できます。しかし、リレーションが深くネスト
+しているような状況では、 <tt class="docutils literal"><span class="pre">select_related()</span></tt> が追跡するリレーションが「多
+すぎる」ために、巨大なクエリを生成してしまい、結果的にパフォーマンスの低下
+を招く場合があります。</p>
+<p>こうした状況に対応するため、 <tt class="docutils literal"><span class="pre">select_related()</span></tt> に <tt class="docutils literal"><span class="pre">depth</span></tt> 引数を指定す
+ると、以下の例のようにリレーションを何「レベル」まで追跡するかを制御できま
+す:</p>
+<div class="highlight"><pre><span class="n">b</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">author</span>         <span class="c"># 追跡済みのリレーション。データベースを操作しません。</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">hometown</span>       <span class="c"># 未追跡のリレーション。データベースを呼び出します。</span>
+</pre></div>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p><tt class="docutils literal"><span class="pre">depth</span></tt> 引数は Django 1.0 で新たに追加された機能です。</p>
+</div>
+<div class="section" id="s-extra-select-none-where-none-params-none-tables-none-order-by-none-select-params-none">
+<h4><tt class="docutils literal"><span class="pre">extra(select=None,</span> <span class="pre">where=None,</span> <span class="pre">params=None,</span> <span class="pre">tables=None,</span> <span class="pre">order_by=None,</span> <span class="pre">select_params=None)</span></tt><a class="headerlink" href="#extra-select-none-where-none-params-none-tables-none-order-by-none-select-params-none" title="Permalink to this headline">¶</a></h4>
+<p>時として、 Django のクエリ表記法だけでは複雑な <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節を容易に表現でき
+ない場合があります。こうした特異な場合のために、 Django では <tt class="docutils literal"><span class="pre">extra()</span></tt>
+というクエリセット修飾子を提供しています。このメソッドは、クエリセットが
+生成する SQL 文中に特定の SQL 節を挿入するためのフックです。</p>
+<p>定義上、これらの拡張照合機能は (直接 SQL コードを書いているため) データベー
+スエンジン間の可搬性がありません。また、 DRY 則の侵犯でもあります。可能な限
+り使わないようにして下さい。</p>
+<p><tt class="docutils literal"><span class="pre">params</span></tt>, <tt class="docutils literal"><span class="pre">select</span></tt>, <tt class="docutils literal"><span class="pre">where</span></tt>,  <tt class="docutils literal"><span class="pre">tables</span></tt> のいずれかを指定します。
+いずれの引数も必須ではありませんが、少なくとも一つは指定せねばなりません。</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">select</span></tt></dt>
+<dd><p class="first"><tt class="docutils literal"><span class="pre">select</span></tt> キーワードを使うと、 <tt class="docutils literal"><span class="pre">SELECT</span></tt> 節に追加のフィールドを選択で
+きます。この引数は、属性名とその属性値を計算するための SQL 節を対応づけ
+た辞書にします。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;is_recent&#39;</span><span class="p">:</span> <span class="s">&quot;pub_date &gt; &#39;2006-01-01&#39;&quot;</span><span class="p">})</span>
+</pre></div>
+<p>のようにすると、 <tt class="docutils literal"><span class="pre">Entry</span></tt> オブジェクトは、エントリの <tt class="docutils literal"><span class="pre">pub_date</span></tt> が
+Jan. 1, 2006 より大きいかどうかを示すブール値の属性 <tt class="docutils literal"><span class="pre">is_recent</span></tt> を
+持つようになります。</p>
+<p>Django は指定された SQL を直接 <tt class="docutils literal"><span class="pre">SELECT</span></tt> 文に挿入するので、上の例の
+SQL 文は以下のようになります:</p>
+<pre>SELECT blog_entry.*, (pub_date &gt; '2006-01-01')
+FROM blog_entry;</pre>
+<p>次の例はもっと高度です。この例では、 <tt class="docutils literal"><span class="pre">Blog</span></tt> オブジェクトに関連づけら
+れている <tt class="docutils literal"><span class="pre">Entry</span></tt> オブジェクトの個数を表す整数を、 <tt class="docutils literal"><span class="pre">Blog</span></tt> オブジェク
+トの <tt class="docutils literal"><span class="pre">entry_count</span></tt> 属性に持たせるためにサブクエリを実行しています:</p>
+<div class="highlight"><pre><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span>
+    <span class="n">select</span><span class="o">=</span><span class="p">{</span>
+        <span class="s">&#39;entry_count&#39;</span><span class="p">:</span> <span class="s">&#39;SELECT COUNT(*) FROM blog_entry WHERE blog_entry.blog_id = blog_blog.id&#39;</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+<p>(上の場合では、クエリの <tt class="docutils literal"><span class="pre">FROM</span></tt> 節に <tt class="docutils literal"><span class="pre">blog_blog</span></tt> が入るという事実を
+利用しています。)</p>
+<p>上の例の場合、 SQL は以下のようになります:</p>
+<pre>SELECT blog_blog.*, (SELECT COUNT(*) FROM blog_entry WHERE blog_entry.blog_id = blog_blog.id)
+FROM blog_blog;</pre>
+<p>ほとんどのデータベースエンジンでは、サブセレクションの周りに丸括弧が必
+要ですが、Django の <tt class="docutils literal"><span class="pre">select</span></tt> 節では必要ないということに注意してくださ
+い。また、 MySQL の一部のバージョンのように、データベースバックエンドに
+よってはサブクエリをサポートしないので注意してください。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>ごく稀に、 <tt class="docutils literal"><span class="pre">extra(select=...)</span></tt> に指定する SQL にパラメタを渡したい場
+場合があります。そんなときは <tt class="docutils literal"><span class="pre">select_params</span></tt> パラメタを使ってください。
+ただし、 <tt class="docutils literal"><span class="pre">select_params</span></tt> はシーケンス型で、 <tt class="docutils literal"><span class="pre">select</span></tt> は辞書なので、
+<tt class="docutils literal"><span class="pre">select=</span></tt> の中でパラメタが正しく一致するように注意する必要があります。
+<tt class="docutils literal"><span class="pre">select</span></tt> に通常の辞書型を渡す代わりに
+<tt class="docutils literal"><span class="pre">django.utils.datastructures.SortedDict</span></tt> を指定すれば、こうした状況を
+うまく扱えます。</p>
+<p>例えば、以下のコードは期待通りに動作します:</p>
+<div class="highlight"><pre><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span>
+    <span class="n">select</span><span class="o">=</span><span class="n">SortedDict</span><span class="p">([(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">&#39;</span><span class="p">)]),</span>
+    <span class="n">select_params</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;one&#39;</span><span class="p">,</span> <span class="s">&#39;two&#39;</span><span class="p">))</span>
+</pre></div>
+<p class="last"><tt class="docutils literal"><span class="pre">extra()</span></tt> に SELECT パラメタを渡す時には、 <tt class="docutils literal"><span class="pre">&quot;%%s&quot;</span></tt> (<tt class="docutils literal"><span class="pre">s</span></tt> の前のパー
+セント記号が <em>二重</em> のもの) だけは使わないでください。 Django は
+<tt class="docutils literal"><span class="pre">%s</span></tt> を探してパラメタの挿入位置を追跡しますが、  <tt class="docutils literal"><span class="pre">&quot;%%s&quot;</span></tt> のように
+<tt class="docutils literal"><span class="pre">%</span></tt> がエスケープされていると検出しないからです。そのため、クエリ結果
+が正しくなくなります。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">where</span></tt> / <tt class="docutils literal"><span class="pre">tables</span></tt></dt>
+<dd><p class="first">明示的に追加の <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節を渡す必要がある場合 -- おそらく非明示的な結
+合を行っている場合 -- には、 <tt class="docutils literal"><span class="pre">where</span></tt> キーワードを使って下さい。
+<tt class="docutils literal"><span class="pre">tables</span></tt> を使えば、 SQL の <tt class="docutils literal"><span class="pre">FROM</span></tt> 節に手動でテーブル名を追加できま
+す。</p>
+<p><tt class="docutils literal"><span class="pre">where</span></tt> や <tt class="docutils literal"><span class="pre">tables</span></tt> は、ともに文字列のリストを引数にとります。
+<tt class="docutils literal"><span class="pre">where</span></tt> パラメタの内容は全て、多の検索条件と &quot;AND&quot; で結合されます。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;id IN (3, 4, 5, 20)&#39;</span><span class="p">])</span>
+</pre></div>
+<p>は、(大雑把にいって) 以下のような SQL 文に変換されます:</p>
+<pre>SELECT * FROM blog_entry WHERE id IN (3, 4, 5, 20);</pre>
+<p><tt class="docutils literal"><span class="pre">tables</span></tt> パラメタを使う場合、クエリ中にすでに登場しているテーブルを指
+定していないか注意が必要です。 <tt class="docutils literal"><span class="pre">tables</span></tt> パラメタに追加のテーブル名を
+指定して、それがすでにクエリ中に含まれているテーブルであった場合、
+Django はユーザがそのテーブルをさらに加えようとしているものとみなします。
+その場合、追加されたテーブルの名前にはエイリアスがつけられるので、問題
+を引き起こします。 SQL 文の中に同じテーブルを複数回登場させる場合、デー
+タベースがそれぞれのテーブルを区別できるように、2度目以降のテーブル名に
+はエイリアスをつけねばなりません。そのため、 <tt class="docutils literal"><span class="pre">where</span></tt> パラメタにすでに
+クエリ中に存在するテーブル名を渡すと、エラーを引き起こすのです。</p>
+<p class="last">通常は、すでにクエリ中に存在するテーブル名を追加するような作業はしない
+はずです。しかし、上で述べたようなことが起きてしまう場合には、いくつか
+解決方法があります。まず、追加でテーブル名を指定しなくても正しくクエリ
+を実行できるか試してください。それがだめなら、クエリセットを構築する際
+に、 <tt class="docutils literal"><span class="pre">extra()</span></tt> を先に呼び出して、テーブル名を最初に登場させてみてく
+ださい。最後に、どうしてもうまくいかないのなら、生成されるクエリを見て、
+<tt class="docutils literal"><span class="pre">where</span></tt> を書き直し、テーブル名にエイリアスを与えてみてください。
+エイリアスは同じ方法でクエリセットを生成している限り同じ名前を持つので、
+エイリアス名は変化しないものとして扱えます。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">order_by</span></tt></dt>
+<dd><p class="first">クエリセットの評価結果を、 <tt class="docutils literal"><span class="pre">extra()</span></tt> に入れたフィールドやテーブルに基
+づいて並べ替えたい場合は、 <tt class="docutils literal"><span class="pre">extra()</span></tt> に <tt class="docutils literal"><span class="pre">order_by</span></tt> パラメタを指定し
+てください。 <tt class="docutils literal"><span class="pre">order_by</span></tt> は文字列のシーケンスで指定します。各文字列は
+(<tt class="docutils literal"><span class="pre">order_by()</span></tt> メソッドで指定するような) モデルフィールド名か、
+<tt class="docutils literal"><span class="pre">table_name.column_name</span></tt> 形式か、 <tt class="docutils literal"><span class="pre">extra()</span></tt> の <tt class="docutils literal"><span class="pre">select</span></tt> パラメ
+タに指定したカラムのエイリアスのいずれかで指定します。</p>
+<p>例を示しましょう:</p>
+<div class="highlight"><pre><span class="n">q</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;is_recent&#39;</span><span class="p">:</span> <span class="s">&quot;pub_date &gt; &#39;2006-01-01&#39;&quot;</span><span class="p">})</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">order_by</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;-is_recent&#39;</span><span class="p">])</span>
+</pre></div>
+<p>上の例は、 <tt class="docutils literal"><span class="pre">is_recent</span></tt> が真であるような結果を先に表示します (<tt class="xref docutils literal"><span class="pre">True</span></tt>
+よりも <tt class="xref docutils literal"><span class="pre">False</span></tt> が先にくるのは降順のときだからです)。</p>
+<p class="last">ちなみに、上の例でわかるように、 <tt class="docutils literal"><span class="pre">extra()</span></tt> は何度も呼び出しできます。
+(その度に、制約条件が追加されてゆきます)。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">params</span></tt></dt>
+<dd><p class="first">上で説明した <tt class="docutils literal"><span class="pre">where</span></tt> パラメタでは、標準の Python の文字列プレースホル
+ダ <tt class="docutils literal"><span class="pre">'%s'</span></tt> を使って、データベースエンジンが自動的にパラメタをクオート
+するよう指示できます。 <tt class="docutils literal"><span class="pre">params</span></tt> 引数には、プレースホルダで置き換えら
+れるパラメタのリストを指定します。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;headline=</span><span class="si">%s</span><span class="s">&#39;</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Lennon&#39;</span><span class="p">])</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">where</span></tt> の中に直接値を埋め込まず、常に <tt class="docutils literal"><span class="pre">params</span></tt> を使うようにしてく
+ださい。というのも、 <tt class="docutils literal"><span class="pre">params</span></tt> を使えば、バックエンド固有の方法でパラ
+メタの値を正しくクオートするからです。 (例えば引用符文字などを正しくエ
+スケープします)</p>
+<p>悪い例:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;headline=&#39;Lennon&#39;&quot;</span><span class="p">])</span>
+</pre></div>
+<p>良い例:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;headline=</span><span class="si">%s</span><span class="s">&#39;</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Lennon&#39;</span><span class="p">])</span>
+</pre></div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="s-queryset">
+<span id="s-queryset-methods-that-do-not-return-querysets"></span><h3>QuerySet を返さないクエリセットメソッド<a class="headerlink" href="#queryset" title="Permalink to this headline">¶</a></h3>
+<p>以下のクエリセットメソッドは、クエリセットを評価して、クエリセット <em>でない</em>
+値を返します。</p>
+<p>これらのメソッドはキャッシュを使わず (後述の <a class="reference external" href="../../topics/db/queries.html#caching-and-querysets"><em>キャッシュとクエリセット</em></a>
+を参照してください)、メソッド呼び出しごとにデータベースにクエリをかけます。</p>
+<div class="section" id="s-id6">
+<span id="s-get-kwargs"></span><h4><tt class="docutils literal"><span class="pre">get(**kwargs)</span></tt><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>照合パラメタに一致するオブジェクトを返します。照合パラメタは後述の
+<a class="reference internal" href="#id10">フィールドの照合</a> で説明するフォーマットにします。</p>
+<p>複数のオブジェクトがみつかると、 <tt class="docutils literal"><span class="pre">get()</span></tt> は <tt class="docutils literal"><span class="pre">AssertionError</span></tt> を送出しま
+す。</p>
+<p>指定パラメタに対するオブジェクトが見つからなかった場合には <tt class="docutils literal"><span class="pre">get()</span></tt> は
+<tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> 例外を送出します。 <tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> 例外はモデルクラスの属
+性の一つです。例えば:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&#39;foo&#39;</span><span class="p">)</span> <span class="c"># raises Entry.DoesNotExist</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> 例外は <tt class="docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt> を継
+承しているので、複数の <tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> 例外を <tt class="docutils literal"><span class="pre">except:</span></tt> のターゲットにで
+きます。例えば:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ObjectDoesNotExist</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;Either the entry or blog doesn&#39;t exist.&quot;</span>
+</pre></div>
+</div>
+<div class="section" id="s-create-kwargs">
+<h4><tt class="docutils literal"><span class="pre">create(**kwargs)</span></tt><a class="headerlink" href="#create-kwargs" title="Permalink to this headline">¶</a></h4>
+<p>ワンステップでオブジェクトを生成して保存するための便宜メソッドです。
+すなわち、以下の文:</p>
+<div class="highlight"><pre><span class="n">p</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&quot;Bruce&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&quot;Springsteen&quot;</span><span class="p">)</span>
+</pre></div>
+<p>と、以下の文:</p>
+<div class="highlight"><pre><span class="n">p</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&quot;Bruce&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&quot;Springsteen&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">force_insert</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p>は等価です。</p>
+<p><a class="reference external" href="instances.html#ref-models-force-insert"><em>force_insert</em></a> パラメタはここでは説明してい
+ませんが、このパラメタを指定すると、常に新たなオブジェクトを生成します。
+通常は、このパラメタのことを気にする必要はありません。しかし、モデルに手動
+で設定した主キーが存在していて、すでにデータベース上にある主キーと同じ値を
+もったオブジェクトを <tt class="docutils literal"><span class="pre">create()</span></tt> して保存しようとすると、主キーの一意性が
+破れてしまうため、 <tt class="docutils literal"><span class="pre">IntegrityError</span></tt> を引き起こしてしまいます。ですから、
+手動で主キーを設定したときには、例外処理を忘れずに準備しておいてください。</p>
+</div>
+<div class="section" id="s-get-or-create-kwargs">
+<h4><tt class="docutils literal"><span class="pre">get_or_create(**kwargs)</span></tt><a class="headerlink" href="#get-or-create-kwargs" title="Permalink to this headline">¶</a></h4>
+<p>kwargs に指定したオブジェクトを照合し、なければ生成するための便宜メソッドで
+す。</p>
+<p><tt class="docutils literal"><span class="pre">(object,</span> <span class="pre">created)</span></tt> の形式のタプルを返します。 <tt class="docutils literal"><span class="pre">object</span></tt> は取得または作
+成されたオブジェクトであり、 <tt class="docutils literal"><span class="pre">created</span></tt> はブール値で、オブジェクトが新たに
+生成されたかどうかを示します。</p>
+<p>このメソッドは、お決まりのコードを書く上でのショートカットとして定義されて
+おり、データを取り込むスクリプトを書くときに便利です。例えば:</p>
+<div class="highlight"><pre><span class="k">try</span><span class="p">:</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">Person</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">,</span> <span class="n">birthday</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">1940</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>このようなコードパターンでは、モデル中のフィールドが増えると手に負えなくな
+ります。 <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> を使うと、上のコード例は以下のように書き直せま
+す:</p>
+<div class="highlight"><pre><span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">,</span>
+                  <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;birthday&#39;</span><span class="p">:</span> <span class="n">date</span><span class="p">(</span><span class="mi">1940</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">)})</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">get_or_create()</span></tt> に渡されたキーワード引数は、 (オプションの引数である
+<tt class="docutils literal"><span class="pre">defaults</span></tt> を除いて) 全て <tt class="docutils literal"><span class="pre">get()</span></tt> の呼び出し時の引数として渡されます。
+オブジェクトが見つかった場合、 <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> は見つかったオブジェクト
+と <tt class="xref docutils literal"><span class="pre">False</span></tt> を返します。オブジェクトが <em>見つからなかった</em> 場合、新たに生成
+されたオブジェクトと <tt class="xref docutils literal"><span class="pre">True</span></tt> を返します。新たなオブジェクトは以下のアルゴ
+リズムで作成されます:</p>
+<div class="highlight"><pre><span class="n">defaults</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;defaults&#39;</span><span class="p">,</span> <span class="p">{})</span>
+<span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">])</span>
+<span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>上のコードを日本語で表すなら、まず <tt class="docutils literal"><span class="pre">'defaults'</span></tt> でないキーワード引数のう
+ち、二重アンダースコアを含まないもの (二重アンダースコアはあいまい照合のキー
+ワードなので除外します) を使ってパラメタ <tt class="docutils literal"><span class="pre">params</span></tt> を作成し、必要に応じて
+デフォルト値 <tt class="docutils literal"><span class="pre">defaults</span></tt> で内容を更新して、その結果をモデルクラスを呼び出
+すときのキーワード引数に使う、という処理に相当します。上で示唆したように、
+ここではアルゴリズムを簡単化して、必要な部分だけを記述しています。内部実装
+では、もっと細かくエラーチェックを行い、境界条件を処理しています。興味があ
+るなら、ぜひコードを読んでみてください。</p>
+<p><tt class="docutils literal"><span class="pre">defaults</span></tt> という名前のフィールド名を持っていて、 <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> の
+中で厳密照合に使いたければ、以下のように <tt class="docutils literal"><span class="pre">'defaults__exact'</span></tt> を使います:</p>
+<div class="highlight"><pre><span class="n">Foo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">defaults__exact</span><span class="o">=</span><span class="s">&#39;bar&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;defaults&#39;</span><span class="p">:</span> <span class="s">&#39;baz&#39;</span><span class="p">})</span>
+</pre></div>
+<p>主キーを手動で指定している場合、 <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> メソッドは
+<tt class="docutils literal"><span class="pre">create()</span></tt> とおなじようなエラーを引き起こします。すなわち、すでにデータベー
+ス上に存在するキーを使ってオブジェクトを生成しようとすると、
+<tt class="docutils literal"><span class="pre">IntegrityError</span></tt> を送出します。</p>
+<p>最後に、 Django ビューの中で <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> を使う場合についてひとこと
+注意しておきましょう。上で説明したように、主として <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> が有
+用なのは、データを解析し、該当する既存のデータが存在しない場合に新たなレコー
+ドを生成するようなスクリプトを書く場合です。ビューで <tt class="docutils literal"><span class="pre">get_or_create()</span></tt> を
+使いたいのなら、特に理由のない限り <tt class="docutils literal"><span class="pre">POST</span></tt> リクエスト中で使うようにしましょ
+う。一般論として、 <tt class="docutils literal"><span class="pre">GET</span></tt> リクエストの処理中ではデータに影響を及ぼすべきで
+はありません。データに副作用をもたらすようなページのリクエストには常に
+<tt class="docutils literal"><span class="pre">POST</span></tt> を使うようにしましょう。詳しくは、 HTTP 仕様における
+<a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1">安全なメソッド</a> を参照してください。</p>
+</div>
+<div class="section" id="s-count">
+<h4><tt class="docutils literal"><span class="pre">count()</span></tt><a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h4>
+<p>クエリセットに一致するデータベース上のオブジェクトの個数を表す整数を返しま
+す。 <tt class="docutils literal"><span class="pre">count()</span></tt> は例外を送出しません。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="c"># データベース中のエントリの総数を返します。</span>
+<span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+<span class="c"># ヘッドラインが &#39;Lennon&#39; を含むエントリの総数を返します。</span>
+<span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">headline__contains</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">count()</span></tt> は背後で <tt class="docutils literal"><span class="pre">SELECT</span> <span class="pre">COUNT(*)</span></tt> を実行するので、単にオブジェクトの
+個数を数えたい場合には、全てのレコードを Python オブジェクトとしてロードし
+てから <tt class="docutils literal"><span class="pre">len()</span></tt> を呼び出すのではなく、常に <tt class="docutils literal"><span class="pre">count()</span></tt> を使うようにしてく
+ださい。</p>
+<p>(PostgreSQL や MySQL といった) どのデータベースを使っているかによって、
+<tt class="docutils literal"><span class="pre">count()</span></tt> の戻り値が Python の通常の整数型ではなく、長整数になることもあ
+ります。これは実装上の問題であり、現実的に問題になることはありません。</p>
+</div>
+<div class="section" id="s-in-bulk-id-list">
+<h4><tt class="docutils literal"><span class="pre">in_bulk(id_list)</span></tt><a class="headerlink" href="#in-bulk-id-list" title="Permalink to this headline">¶</a></h4>
+<p>主キーの値のリストを引数にとり、各主キー値とオブジェクトを対応づけた辞書を
+返します。</p>
+<p>例えば:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">in_bulk</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">{1: &lt;Blog: Beatles Blog&gt;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">in_bulk</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="go">{1: &lt;Blog: Beatles Blog&gt;, 2: &lt;Blog: Cheddar Talk&gt;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">in_bulk</span><span class="p">([])</span>
+<span class="go">{}</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">in_bulk()</span></tt> に空のリストを渡すと空の辞書を返します。</p>
+</div>
+<div class="section" id="s-iterator">
+<h4><tt class="docutils literal"><span class="pre">iterator()</span></tt><a class="headerlink" href="#iterator" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">QuerySet</span></tt> を評価し (クエリを実行し) て、その結果の入った <a class="reference external" href="http://www.python.org/dev/peps/pep-0234/">イテレータ</a>
+を返します。 <tt class="docutils literal"><span class="pre">QuerySet</span></tt> は通常、最初にアクセスした時点で、全ての検索結果
+を読み込んで、対応するオブジェクトのインスタンスを生成してしまいます。
+一方、 <tt class="docutils literal"><span class="pre">iterator()</span></tt> は、離散的なチャンク単位で検索結果を読み出し、オブジェ
+クトをインスタンス化して、一度に一つづつ yield します。 <tt class="docutils literal"><span class="pre">QuerySet</span></tt> は膨大
+な数のオブジェクトを返す場合があるので、その場合には <tt class="docutils literal"><span class="pre">iterator()</span></tt> を使う
+ことでパフォーマンスを改善し、メモリの使用量を劇的に減らせます。</p>
+<p>すでに値にアクセス済みの <tt class="docutils literal"><span class="pre">QuerySet</span></tt> に対して <tt class="docutils literal"><span class="pre">iterator()</span></tt> を呼び出すと、
+値の評価が再度行われ、クエリが繰り返し発行されるので注意してください。</p>
+</div>
+<div class="section" id="s-latest-field-name-none">
+<h4><tt class="docutils literal"><span class="pre">latest(field_name=None)</span></tt><a class="headerlink" href="#latest-field-name-none" title="Permalink to this headline">¶</a></h4>
+<p>日付フィールドである <tt class="docutils literal"><span class="pre">field_name</span></tt> の値に応じて、テーブル中の最新のオブジェ
+クトを返します。</p>
+<p>以下の例では、 <tt class="docutils literal"><span class="pre">pub_date</span></tt> フィールドに応じて、テーブル中の最新の
+<tt class="docutils literal"><span class="pre">Entry</span></tt> を返します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">latest</span><span class="p">(</span><span class="s">&#39;pub_date&#39;</span><span class="p">)</span>
+</pre></div>
+<p>モデルの <tt class="docutils literal"><span class="pre">Meta</span></tt> で  <tt class="docutils literal"><span class="pre">get_latest_by</span></tt> を指定している場合、 <tt class="docutils literal"><span class="pre">latest()</span></tt>
+の <tt class="docutils literal"><span class="pre">field_name</span></tt> 引数は省略できます。 Django は <tt class="docutils literal"><span class="pre">get_latest_by</span></tt> に指定し
+たフィールドをデフォルト値にします。</p>
+<p><tt class="docutils literal"><span class="pre">get()</span></tt> と同様、 <tt class="docutils literal"><span class="pre">latest()</span></tt> は指定パラメタに一致するオブジェクトがない
+場合に <tt class="docutils literal"><span class="pre">DoesNotExist</span></tt> を送出します。</p>
+<p><tt class="docutils literal"><span class="pre">latest()</span></tt> は純粋に利便性と可読性のためだけに存在しています。</p>
+<span class="target" id="field-lookups"></span></div>
+</div>
+<div class="section" id="s-id10">
+<h3>フィールドの照合<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>フィールドの照合操作によって、 SQL の <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節の中身が決まります。フィー
+ルドの照合を行うには、 <tt class="docutils literal"><span class="pre">filter()</span></tt>, <tt class="docutils literal"><span class="pre">exclude()</span></tt> および <tt class="docutils literal"><span class="pre">get()</span></tt> といっ
+たクエリセットのメソッドのキーワード引数を指定します。</p>
+<p>フィールド照合について知りたければ、 <a class="reference external" href="../../topics/db/queries.html#field-lookups-intro"><em>フィールドの照合</em></a> を参照して
+ください。</p>
+<div class="section" id="s-exact">
+<h4>exact<a class="headerlink" href="#exact" title="Permalink to this headline">¶</a></h4>
+<p>厳密な一致です、比較対象の値を <tt class="xref docutils literal"><span class="pre">None</span></tt> にすると、SQL における <tt class="docutils literal"><span class="pre">NULL</span></tt> と
+の比較として扱われます (詳しくは <a class="reference internal" href="#isnull">isnull</a> を参照してください)。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id__exact</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id__exact</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE id = 14;
+SELECT ... WHERE id IS NULL;</pre>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました:</span> バージョン 1.0 から、 <tt class="docutils literal"><span class="pre">id__exact=None</span></tt> のセマンティクスが変更されまし
+た。以前は SQL レベルで (意図的に) <tt class="docutils literal"><span class="pre">WHERE</span> <span class="pre">id</span> <span class="pre">=</span> <span class="pre">NULL</span></tt> に置き換えられて
+いましたが、この SQL はいかなるレコードにもマッチしません。バージョン
+1.0 では、 <tt class="docutils literal"><span class="pre">id__isnull=True</span></tt> と同じ挙動を示すように変更されています。</div>
+<div class="admonition-mysql admonition">
+<p class="first admonition-title">MySQL での比較</p>
+<p class="last">MySQL では、デフォルト構成での <tt class="docutils literal"><span class="pre">exact</span></tt> 比較の判定は大小文字を区別しま
+せん。大小文字の区別は、データベーステーブルごとのコレーション
+(collation) 設定で制御されています (データベースの設定であって、 Django
+の設定では <em>ありません</em>)。 MySQL のテーブルは大小文字を区別して比較する
+ように構成できますが、トレードオフもあります。詳しくは、
+<a class="reference external" href="../databases.html#ref-databases"><em>databases</em></a> ドキュメントの <a class="reference external" href="../databases.html#mysql-collation"><em>コレーションの節</em></a> を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-iexact">
+<h4>iexact<a class="headerlink" href="#iexact" title="Permalink to this headline">¶</a></h4>
+<p>大小文字の区別をしない一致です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name__iexact</span><span class="o">=</span><span class="s">&#39;beatles blog&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE name ILIKE 'beatles blog';</pre>
+<p>この例は、 <tt class="docutils literal"><span class="pre">'Beatles</span> <span class="pre">Blog'</span></tt>, <tt class="docutils literal"><span class="pre">'beatles</span> <span class="pre">blog'</span></tt>, <tt class="docutils literal"><span class="pre">'BeAtLes</span> <span class="pre">BLoG'</span></tt>
+などにマッチします。</p>
+</div>
+<div class="section" id="s-contains">
+<h4>contains<a class="headerlink" href="#contains" title="Permalink to this headline">¶</a></h4>
+<p>大小文字を区別する包含テストです。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">headline__contains</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE headline LIKE '%Lennon%';</pre>
+<p>この例では、 <tt class="docutils literal"><span class="pre">'Today</span> <span class="pre">Lennon</span> <span class="pre">honored'</span></tt> というヘッドラインには一致しますが、
+<tt class="docutils literal"><span class="pre">'today</span> <span class="pre">lennon</span> <span class="pre">honored'</span></tt> には一致しません。</p>
+<p>SQLite は大小文字を区別する <tt class="docutils literal"><span class="pre">LIKE</span></tt> をサポートしないので、 <tt class="docutils literal"><span class="pre">contains</span></tt> は
+<tt class="docutils literal"><span class="pre">icontains</span></tt> と同じになります。</p>
+</div>
+<div class="section" id="s-icontains">
+<h4>icontains<a class="headerlink" href="#icontains" title="Permalink to this headline">¶</a></h4>
+<p>大小文字を区別しない包含テストです。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">headline__icontains</span><span class="o">=</span><span class="s">&#39;Lennon&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE headline ILIKE '%Lennon%';</pre>
+</div>
+<div class="section" id="s-in">
+<h4>in<a class="headerlink" href="#in" title="Permalink to this headline">¶</a></h4>
+<p>指定のリストに入っているものに一致します。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE id IN (1, 3, 4);</pre>
+<p>リテラル値のリストを渡す代わりに、クエリセットを使って動的なリストとして評
+価してもかまいません。クエリセットは <tt class="docutils literal"><span class="pre">values()</span></tt> メソッドを使って個々のオ
+ブジェクト値からなるリストに変換できねばならず、 <tt class="docutils literal"><span class="pre">query</span></tt> 属性を使ってクエ
+リセットに変換してから渡さねばなりません:</p>
+<div class="highlight"><pre><span class="n">q</span> <span class="o">=</span> <span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="s">&#39;Cheddar&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;pk&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">query</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">blog__in</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+</pre></div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><tt class="docutils literal"><span class="pre">query</span></tt> 属性は、まだ明確に仕様の定まっていない内部的な属性です。
+現在は上記のように問題なく使えますが、将来のバージョンで API が変更され
+るかもしれません。</p>
+</div>
+<p>上のクエリセットを評価すると、以下の SQL 文と同様の結果を得ます:</p>
+<pre>SELECT ... WHERE blog.id IN (SELECT id FROM ... WHERE NAME LIKE '%Cheddar%')</pre>
+</div>
+<div class="section" id="s-gt">
+<h4>gt<a class="headerlink" href="#gt" title="Permalink to this headline">¶</a></h4>
+<p>より大きい値に一致します。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__gt</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE id &gt; 4;</pre>
+</div>
+<div class="section" id="s-gte">
+<h4>gte<a class="headerlink" href="#gte" title="Permalink to this headline">¶</a></h4>
+<p>等しいか、より大きい値に一致します。</p>
+</div>
+<div class="section" id="s-lt">
+<h4>lt<a class="headerlink" href="#lt" title="Permalink to this headline">¶</a></h4>
+<p>より少ない値に一致します。</p>
+</div>
+<div class="section" id="s-lte">
+<h4>lte<a class="headerlink" href="#lte" title="Permalink to this headline">¶</a></h4>
+<p>等しいか、より少ない値に一致します。</p>
+</div>
+<div class="section" id="s-startswith">
+<h4>startswith<a class="headerlink" href="#startswith" title="Permalink to this headline">¶</a></h4>
+<p>大小文字を区別する starts-with です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">headline__startswith</span><span class="o">=</span><span class="s">&#39;Will&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE headline LIKE 'Will%';</pre>
+<p>SQLite は大小文字を区別する <tt class="docutils literal"><span class="pre">LIKE</span></tt> をサポートしないので、 <tt class="docutils literal"><span class="pre">startswith</span></tt>
+は <tt class="docutils literal"><span class="pre">istartswith</span></tt> と同じになります。</p>
+</div>
+<div class="section" id="s-istartswith">
+<h4>istartswith<a class="headerlink" href="#istartswith" title="Permalink to this headline">¶</a></h4>
+<p>大小文字を区別しない starts-with です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">headline__istartswith</span><span class="o">=</span><span class="s">&#39;will&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE headline ILIKE 'Will%';</pre>
+</div>
+<div class="section" id="s-endswith">
+<h4>endswith<a class="headerlink" href="#endswith" title="Permalink to this headline">¶</a></h4>
+<p>大小文字を区別する ends-with です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">headline__endswith</span><span class="o">=</span><span class="s">&#39;cats&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE headline LIKE '%cats';</pre>
+<p>SQLite は大小文字を区別する <tt class="docutils literal"><span class="pre">LIKE</span></tt> をサポートしないので、 <tt class="docutils literal"><span class="pre">endswith</span></tt>
+は <tt class="docutils literal"><span class="pre">iendswith</span></tt> と同じです。</p>
+</div>
+<div class="section" id="s-iendswith">
+<h4>iendswith<a class="headerlink" href="#iendswith" title="Permalink to this headline">¶</a></h4>
+<p>大小文字を区別しない ends-with です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">headline__iendswith</span><span class="o">=</span><span class="s">&#39;will&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE headline ILIKE '%will'</pre>
+</div>
+<div class="section" id="s-range">
+<h4>range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h4>
+<p>範囲テスト (閉包テスト) です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2005</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
+<span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__range</span><span class="o">=</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">))</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE pub_date BETWEEN '2005-01-01' and '2005-03-31';</pre>
+<p><tt class="docutils literal"><span class="pre">range</span></tt> は日付、数値、文字など、SQL で <tt class="docutils literal"><span class="pre">BETWEEN</span></tt> を使える場所ならどこで
+も使えます。</p>
+</div>
+<div class="section" id="s-year">
+<h4>year<a class="headerlink" href="#year" title="Permalink to this headline">¶</a></h4>
+<p>date/datetime フィールドに対する、 year の厳密一致です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__year</span><span class="o">=</span><span class="mi">2005</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE EXTRACT('year' FROM pub_date) = '2005';</pre>
+<p>(厳密な SQL シンタクスはデータベースエンジンによって違います。)</p>
+</div>
+<div class="section" id="s-month">
+<h4>month<a class="headerlink" href="#month" title="Permalink to this headline">¶</a></h4>
+<p>date/datetime フィールドに対する、 month の厳密一致です。 1 (1月)
+から 12 (12 月) までの整数を引数にとります。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__month</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE EXTRACT('month' FROM pub_date) = '12';</pre>
+<p>(厳密な SQL シンタクスはデータベースエンジンによって違います。)</p>
+</div>
+<div class="section" id="s-day">
+<h4>day<a class="headerlink" href="#day" title="Permalink to this headline">¶</a></h4>
+<p>date/datetime フィールドに対する day の厳密一致です。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__day</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE EXTRACT('day' FROM pub_date) = '3';</pre>
+<p>(厳密な SQL シンタクスはデータベースエンジンによって違います。)</p>
+<p>このクエリ文は、「1 月 3 日」や「7 月 3 日」のように、毎月 3 日にマッチし
+ます。</p>
+</div>
+<div class="section" id="s-isnull">
+<h4>isnull<a class="headerlink" href="#isnull" title="Permalink to this headline">¶</a></h4>
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> または <tt class="xref docutils literal"><span class="pre">False</span></tt> を引数にとり、それぞれが <tt class="docutils literal"><span class="pre">IS</span> <span class="pre">NULL</span></tt> および
+<tt class="docutils literal"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">NULL</span></tt> に対応しています。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pub_date__isnull</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE pub_date IS NULL;</pre>
+<div class="admonition-isnull-true-exact-none admonition">
+<p class="first admonition-title"><tt class="docutils literal"><span class="pre">__isnull=True</span></tt> と <tt class="docutils literal"><span class="pre">__exact=None</span></tt></p>
+<p class="last"><tt class="docutils literal"><span class="pre">__isnull=True</span></tt> と <tt class="docutils literal"><span class="pre">__exact=None</span></tt> には重要な違いがあります。
+SQL の仕様上、いかなる値も <tt class="docutils literal"><span class="pre">NULL</span></tt> と等価ではないので、
+<tt class="docutils literal"><span class="pre">__exact=None</span></tt> は <em>常に</em> 空の結果セットを返します。一方、
+<tt class="docutils literal"><span class="pre">__isnull</span></tt> はフィールドの値が <tt class="docutils literal"><span class="pre">NULL</span></tt> であるかどうかだけを調べ、比較
+を実行しません。</p>
+</div>
+</div>
+<div class="section" id="s-search">
+<h4>search<a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h4>
+<p>全文インデクスを活用した全文検索で、ブール値を返します。このメソッドは
+<tt class="docutils literal"><span class="pre">contains</span></tt> に似ていますが、全文インデクスを使うためはるかに高速です。</p>
+<p>この機能は MySQL でだけ利用可能です。また、全文インデクスを追加するにはデー
+タベースを直接操作する必要があります。</p>
+</div>
+<div class="section" id="s-regex">
+<h4>regex<a class="headerlink" href="#regex" title="Permalink to this headline">¶</a></h4>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>正規表現による大小文字を区別した検索を行います。</p>
+<p>正規表現の構文は各データベースバックエンドで使われているものと同じです。
+正規表現による照合をサポートしない <tt class="docutils literal"><span class="pre">sqlite</span></tt> バックエンドの場合に、Python
+の <tt class="docutils literal"><span class="pre">re</span></tt> モジュールと同じ構文を使います。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">title__regex</span><span class="o">=</span><span class="s">r&#39;^(An?|The) +&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE title REGEXP BINARY '^(An?|The) +'; -- MySQL
+
+SELECT ... WHERE REGEXP_LIKE(title, '^(an?|the) +', 'c'); -- Oracle
+
+SELECT ... WHERE title ~ '^(An?|The) +'; -- PostgreSQL
+
+SELECT ... WHERE title REGEXP '^(An?|The) +'; -- SQLite</pre>
+<p>正規表現を指定する場合には raw 文字列を使う (<tt class="docutils literal"><span class="pre">'foo'</span></tt> でなく <tt class="docutils literal"><span class="pre">r'foo'</span></tt> を
+使う)よう勧めます。</p>
+</div>
+<div class="section" id="s-iregex">
+<h4>iregex<a class="headerlink" href="#iregex" title="Permalink to this headline">¶</a></h4>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>正規表現による大小文字を区別しない検索を行います。</p>
+<p>使い方の例を示します:</p>
+<div class="highlight"><pre><span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">title__iregex</span><span class="o">=</span><span class="s">r&#39;^(an?|the) +&#39;</span><span class="p">)</span>
+</pre></div>
+<p>これは、以下の SQL と等価です:</p>
+<pre>SELECT ... WHERE title REGEXP '^(an?|the) +'; -- MySQL
+
+SELECT ... WHERE REGEXP_LIKE(title, '^(an?|the) +', 'i'); -- Oracle
+
+SELECT ... WHERE title ~* '^(an?|the) +'; -- PostgreSQL
+
+SELECT ... WHERE title REGEXP '(?i)^(an?|the) +'; -- SQLite</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">QuerySet API リファレンス</a><ul>
+<li><a class="reference external" href="#id2">クエリセットはいつ評価されるのか</a></li>
+<li><a class="reference external" href="#api">クエリセット API</a><ul>
+<li><a class="reference external" href="#id4">新たなクエリセットを返すクエリセットメソッド</a><ul>
+<li><a class="reference external" href="#filter-kwargs"><tt class="docutils literal"><span class="pre">filter(**kwargs)</span></tt></a></li>
+<li><a class="reference external" href="#exclude-kwargs"><tt class="docutils literal"><span class="pre">exclude(**kwargs)</span></tt></a></li>
+<li><a class="reference external" href="#order-by-fields"><tt class="docutils literal"><span class="pre">order_by(*fields)</span></tt></a></li>
+<li><a class="reference external" href="#distinct"><tt class="docutils literal"><span class="pre">distinct()</span></tt></a></li>
+<li><a class="reference external" href="#values-fields"><tt class="docutils literal"><span class="pre">values(*fields)</span></tt></a></li>
+<li><a class="reference external" href="#values-list-fields"><tt class="docutils literal"><span class="pre">values_list(*fields)</span></tt></a></li>
+<li><a class="reference external" href="#dates-field-kind-order-asc"><tt class="docutils literal"><span class="pre">dates(field,</span> <span class="pre">kind,</span> <span class="pre">order='ASC')</span></tt></a></li>
+<li><a class="reference external" href="#none"><tt class="docutils literal"><span class="pre">none()</span></tt></a></li>
+<li><a class="reference external" href="#id5"><tt class="docutils literal"><span class="pre">select_related()</span></tt></a></li>
+<li><a class="reference external" href="#extra-select-none-where-none-params-none-tables-none-order-by-none-select-params-none"><tt class="docutils literal"><span class="pre">extra(select=None,</span> <span class="pre">where=None,</span> <span class="pre">params=None,</span> <span class="pre">tables=None,</span> <span class="pre">order_by=None,</span> <span class="pre">select_params=None)</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#queryset">QuerySet を返さないクエリセットメソッド</a><ul>
+<li><a class="reference external" href="#id6"><tt class="docutils literal"><span class="pre">get(**kwargs)</span></tt></a></li>
+<li><a class="reference external" href="#create-kwargs"><tt class="docutils literal"><span class="pre">create(**kwargs)</span></tt></a></li>
+<li><a class="reference external" href="#get-or-create-kwargs"><tt class="docutils literal"><span class="pre">get_or_create(**kwargs)</span></tt></a></li>
+<li><a class="reference external" href="#count"><tt class="docutils literal"><span class="pre">count()</span></tt></a></li>
+<li><a class="reference external" href="#in-bulk-id-list"><tt class="docutils literal"><span class="pre">in_bulk(id_list)</span></tt></a></li>
+<li><a class="reference external" href="#iterator"><tt class="docutils literal"><span class="pre">iterator()</span></tt></a></li>
+<li><a class="reference external" href="#latest-field-name-none"><tt class="docutils literal"><span class="pre">latest(field_name=None)</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id10">フィールドの照合</a><ul>
+<li><a class="reference external" href="#exact">exact</a></li>
+<li><a class="reference external" href="#iexact">iexact</a></li>
+<li><a class="reference external" href="#contains">contains</a></li>
+<li><a class="reference external" href="#icontains">icontains</a></li>
+<li><a class="reference external" href="#in">in</a></li>
+<li><a class="reference external" href="#gt">gt</a></li>
+<li><a class="reference external" href="#gte">gte</a></li>
+<li><a class="reference external" href="#lt">lt</a></li>
+<li><a class="reference external" href="#lte">lte</a></li>
+<li><a class="reference external" href="#startswith">startswith</a></li>
+<li><a class="reference external" href="#istartswith">istartswith</a></li>
+<li><a class="reference external" href="#endswith">endswith</a></li>
+<li><a class="reference external" href="#iendswith">iendswith</a></li>
+<li><a class="reference external" href="#range">range</a></li>
+<li><a class="reference external" href="#year">year</a></li>
+<li><a class="reference external" href="#month">month</a></li>
+<li><a class="reference external" href="#day">day</a></li>
+<li><a class="reference external" href="#isnull">isnull</a></li>
+<li><a class="reference external" href="#search">search</a></li>
+<li><a class="reference external" href="#regex">regex</a></li>
+<li><a class="reference external" href="#iregex">iregex</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="instances.html">Model instance reference</a></li>
+    
+    
+      <li>次: <a href="../request-response.html">リクエストオブジェクトとレスポンスオブジェクト</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">モデル</a>
+        
+        <ul><li>QuerySet API リファレンス</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/models/querysets.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="instances.html" title="Model instance reference">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="../request-response.html" title="リクエストオブジェクトとレスポンスオブジェクト">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

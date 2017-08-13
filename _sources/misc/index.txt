@@ -1,0 +1,16 @@
+.. _misc-index:
+
+ドキュメントのドキュメント、その他
+====================================
+
+:revision-up-to: 8961 (1.0)
+
+ここには、他に適切な置場のないドキュメントがあります。ハサミや養生テープや
+がらくたがごっちゃになったキッチンの引きだしのようなものです。
+
+.. toctree::
+   :maxdepth: 2
+   
+   api-stability
+   design-philosophies
+   distributions
