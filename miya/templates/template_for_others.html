@@ -1,0 +1,213 @@
+{% extends 'base.html' %}{#% extends 'miyadaiku.themes.base!page_article.html' %#}{#% extends 'miyadaiku.themes.base!base.html' %#}
+
+
+{% block head %}
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="" />
+<meta name="description" content="{{ page.meta_description }}" />
+<title>{% block title %}{{ page.title | striptags }} | {{ page.site_title | striptags }}{% endblock %}</title>
+<link rel="shortcut icon" href="/static/img/favicon.ico">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/weblog/feeds/rss/">
+<link rel="alternate" type="application/atom+xml" title="Atom" href="/weblog/feeds/atom/">
+
+
+
+{% include 'common_css.html' %}
+{% block user_css %}
+{% endblock user_css %}
+
+{% include 'common_script.html' %}
+{% block user_script %}
+{% endblock user_script %}
+
+
+{% endblock head %}
+
+
+
+{% block body %}
+
+  {#{ super() }#}
+
+  <div id="wrapper">
+  	<header>
+  <div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+  <div class="navbar-header">
+     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                      </button>
+    <a class="navbar-brand" href="/">djangoproject.jp</a>
+
+  </div>
+  <div class="navbar-collapse collapse">
+
+  <ul class="nav navbar-nav"><li id="dropdown-menu-home"><a href="/">Home</a></li><li class="dropdown
+                 active"
+          id="about"><a href="/about/"
+
+          class="dropdown-toggle disabled" data-toggle="dropdown"
+          >
+              About
+              <b class="caret"></b></a><ul class="dropdown-menu"><li class="
+                 "
+          id="whouses"><a href="/whouses/">利用実績</a></li></ul></li><li class="dropdown
+                 "
+          id="https:--docs.djangoproject.com-ja-"><a href="https://docs.djangoproject.com/ja/"
+
+          class="dropdown-toggle disabled" data-toggle="dropdown"
+          >
+              documentation
+              <b class="caret"></b></a><ul class="dropdown-menu"><li class="
+                 "
+          id="https:--docs.djangoproject.com-ja-1.11-"><a href="https://docs.djangoproject.com/ja/1.11/">1.11 ドキュメント</a></li><li class="
+                 "
+          id="https:--docs.djangoproject.com-ja-1.9-"><a href="https://docs.djangoproject.com/ja/1.9/">1.9ドキュメント</a></li><li class="
+                 "
+          id="http:--docs.djangoproject.jp-"><a href="http://docs.djangoproject.jp/">1.4ドキュメント</a></li><li class="
+                 "
+          id="-doc-ja-1.0-"><a href="/doc/ja/1.0/">1.0ドキュメント</a></li><li class="
+                 "
+          id="translate"><a href="/translate/">翻訳への参加方法</a></li></ul></li><li class="dropdown
+                 "
+          id="community"><a href="/community/"
+
+          class="dropdown-toggle disabled" data-toggle="dropdown"
+          >
+              Community
+              <b class="caret"></b></a><ul class="dropdown-menu"><li class="
+                 "
+          id="events"><a href="/events/">Events</a></li></ul></li><li class="
+                 "
+          id="-weblog-"><a href="/weblog/"
+          >
+              Blog
+
+          </a></li></ul>
+
+  </div>
+  </div>
+  </div>
+  	</header>
+
+  <div class="container">
+
+
+
+
+
+
+  </div>
+
+  <section id="inner-headline">
+  <div class="container">
+  	<div class="row">
+  		<div class="col-lg-12">
+  <ul class="breadcrumb">
+  <li id="breadcrumb-menu-home"><a href="/">Home</a></li><li id="breadcrumb-menu-about"
+          class="active">About</li>
+  </ul>
+  </div>
+  </div>
+  </div>
+  </section>
+
+
+  <section class="callaction">
+  	<div class="container">
+  		<div class="row">
+  			<div class="col-lg-12">
+  				<div class="big-cta">
+  					<div class="cta-text">
+  					<h2>
+  {{ page.cta_text }}
+  </h2>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  	</div>
+  </section>
+
+  <section id="content">
+  <div class="container">
+  <div class="row">
+
+
+
+    {% if page.page_type == 'home' %}
+
+    {% else %}
+    {% endif %}
+
+
+
+  <div class="col-md-8 middle">
+
+
+
+
+
+
+
+
+  {{ page.html }}
+
+
+
+</div>
+
+
+
+<div class="col-md-3 right">
+
+
+
+
+
+	<aside class="right-sidebar">
+
+
+
+
+
+
+
+	</aside>
+</div>
+
+</div>
+</div>
+</section>
+
+{% include 'footer.html' %}
+
+</div>
+
+
+<script src="/static/js/jquery.easing.1.3.js"></script>
+
+<script src="/static/js/jquery.fancybox.pack.js"></script>
+<script src="/static/js/jquery.fancybox-media.js"></script>
+<script src="/static/js/google-code-prettify/prettify.js"></script>
+<script src="/static/js/portfolio/jquery.quicksand.js"></script>
+<script src="/static/js/portfolio/setting.js"></script>
+<script src="/static/js/jquery.flexslider.js"></script>
+<script src="/static/js/animate.js"></script>
+<script src="/static/js/custom.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51972813-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+{% endblock body %}
