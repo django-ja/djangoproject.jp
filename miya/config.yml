@@ -1,0 +1,21 @@
+# Miyadaiku config file
+
+# Base URL of the site
+site_url: http://localhost:8888/
+
+# Title of the site
+site_title: djangoproject.jp
+
+# Default language code
+lang: en
+
+# Default charset
+charset: utf-8
+
+# Default timezone
+timezone: local
+
+# List of site theme
+# themes:
+#   - miyadaiku.themes.sample.blog
+

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="{{ page.lang }}">
+
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="" />
+<meta name="description" content="{{ page.meta_description }}" />
+<title>{% block title %}{{ page.title | striptags }} | {{ page.site_title | striptags }}{% endblock %}</title>
+<link rel="shortcut icon" href="/static/img/favicon.ico">
+
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/weblog/feeds/rss/">
+<link rel="alternate" type="application/atom+xml" title="Atom" href="/weblog/feeds/atom/">
+
+
+
+{% include 'common_css.html' %}
+
+
+
+{% include 'common_script_in_head.html' %}
+
+
+</head>
+
+<body id="body">
+<div id="wrapper">
+	<header>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+<div class="container">
+<div class="navbar-header">
+   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+  <a class="navbar-brand" href="/">djangoproject.jp</a>
+    
+</div>
+<div class="navbar-collapse collapse">
+       
+<ul class="nav navbar-nav"><li id="dropdown-menu-home"><a href="/">Home</a></li><li class="dropdown
+               active"
+        id="about"><a href="/about/"
+        
+        class="dropdown-toggle disabled" data-toggle="dropdown"
+        >
+            About
+            <b class="caret"></b></a><ul class="dropdown-menu"><li class="
+               "
+        id="whouses"><a href="/whouses/">利用実績</a></li></ul></li><li class="dropdown
+               "
+        id="https:--docs.djangoproject.com-ja-"><a href="https://docs.djangoproject.com/ja/"
+        
+        class="dropdown-toggle disabled" data-toggle="dropdown"
+        >
+            documentation
+            <b class="caret"></b></a><ul class="dropdown-menu"><li class="" id="https:--docs.djangoproject.com-ja"><a href="https://docs.djangoproject.com/ja/">日本語ドキュメント</a></li><li class="
+               "
+        id="translate"><a href="/translate/">翻訳への参加方法</a></li></ul></li><li class="dropdown
+               "
+        id="community"><a href="/community/"
+        
+        class="dropdown-toggle disabled" data-toggle="dropdown"
+        >
+            Community
+            <b class="caret"></b></a><ul class="dropdown-menu"><li class="
+               "
+        id="events"><a href="/events/">Events</a></li></ul></li><li class="
+               "
+        id="-weblog-"><a href="/weblog/"
+        >
+            Blog
+            
+        </a></li></ul>
+
+</div>
+</div>
+</div>
+	</header>
+
+<div class="container">
+
+
+
+
+
+
+</div>
+
+<section id="inner-headline">
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+<ul class="breadcrumb">
+<li id="breadcrumb-menu-home"><a href="/">Home</a></li><li id="breadcrumb-menu-about"
+        class="active">About</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+
+<section class="callaction">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="big-cta">
+					<div class="cta-text">
+					<h2>
+{{ page.cta_text }}
+</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="content">
+<div class="container">
+<div class="row">
+
+
+
+
+<div class="col-md-8 middle">
+    
+
+
+{{ page.html }}
+
+
+</div>
+
+
+
+<div class="col-md-3 right">
+    
+    
+
+
+    
+	<aside class="right-sidebar">
+
+    
+
+    
+    
+
+
+	</aside>
+</div>
+
+</div>
+</div>
+</section>
+
+{% include 'footer.html' %}
+</div>
+
+
+{% include 'common_script_in_foot.html' %}
+
+</body>
+</html>
+
