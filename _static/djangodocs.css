@@ -30,7 +30,7 @@ div.nav { margin: 0; font-size: 11px; text-align: right; color: #487858;}
 #hd div.nav { margin-top: -27px; }
 #ft div.nav { margin-bottom: -18px; }
 #hd h1 a { color: white; }
-#global-nav { position:absolute; top:5px; margin-left: -5px; padding:7px 0; color:#263E2B; }
+#global-nav { padding:7px 0; color:#263E2B; }
 #global-nav a:link, #global-nav a:visited {color:#487858;}
 #global-nav a {padding:0 4px;}
 #global-nav a.about {padding-left:0;}
@@ -128,3 +128,6 @@ div#contents ul ul li { margin-top: 0.3em;}
 
 /*** IE hacks ***/
 * pre { width: 100%; }
+
+/*** Warning for outdated version ***/
+#outdated-warning { background-color: #FFBABA; color: #6A0E0E; position: absolute; top: 0; width: 100%; padding: 8px 20px 8px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; background-image: -webkit-linear-gradient(-45deg, rgba(0,0,0,0.04) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.04) 75%, transparent 75%, transparent); background-image: -moz-linear-gradient(-45deg, rgba(0,0,0,0.04) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.04) 75%, transparent 75%, transparent); background-image: linear-gradient(135deg, rgba(0,0,0,0.04) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.04) 75%, transparent 75%, transparent); font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif; font-size: 14px; text-align: center; @media screen and (min-width: 768px) { position: fixed; min-width: 768px; } }
