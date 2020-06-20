@@ -4,7 +4,7 @@
   "description": "Source code of http://djangoproject.jp/",
   "scripts": {
     "build": "npm run -s install-miyadaiku && npm run -s escape-jinja2 && npm run -s prepare-contents && npm run -s prepare-templates && miyadaiku-build work && npm run -s setup-artifacts",
-    "escape-jinja2": "sed -i -e '1i {% raw %}' -e '$a {% endraw %}' $(find . -type f -name '*.html*')",
+    "escape-jinja2": "sed -i -e '1i {% raw %}' -e '$a {% endraw %}' $(find . -path './djangoproject.jp/doc' -prune -o -type f -name '*.html*' -print)",
     "install-miyadaiku": "pip3 install miyadaiku",
     "prepare-contents": "mkdir -p work/contents && cp .miyadaiku/config.yml work/ && mv djangoproject.jp/{about,community,events,howtojoin-transifex,howtotranslate,index.html,translate,translate_old,weblog,whouses} work/contents/",
     "prepare-templates": "mkdir -p work/templates && echo '{{ page.html }}' | tee work/templates/page_index.html | tee work/templates/page_article.html > /dev/null",
