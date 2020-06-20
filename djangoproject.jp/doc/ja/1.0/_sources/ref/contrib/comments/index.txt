@@ -1,0 +1,235 @@
+.. _ref-contrib-comments-index:
+
+===========================
+コメントフレームワーク
+===========================
+
+:revision-up-to: 8961 (1.0)
+
+.. module:: django.contrib.comments
+   :synopsis: Django のコメントフレームワークです。
+
+Django には単純ながらカスタマイズ可能なコメントフレームワークが付属していま
+す。この組み込みのコメントフレームワークを使えば、任意のモデルにコメントを
+付加できます。つまり、ブログエントリや写真、本、本の各章、その他あらゆるも
+のにコメントを付けられるのです。
+
+.. note::
+
+    Django の古い (ドキュメント化されなかった) コメントフレームワークを使っ
+    ていたのなら、アップグレードが必要です。 :ref:`アップグレードガイド
+    <ref-contrib-comments-upgrade>` を参照してください。
+
+クイックスタートガイド
+==========================
+
+``comments`` を使うには、以下のステップに従います:
+
+    #. :setting:`INSTALLED_APPS` に ``'django.contrib.comments'`` を
+       インストールします。
+
+    #. ``manage.py syncdb`` を実行して、コメントフレームワークのテーブルを
+       生成します。
+
+    #. コメントアプリケーションの URL をプロジェクトの ``urls.py`` にマップ
+       します:
+   
+       .. code-block:: python
+
+            urlpatterns = patterns('',
+                ...
+                (r'^comments/', include('django.contrib.comments.urls')),
+                ...
+            )
+
+    #. :ref:`コメントテンプレートタグ <comment-template-tags>` を使って、
+       コメント機能をテンプレートに埋め込みます。
+
+:ref:`ref-contrib-comments-settings` も調べておきましょう。
+    
+.. _comment-template-tags:
+
+コメントテンプレートタグ
+==========================
+
+コメントシステムは、主にテンプレートタグを使って操作します。テンプレートタ
+グを使えば、コメントをポストするためのフォームや、ポストされたコメントを埋
+め込めます。
+
+他のカスタムテンプレートタグライブラリと同様、使うには
+:ref:`カスタムタグライブラリをロード <loading-custom-template-libraries>` 
+しておかねばなりません::
+
+    {% load comments %}
+
+タグライブラリをロードすれば、後で解説するテンプレートタグを使えるようにな
+ります。
+
+どのオブジェクトにコメントを結びつけるか指定する
+------------------------------------------------
+
+Django のコメントは、全て何らかのオブジェクトに「結びついて (attached)」い
+ます。コメントは、任意の Django モデルのインスタンスに結びつけられます。
+以下のタグを使うと、 2 種類の方法で、コメントを結びつけたいオブジェクトを指
+定できます:
+
+    #. オブジェクトを直接参照する方法 -- より一般的な方法です。たいていの場
+       合、コメントを結びつけたいオブジェクトはテンプレートコンテキストの中
+       に入っているはずです。そのオブジェクトを使います。
+       
+       例えば、あるブログのエントリ表示ページに ``entry`` という変数が入っ
+       ていて、エントリオブジェクトを表現しているなら、以下のようにして、
+       ``entry`` に結び付いたコメントの数を表示できます::
+       
+            {% get_comment_count for entry as comment_count %}.
+            
+    #. オブジェクトをコンテンツタイプとオブジェクト id で指定する方法。何ら
+       かの理由で、コメントを結び付ける対象のオブジェクトに直接アクセスでき
+       ない場合に使います。
+
+       上のような例で、オブジェクトの id が ``14`` だと分かっていて、かつ対
+       象のオブジェクトにアクセスできないなら、以下のようにします::
+       
+            {% get_comment_count for blog.entry 14 as comment_count %}
+            
+       この例の ``blog.entry`` は、アプリケーションラベルと (小文字にした)
+       モデルクラス名をつなげたものです。
+
+.. templatetag:: get_comment_list
+
+コメントを表示する
+-------------------
+
+オブジェクトに結びつけられたコメントを取得するには、
+:ttag:`get_comment_list` を使います::
+
+    {% get_comment_list for [object] as [varname] %}
+
+例を挙げましょう::
+
+    {% get_comment_list for event as comment_list %}
+    {% for comment in comment_list %}
+        ...
+    {% endfor %}
+
+.. templatetag:: get_comment_count
+
+コメントの数を数える
+----------------------
+
+オブジェクトに結びつけられたコメントの数を取得するには、
+:ttag:`get_comment_count` を使います::
+
+    {% get_comment_count for [object] as [varname]  %}
+
+例を挙げましょう::
+
+        {% get_comment_count for event as comment_count %}
+        
+        <p>This event has {{ comment_count }} comments.</p>
+        
+
+コメント投稿フォームを表示する
+--------------------------------
+
+ユーザがコメントを投稿できるようフォームを表示するには、
+:ttag:`render_comment_form` や :ttag:`get_comment_form` を使います。
+
+.. templatetag:: render_comment_form
+
+コメントフォームを手軽に出力する
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+コメントフォームを表示する最も簡単な方法は、
+:ttag:`render_comment_form` を使うやり方です::
+
+    {% render_comment_form for [object] %}
+
+例を挙げましょう::
+
+    {% render_comment_form for event %}
+
+このコードによって、Django に付属のデフォルトの ``comments/form.html`` テン
+プレートを使ってコメントフォームがレンダされます。
+
+.. templatetag:: get_comment_form
+
+カスタムのコメントフォームを出力する
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+コメントフォームのルック&フィールを制御したければ、
+:ttag:`get_comment_form` を使って :ref:`フォームオブジェクト
+<topics-forms-index>` を取得し、テンプレート内で使います::
+
+    {% get_comment_form for [object] as [varname] %}
+
+これで、フォームは以下のように書けます::    
+
+    {% get_comment_form for event as form %}
+    <form action="{% comment_form_target %}" method="POST">
+      {{ form }}
+      <p class="submit">
+        <input type="submit" name="submit" class="submit-post" value="Preview">
+      </p>
+    </form>
+
+このアプローチをとるときには、いくつか考慮すべき点があります。後述の
+`コメントフォームに関する注意 <notes-on-the-comment-form>`_ をよく読んでく
+ださい。
+
+.. templatetag:: comment_form_target
+
+コメントフォームターゲットを取得する
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+上の例では、 :ttag:`comment_form_target` というもう一つのタグを使って、フォー
+ムの ``action`` 属性を取得していたことに気づいたでしょうか。このタグは、常
+にコメントフォームのポスト先として正しい URL を返します。コメントフォームを
+使うときには、いつも以下のように書いてください::
+
+    <form action="{% comment_form_target %}" method="POST">
+
+.. _notes-on-the-comment-form:
+
+コメントフォームに関する注意
+--------------------------------
+
+コメントシステムの使っているフォームには、スパムを防ぐための重要な属性があ
+ります。これらの属性についてよく知っておきましょう:
+
+    * フォームには、タイムスタンプやコメントを結び付ける対象のオブジェクト、
+      これらの情報を検証するための「セキュリティハッシュ(security hash)」な
+      ど、いくつもの隠しフィールドが入っています。コメントスパム屋がよくや
+      るように、これらのフィールドの値を改ざんしようとすると、コメントの投
+      稿に失敗します。
+      
+      自作のコメントフォームを出力するときには、この隠しフィールドの値を変
+      更せずに渡してください。
+      
+    * タイムスタンプは、長時間再生攻撃が繰り返されるのを防ぐために使われま
+      す。フォームのリクエストからコメントのポストまで長時間経っている場合、
+      フォームの提出は拒否されます。
+      
+    * コメントフォームには、「 `ハニーポット`_ (honeypot_)」フィールドがあ
+      ります。このフィールドはトラップです: このフィールドに何らかのデータ
+      が入力されると、そのコメントはスパムであると見なされます (スパムプロ
+      グラムは、有効なフォーム入力を偽装するために、全てのフィールドを自動
+      的に埋めようとするからです)。
+
+      デフォルトのフォームは、 CSS を使ってこのフォームを隠し、ラベルにも
+      警告の文字列を入れます。カスタムのテンプレートでコメントフォームを使
+      うときにも、同じようにしてください。
+    
+.. _honeypot: http://en.wikipedia.org/wiki/Honeypot_(computing)
+.. _ハニーポット: http://ja.wikipedia.org/wiki/ハニーポット
+
+その他の情報
+==============
+
+.. toctree::
+   :maxdepth: 1
+
+   settings
+   signals
+   upgrade
+

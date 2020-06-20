@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>File オブジェクト &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ファイル操作 API リファレンス" href="index.html" />
+    <link rel="next" title="ファイルストレージ API" href="storage.html" />
+    <link rel="prev" title="ファイル操作 API リファレンス" href="index.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="ファイル操作 API リファレンス">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="storage.html" title="ファイルストレージ API">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-files-file">
+            
+  
+  <div class="section" id="s-file">
+<span id="s-ref-files-file"></span><h1><tt class="docutils literal"><span class="pre">File</span></tt> オブジェクト<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="django.core.files.File">
+<!--[django.core.files.File]-->class <tt class="descname">File</tt>(<em>file_object</em>)<a class="headerlink" href="#django.core.files.File" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="section" id="s-id1">
+<h2>属性とメソッド<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Django の <tt class="docutils literal"><span class="pre">File</span></tt> 型は、以下の属性とメソッドを備えています:</p>
+<dl class="attribute">
+<dt id="django.core.files.File.name">
+<!--[django.core.files.File.name]--><tt class="descclassname">File.</tt><tt class="descname">name</tt><a class="headerlink" href="#django.core.files.File.name" title="Permalink to this definition">¶</a></dt>
+<dd><a class="reference external" href="../settings.html#setting-MEDIA_ROOT"><tt class="xref docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a> からの相対パスを含む、ファイルの名前です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.core.files.File.path">
+<!--[django.core.files.File.path]--><tt class="descclassname">File.</tt><tt class="descname">path</tt><a class="headerlink" href="#django.core.files.File.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>ローカルのファイルシステムにおけるファイルの絶対パスです。</p>
+<p><a class="reference external" href="../../howto/custom-file-storage.html#howto-custom-file-storage"><em>カスタムのファイルストレージシステム</em></a>
+の場合、必ずしもローカルにファイルを保存しません。ローカルにファイルを
+保存しないシステムでは、 <tt class="docutils literal"><span class="pre">path</span></tt> は <tt class="xref docutils literal"><span class="pre">None</span></tt> です。</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.core.files.File.url">
+<!--[django.core.files.File.url]--><tt class="descclassname">File.</tt><tt class="descname">url</tt><a class="headerlink" href="#django.core.files.File.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>ファイルを取得できる URL です。 <a class="reference external" href="../../topics/templates.html#topics-templates"><em>templates</em></a> で
+使う場合に便利です。例えば、ファイル <a class="reference external" href="../../topics/files.html#topics-files"><em>ファイルの管理</em></a> の <tt class="docutils literal"><span class="pre">Car</span></tt>
+の例で、車の写真を表示するテンプレートは以下のように書けます:</p>
+<div class="highlight"><pre><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">car.photo.url</span> <span class="cp">}}</span><span class="s">&#39;</span> <span class="na">alt=</span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">car.name</span> <span class="cp">}}</span><span class="s">&#39;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.core.files.File.size">
+<!--[django.core.files.File.size]--><tt class="descclassname">File.</tt><tt class="descname">size</tt><a class="headerlink" href="#django.core.files.File.size" title="Permalink to this definition">¶</a></dt>
+<dd>バイト単位のファイルサイズです。</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.open">
+<!--[django.core.files.File.open]--><tt class="descclassname">File.</tt><tt class="descname">open</tt>(<em>mode=None</em>)<a class="headerlink" href="#django.core.files.File.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>ファイルをオープンまたは再オープン (かつ <tt class="docutils literal"><span class="pre">File.seek(0)</span></tt>) します。
+<tt class="docutils literal"><span class="pre">mode</span></tt> 引数には、 Python の標準の関数 <tt class="docutils literal"><span class="pre">open()</span></tt> と同じ引数を指定でき
+ます。</p>
+<p>ファイルを再オープンした場合、 <tt class="docutils literal"><span class="pre">mode</span></tt> は最初にオープンしたときのファ
+イルモードをオーバライドします。 <tt class="xref docutils literal"><span class="pre">None</span></tt> を指定すると、最初のモードと
+同じモードを使います。</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.read">
+<!--[django.core.files.File.read]--><tt class="descclassname">File.</tt><tt class="descname">read</tt>(<em>num_bytes=None</em>)<a class="headerlink" href="#django.core.files.File.read" title="Permalink to this definition">¶</a></dt>
+<dd>ファイルからコンテンツを読み出します。オプションの <tt class="docutils literal"><span class="pre">num_bytes</span></tt>
+は読み出すデータの長さです。指定しなければ、末尾まで読み出します。</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.__iter__">
+<!--[django.core.files.File.__iter__]--><tt class="descclassname">File.</tt><tt class="descname">__iter__</tt>()<a class="headerlink" href="#django.core.files.File.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd>ファイルを一度に一行づつ繰り返して読み出します。</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.chunks">
+<!--[django.core.files.File.chunks]--><tt class="descclassname">File.</tt><tt class="descname">chunks</tt>(<em>chunk_size=None</em>)<a class="headerlink" href="#django.core.files.File.chunks" title="Permalink to this definition">¶</a></dt>
+<dd><p>ファイルを <tt class="docutils literal"><span class="pre">chunk_size</span></tt> に指定したサイズのチャンク (&quot;chunk&quot;) づつ繰り
+返して読み出します。 <tt class="docutils literal"><span class="pre">chunk_size</span></tt> のデフォルトサイズは 64KB です。</p>
+<p>このメソッドは、ファイル全体をメモリに保存しなくても、ディスクからスト
+リーム読み出しできるので、巨大なファイルを読むときに便利です。</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.multiple_chunks">
+<!--[django.core.files.File.multiple_chunks]--><tt class="descclassname">File.</tt><tt class="descname">multiple_chunks</tt>(<em>chunk_size=None</em>)<a class="headerlink" href="#django.core.files.File.multiple_chunks" title="Permalink to this definition">¶</a></dt>
+<dd>ファイルが大きくて、長さ <tt class="docutils literal"><span class="pre">chunk_size</span></tt> のチャンクに分けて複数回アクセ
+スできる場合に <tt class="xref docutils literal"><span class="pre">True</span></tt> を返します。</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.write">
+<!--[django.core.files.File.write]--><tt class="descclassname">File.</tt><tt class="descname">write</tt>(<em>content</em>)<a class="headerlink" href="#django.core.files.File.write" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">content</span></tt> に指定した文字列をファイルに書き込みます。背後にあるストレー
+ジシステムによっては、 <tt class="docutils literal"><span class="pre">close()</span></tt> を呼ぶまで <tt class="docutils literal"><span class="pre">content</span></tt> がコミットさ
+れない場合があります。</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.close">
+<!--[django.core.files.File.close]--><tt class="descclassname">File.</tt><tt class="descname">close</tt>()<a class="headerlink" href="#django.core.files.File.close" title="Permalink to this definition">¶</a></dt>
+<dd>ファイルを閉じます。</dd></dl>
+
+</div>
+<div class="section" id="s-imagefield">
+<h2><tt class="docutils literal"><span class="pre">ImageField</span></tt> 固有の属性<a class="headerlink" href="#imagefield" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="django.core.files.File.width">
+<!--[django.core.files.File.width]--><tt class="descclassname">File.</tt><tt class="descname">width</tt><a class="headerlink" href="#django.core.files.File.width" title="Permalink to this definition">¶</a></dt>
+<dd>画像の幅です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.core.files.File.height">
+<!--[django.core.files.File.height]--><tt class="descclassname">File.</tt><tt class="descname">height</tt><a class="headerlink" href="#django.core.files.File.height" title="Permalink to this definition">¶</a></dt>
+<dd>画像の高さです。</dd></dl>
+
+</div>
+<div class="section" id="s-id2">
+<h2>オブジェクトに結び付いているファイル特有のメソッド<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>(<tt class="docutils literal"><span class="pre">Car.photo</span></tt> のように) オブジェクトに結び付いてる <a title="django.core.files.File" class="reference internal" href="#django.core.files.File"><tt class="xref docutils literal"><span class="pre">File</span></tt></a> には、
+以下の二つのメソッドがあります:</p>
+<dl class="method">
+<dt id="django.core.files.File.save">
+<!--[django.core.files.File.save]--><tt class="descclassname">File.</tt><tt class="descname">save</tt>(<em>name</em>, <em>content</em>, <em>save=True</em>)<a class="headerlink" href="#django.core.files.File.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>ファイル名 <tt class="docutils literal"><span class="pre">name</span></tt> とコンテンツ <tt class="docutils literal"><span class="pre">content</span></tt> を使って新たなファイルを生
+成し、保存します。このメソッドは既存のファイルを置き換えるのではなく、
+新たなファイルを作成して、オブジェクトがそのファイルを指すようにします。
+<tt class="docutils literal"><span class="pre">save</span></tt> を <tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、ファイルが保存されたときに <tt class="docutils literal"><span class="pre">save()</span></tt> メ
+ソッドを呼び出します。すなわち、以下の 2 行:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">car</span><span class="o">.</span><span class="n">photo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;myphoto.jpg&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">car</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>は、以下の 1 行と同じです:</p>
+<div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">car</span><span class="o">.</span><span class="n">photo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;myphoto.jpg&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">content</span></tt> 引数は <a title="django.core.files.File" class="reference internal" href="#django.core.files.File"><tt class="xref docutils literal"><span class="pre">File</span></tt></a> またはそのサブクラスのインスタンスでな
+ければなりません。</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="django.core.files.File.delete">
+<!--[django.core.files.File.delete]--><tt class="descclassname">File.</tt><tt class="descname">delete</tt>(<em>save=True</em>)<a class="headerlink" href="#django.core.files.File.delete" title="Permalink to this definition">¶</a></dt>
+<dd>ファイルをモデルインスタンスから除去して、背後にあるファイルも削除しま
+す。 <tt class="docutils literal"><span class="pre">save</span></tt> 引数は上のメソッドと同じです。</dd></dl>
+
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href=""><tt class="docutils literal"><span class="pre">File</span></tt> オブジェクト</a><ul>
+<li><a class="reference external" href="#id1">属性とメソッド</a></li>
+<li><a class="reference external" href="#imagefield"><tt class="docutils literal"><span class="pre">ImageField</span></tt> 固有の属性</a></li>
+<li><a class="reference external" href="#id2">オブジェクトに結び付いているファイル特有のメソッド</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">ファイル操作 API リファレンス</a></li>
+    
+    
+      <li>次: <a href="storage.html">ファイルストレージ API</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">ファイル操作 API リファレンス</a>
+        
+        <ul><li><tt class="docutils literal"><span class="pre">File</span></tt> オブジェクト</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/files/file.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="ファイル操作 API リファレンス">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="storage.html" title="ファイルストレージ API">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

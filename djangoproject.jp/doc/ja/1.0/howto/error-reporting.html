@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>電子メールによるエラー通知 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="HOWTO ガイド" href="index.html" />
+    <link rel="next" title="モデルに初期データを与える" href="initial-data.html" />
+    <link rel="prev" title="FastCGI, SCGI, AJP で Django を使う" href="deployment/fastcgi.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="deployment/fastcgi.html" title="FastCGI, SCGI, AJP で Django を使う">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="initial-data.html" title="モデルに初期データを与える">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="howto-error-reporting">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-howto-error-reporting"></span><h1>電子メールによるエラー通知<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>サイトを公開しているときには、 <a class="reference external" href="../ref/settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> を常に切りましょう。
+<a class="reference external" href="../ref/settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> を切ると、サーバの動作は軽くなり、エラーページを介して悪意
+あるユーザにアプリケーションの詳細が漏れてしまうのを防げます。</p>
+<p>その代わり、 <a class="reference external" href="../ref/settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> を <tt class="xref docutils literal"><span class="pre">False</span></tt> にすると、サイト上で発生したエラー
+を一切表示できません。ユーザはみな、公開用に作られたエラーページを見るだけ
+です。実運用のサイトで発生したエラーを追跡したい場合のために、 Django はエ
+ラーの詳細をメールで送信するように設定できます。</p>
+<div class="section" id="s-id2">
+<span id="s-server-errors"></span><h2>サーバのエラー<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="../ref/settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> を <tt class="xref docutils literal"><span class="pre">False</span></tt> にすると、コードが例外を送出し、その例外が捕
+捉されず、結果的に 500 エラーになった場合に、 Django は <a class="reference external" href="../ref/settings.html#setting-ADMINS"><tt class="xref docutils literal"><span class="pre">ADMINS</span></tt></a>
+設定にリストされている全てのユーザにメールを送信します。これは、管理者が何
+らかのエラーにすぐに気づけるようにするためです。<a class="reference external" href="../ref/settings.html#setting-ADMINS"><tt class="xref docutils literal"><span class="pre">ADMINS</span></tt></a> はエラー
+の説明文と、 Python トレースバックと、エラーを引き起こした HTTP リクエスト
+の詳細情報を受け取ります。</p>
+<p>この機能を無効にするには、<a class="reference external" href="../ref/settings.html#setting-ADMINS"><tt class="xref docutils literal"><span class="pre">ADMINS</span></tt></a> 設定から全てのユーザを削除して
+ください。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-errors"></span><h2>404 エラー<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Django は、サイトのリンクが切れている (404 &#8220;page not found&#8221;) 時にメールを送
+信するよう設定できます。 404 エラーメールは、以下の条件下で送信されます:</p>
+<ul class="simple">
+<li><a class="reference external" href="../ref/settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> が <tt class="xref docutils literal"><span class="pre">False</span></tt> に設定されている。</li>
+<li><a class="reference external" href="../ref/settings.html#setting-SEND_BROKEN_LINK_EMAILS"><tt class="xref docutils literal"><span class="pre">SEND_BROKEN_LINK_EMAILS</span></tt></a> が <tt class="xref docutils literal"><span class="pre">True</span></tt> に設定されている。</li>
+<li><a class="reference external" href="../ref/settings.html#setting-MIDDLEWARE_CLASSES"><tt class="xref docutils literal"><span class="pre">MIDDLEWARE_CLASSES</span></tt></a> 設定に <tt class="docutils literal"><span class="pre">CommonMiddleware</span></tt> が登録され
+ている (デフォルトの設定です)</li>
+</ul>
+<p>これらの条件が揃っていると、コード中で 404 例外が生じ、かつリクエストにリファ
+ラが設定されているときに、 Django は <a class="reference external" href="../ref/settings.html#setting-MANAGERS"><tt class="xref docutils literal"><span class="pre">MANAGERS</span></tt></a> 設定に登録された全
+てのユーザにメールを送信します (リファラ付きが条件なのは、リファラのないリ
+クエストに対する404 エラーで管理者を煩わせないためです)。</p>
+<p><a class="reference external" href="../ref/settings.html#setting-IGNORABLE_404_ENDS"><tt class="xref docutils literal"><span class="pre">IGNORABLE_404_ENDS</span></tt></a> や <a class="reference external" href="../ref/settings.html#setting-IGNORABLE_404_STARTS"><tt class="xref docutils literal"><span class="pre">IGNORABLE_404_STARTS</span></tt></a> を使えば、
+特定の 404 に対するレポート送信を抑制できます。例えば:</p>
+<div class="highlight"><pre><span class="n">IGNORABLE_404_ENDS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.php&#39;</span><span class="p">,</span> <span class="s">&#39;.cgi&#39;</span><span class="p">)</span>
+<span class="n">IGNORABLE_404_STARTS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;/phpmyadmin/&#39;</span><span class="p">,)</span>
+</pre></div>
+<p>のようにすると、 URL が <tt class="docutils literal"><span class="pre">.php</span></tt> や <tt class="docutils literal"><span class="pre">.cgi</span></tt> で終わるような URL や
+<tt class="docutils literal"><span class="pre">/phpmyadmin/</span></tt> で始まる URL に対する 404 は報告 <em>されません</em> 。</p>
+<p>この機能を無効にしたければ、 <a class="reference external" href="../ref/settings.html#setting-SEND_BROKEN_LINK_EMAILS"><tt class="xref docutils literal"><span class="pre">SEND_BROKEN_LINK_EMAILS</span></tt></a> を
+<tt class="xref docutils literal"><span class="pre">False</span></tt> に設定してください。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">自作の <a class="reference external" href="../topics/http/middleware.html#exception-middleware"><em>例外ミドルウェア</em></a> を書けば、エラー
+レポートを自作できます。エラー処理をカスタマイズしたければ、 Django 組
+み込みのエラー処理をエミュレートして、 <a class="reference external" href="../ref/settings.html#setting-DEBUG"><tt class="xref docutils literal"><span class="pre">DEBUG</span></tt></a> が <tt class="xref docutils literal"><span class="pre">False</span></tt> の
+ときだけ、レポートやログ記録を行うとよいでしょう。</p>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">電子メールによるエラー通知</a><ul>
+<li><a class="reference external" href="#id2">サーバのエラー</a></li>
+<li><a class="reference external" href="#id3">404 エラー</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="deployment/fastcgi.html">FastCGI, SCGI, AJP で Django を使う</a></li>
+    
+    
+      <li>次: <a href="initial-data.html">モデルに初期データを与える</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">HOWTO ガイド</a>
+        
+        <ul><li>電子メールによるエラー通知</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/howto/error-reporting.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="deployment/fastcgi.html" title="FastCGI, SCGI, AJP で Django を使う">前へ</a> 
+     |
+    <a href="index.html" title="HOWTO ガイド" accesskey="U">上へ</a>
+   |
+    <a href="initial-data.html" title="モデルに初期データを与える">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

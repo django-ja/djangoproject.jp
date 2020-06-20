@@ -1,0 +1,15 @@
+.. _ref-files-index:
+
+ファイル操作 API リファレンス
+================================
+
+:revision-up-to: 8961 (1.0)
+
+.. module:: django.core.files
+   :synopsis: ファイル操作とストレージの API です。
+
+.. toctree::
+   :maxdepth: 1
+   
+   file
+   storage

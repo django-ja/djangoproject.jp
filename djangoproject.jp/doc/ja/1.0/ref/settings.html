@@ -1,0 +1,1042 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Available settings &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="API リファレンス" href="index.html" />
+    <link rel="next" title="組み込みシグナルリファレンス" href="signals.html" />
+    <link rel="prev" title="リクエストオブジェクトとレスポンスオブジェクト" href="request-response.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="request-response.html" title="リクエストオブジェクトとレスポンスオブジェクト">前へ</a> 
+     |
+    <a href="index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="signals.html" title="組み込みシグナルリファレンス">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-settings">
+            
+  
+  <div class="section" id="s-available-settings">
+<span id="s-ref-settings"></span><h1>Available settings<a class="headerlink" href="#available-settings" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントでは、利用可能な全ての設定のリストを示します。リストはアル
+ファベット順で、デフォルト値も示します。</p>
+<div class="section" id="s-absolute-url-overrides">
+<span id="s-setting-ABSOLUTE_URL_OVERRIDES"></span><h2>ABSOLUTE_URL_OVERRIDES<a class="headerlink" href="#absolute-url-overrides" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">{}</span></tt> (空の辞書)</p>
+<p>モデルオブジェクトのパスを表す文字列 <tt class="docutils literal"><span class="pre">&quot;app_label.model_name&quot;</span></tt> から、モデ
+ルオブジェクトを引数にとり URL を返すような関数への対応づけを行うための辞書
+です。 Django で作成したプロジェクトのインストール先ごとに
+<tt class="docutils literal"><span class="pre">get_absolute_url()</span></tt> メソッドを上書きするのに役立ちます。例えば:</p>
+<div class="highlight"><pre><span class="n">ABSOLUTE_URL_OVERRIDES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;blogs.weblog&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="s">&quot;/blogs/</span><span class="si">%s</span><span class="s">/&quot;</span> <span class="o">%</span> <span class="n">o</span><span class="o">.</span><span class="n">slug</span><span class="p">,</span>
+    <span class="s">&#39;news.story&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="s">&quot;/stories/</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">/&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">pub_year</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">slug</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+<p>もとのモデルクラス名で使っている文字ケースに関係なく、モデル名は小文字にせ
+ねばならないので注意してください。</p>
+</div>
+<div class="section" id="s-admin-for">
+<span id="s-setting-ADMIN_FOR"></span><h2>ADMIN_FOR<a class="headerlink" href="#admin-for" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>admin 用サイトの設定モジュールで設定します。このサイトの admin を他のサイト
+の admin にする場合、設定モジュールを (<tt class="docutils literal"><span class="pre">'foo.bar.baz'</span></tt> の形式のタプルで)
+指定します。</p>
+<p>admin サイトはこの変数を使って、モデルやビュー、テンプレートタグのドキュメ
+ントに対するイントロスペクションを自動的に行います。</p>
+</div>
+<div class="section" id="s-admin-media-prefix">
+<span id="s-setting-ADMIN_MEDIA_PREFIX"></span><h2>ADMIN_MEDIA_PREFIX<a class="headerlink" href="#admin-media-prefix" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'/media/'</span></tt></p>
+<p>Django の管理インタフェース上で使われている CSS, JavaScript, 画像といった、
+いわゆる admin メディアへの URL プレフィクスです。必ず末尾にスラッシュをつ
+けてください。また、この値は <tt class="docutils literal"><span class="pre">MEDIA_URL</span></tt> と同じにしないでください (さもな
+いと、二つのファイルに同じ URL がマップされてしまいます)。</p>
+</div>
+<div class="section" id="s-admins">
+<span id="s-setting-ADMINS"></span><h2>ADMINS<a class="headerlink" href="#admins" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>コード中で発生したエラーを報告する連絡先を列挙するタプルです。
+<tt class="docutils literal"><span class="pre">DEBUG=False</span></tt> の設定で、ビューが例外を送出すると、 Django はこの設定値に
+列挙されている相手全てに全ての例外情報の入った通知メールを送ります。タプル
+に入れる各メンバは、 (Full name, e-mail address) の形式で指定します。例えば:</p>
+<div class="highlight"><pre><span class="p">((</span><span class="s">&#39;John&#39;</span><span class="p">,</span> <span class="s">&#39;john@example.com&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;Mary&#39;</span><span class="p">,</span> <span class="s">&#39;mary@example.com&#39;</span><span class="p">))</span>
+</pre></div>
+<p>Django はエラーが生じたときに、このリストに登録されている <em>全ての</em> 宛先にメー
+ルを送信します。詳しくは <a class="reference external" href="../howto/error-reporting.html#howto-error-reporting"><em>電子メールによるエラー通知</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-allowed-include-roots">
+<span id="s-setting-ALLOWED_INCLUDE_ROOTS"></span><h2>ALLOWED_INCLUDE_ROOTS<a class="headerlink" href="#allowed-include-roots" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p><tt class="docutils literal"><span class="pre">{%</span> <span class="pre">ssi</span> <span class="pre">%}</span></tt> テンプレートタグで取り込める URL のプレフィクスを表す文字列か
+らなるタプルです。この設定はセキュリティを高めるためのもので、テンプレート
+の作者に取り込みを禁じられているファイルにアクセスさせないようにします。</p>
+<p>例えば、 <tt class="docutils literal"><span class="pre">ALLOWED_INCLUDE_ROOTS</span></tt> を <tt class="docutils literal"><span class="pre">('/home/html',</span> <span class="pre">'/var/www')</span></tt> にして
+おくと、 <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">ssi</span> <span class="pre">/home/html/foo.txt</span> <span class="pre">%}</span></tt> は期待通りに動作しますが、
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">ssi</span> <span class="pre">/etc/passwd</span> <span class="pre">%}</span></tt> はうまくいきません。</p>
+</div>
+<div class="section" id="s-append-slash">
+<span id="s-setting-APPEND_SLASH"></span><h2>APPEND_SLASH<a class="headerlink" href="#append-slash" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">True</span></tt></p>
+<p>URL の末尾に常にスラッシュを追加するかどうかを決めます。
+<tt class="docutils literal"><span class="pre">CommonMiddleware</span></tt> がインストールされている場合にしか使われません。
+(<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> を参照してください。) <tt class="docutils literal"><span class="pre">PREPEND_WWW</span></tt> も参照
+してください。</p>
+</div>
+<div class="section" id="s-authentication-backends">
+<span id="s-setting-AUTHENTICATION_BACKENDS"></span><h2>AUTHENTICATION_BACKENDS<a class="headerlink" href="#authentication-backends" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">('django.contrib.auth.backends.ModelBackend',)</span></tt></p>
+<p>認証バックエンドのクラス名を (文字列で) 列挙したタプルです。ユーザ認証を試
+みる際に使われます。詳しくは
+<a class="reference external" href="../topics/auth.html#authentication-backends"><em>認証バックエンドのドキュメント</em></a> を参照して
+ください。</p>
+</div>
+<div class="section" id="s-auth-profile-module">
+<span id="s-setting-AUTH_PROFILE_MODULE"></span><h2>AUTH_PROFILE_MODULE<a class="headerlink" href="#auth-profile-module" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: 定義されていません</p>
+<p>サイト固有のユーザプロファイルモデルです。詳しくは  <a class="reference external" href="../topics/auth.html#auth-profiles"><em>追加のユーザ情報の保存</em></a>
+を参照してください。</p>
+</div>
+<div class="section" id="s-cache-backend">
+<span id="s-setting-CACHE_BACKEND"></span><h2>CACHE_BACKEND<a class="headerlink" href="#cache-backend" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'locmem://'</span></tt></p>
+<p>利用するキャッシュバックエンドを指定します。 <a class="reference external" href="../topics/cache.html#topics-cache"><em>Django のキャッシュフレームワーク</em></a> を参照して
+ください。</p>
+</div>
+<div class="section" id="s-cache-middleware-key-prefix">
+<span id="s-setting-CACHE_MIDDLEWARE_KEY_PREFIX"></span><h2>CACHE_MIDDLEWARE_KEY_PREFIX<a class="headerlink" href="#cache-middleware-key-prefix" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>キャッシュミドルウェアが使うキャッシュキープレフィクスを指定します。
+<a class="reference external" href="../topics/cache.html#topics-cache"><em>Django のキャッシュフレームワーク</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-cache-middleware-seconds">
+<span id="s-setting-CACHE_MIDDLEWARE_SECONDS"></span><h2>CACHE_MIDDLEWARE_SECONDS<a class="headerlink" href="#cache-middleware-seconds" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">600</span></tt></p>
+<p>キャッシュミドルウェアや <tt class="docutils literal"><span class="pre">cache_page()</span></tt> デコレータを使うときに、ページを
+キャッシュしておく秒数のデフォルト値です。</p>
+</div>
+<div class="section" id="s-database-engine">
+<span id="s-setting-DATABASE_ENGINE"></span><h2>DATABASE_ENGINE<a class="headerlink" href="#database-engine" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>どのデータベースバックエンドを使うかを指定します。組み込みのデータベースバッ
+クエンドは、 <tt class="docutils literal"><span class="pre">'postgresql_psycopg2'</span></tt>, <tt class="docutils literal"><span class="pre">'postgresql'</span></tt>, <tt class="docutils literal"><span class="pre">'mysql'</span></tt>,
+<tt class="docutils literal"><span class="pre">'sqlite3'</span></tt>, <tt class="docutils literal"><span class="pre">'oracle'</span></tt> です。</p>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました.</span> </div>
+</div>
+<div class="section" id="s-database-host">
+<span id="s-setting-DATABASE_HOST"></span><h2>DATABASE_HOST<a class="headerlink" href="#database-host" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>データベース接続先のホストを指定します。空にしておくと localhost になります。
+SQLite では使いません。</p>
+<p>この変数がスラッシュ (<tt class="docutils literal"><span class="pre">'/'</span></tt>) で始まっていて、 MySQL を使っている場合、
+MySQL は指定された Unix ソケットを介して接続します。例えば:</p>
+<div class="highlight"><pre><span class="n">DATABASE_HOST</span> <span class="o">=</span> <span class="s">&#39;/var/run/mysql&#39;</span>
+</pre></div>
+<p>のように指定します。 MySQL を使っていて、この変数がスラッシュで始まっていな
+い場合には、この変数はホスト名として扱われます。</p>
+<p>PostgreSQL を使っている場合、 <tt class="docutils literal"><span class="pre">DATABASE_HOST</span></tt> に空文字列を指定すると、
+Unix ドメインソケットを使った接続を意味します。ローカルホストに対する
+TCP/IP 接続を指定したければ <tt class="docutils literal"><span class="pre">localhost</span></tt> と指定してください。</p>
+</div>
+<div class="section" id="s-database-name">
+<span id="s-setting-DATABASE_NAME"></span><h2>DATABASE_NAME<a class="headerlink" href="#database-name" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>データベースの名前です。 SQLite の場合は、データベースファイルへのフルパス
+です。</p>
+</div>
+<div class="section" id="s-database-options">
+<span id="s-setting-DATABASE_OPTIONS"></span><h2>DATABASE_OPTIONS<a class="headerlink" href="#database-options" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">{}</span></tt> (空の辞書)</p>
+<p>データベースに接続するときの追加のパラメタです。利用できるキーワードは個々
+のバックエンドモジュールのドキュメントを参照してください。</p>
+</div>
+<div class="section" id="s-database-password">
+<span id="s-setting-DATABASE_PASSWORD"></span><h2>DATABASE_PASSWORD<a class="headerlink" href="#database-password" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>データベースに接続するときのパスワードです。SQLite では使いません。</p>
+</div>
+<div class="section" id="s-database-port">
+<span id="s-setting-DATABASE_PORT"></span><h2>DATABASE_PORT<a class="headerlink" href="#database-port" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>データベースに接続するときのポート番号です。空文字を指定するとデフォルトの
+ポートを使います。SQLite では使いません。</p>
+</div>
+<div class="section" id="s-database-user">
+<span id="s-setting-DATABASE_USER"></span><h2>DATABASE_USER<a class="headerlink" href="#database-user" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>データベースに接続するときのユーザ名です。SQLite では使いません。</p>
+</div>
+<div class="section" id="s-date-format">
+<span id="s-setting-DATE_FORMAT"></span><h2>DATE_FORMAT<a class="headerlink" href="#date-format" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'N</span> <span class="pre">j,</span> <span class="pre">Y'</span></tt> (e.g. <tt class="docutils literal"><span class="pre">Feb.</span> <span class="pre">4,</span> <span class="pre">2003</span></tt>)</p>
+<p>Django の admin サイトの変更履歴ページ (や、システムの他の部分で) 日付フィー
+ルドの表示に使うデフォルトのフォーマットです。
+<a class="reference external" href="templates/builtins.html#ttag-now"><tt class="xref docutils literal"><span class="pre">利用可能な日付フォーマット文字</span></tt></a> を参照してください。</p>
+<p><tt class="docutils literal"><span class="pre">DATETIME_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">TIME_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">YEAR_MONTH_FORMAT</span></tt> および
+<tt class="docutils literal"><span class="pre">MONTH_DAY_FORMAT</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-datetime-format">
+<span id="s-setting-DATETIME_FORMAT"></span><h2>DATETIME_FORMAT<a class="headerlink" href="#datetime-format" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'N</span> <span class="pre">j,</span> <span class="pre">Y,</span> <span class="pre">P'</span></tt> (e.g. <tt class="docutils literal"><span class="pre">Feb.</span> <span class="pre">4,</span> <span class="pre">2003,</span> <span class="pre">4</span> <span class="pre">p.m.</span></tt>)</p>
+<p>Django の admin サイトの変更履歴ページ (や、システムの他の部分で) 日時フィー
+ルドの表示に使うデフォルトのフォーマットです。
+<a class="reference external" href="templates/builtins.html#ttag-now"><tt class="xref docutils literal"><span class="pre">利用可能な日付フォーマット文字</span></tt></a> を参照してください。</p>
+<p><tt class="docutils literal"><span class="pre">DATE_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">TIME_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">YEAR_MONTH_FORMAT</span></tt> および
+<tt class="docutils literal"><span class="pre">MONTH_DAY_FORMAT</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-debug">
+<span id="s-setting-DEBUG"></span><h2>DEBUG<a class="headerlink" href="#debug" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>デバッグモードのオンオフを切替えるブール値です。</p>
+<p>settings に自作の設定項目を追加する場合、django/views/debug.py の
+<tt class="docutils literal"><span class="pre">HIDDEN_SETTINGS</span></tt> に注意してください。この変数は正規表現になっていて、デ
+フォルトでは <tt class="docutils literal"><span class="pre">'SECRET'</span></tt>, <tt class="docutils literal"><span class="pre">'PASSWORD'</span></tt>, <tt class="docutils literal"><span class="pre">'PROFANITIES'</span></tt> といった文字列
+を含む全ての設定の DEBUG ビューへの表示を抑制して、信頼されていないユーザが
+バックトレースから重要な (あるいは攻撃的な) 設定項目を見なくてすむようにし
+ているからです。</p>
+<p>また、デバッグ出力の様々な情報は、いついかなる状況でも衆目に晒すべきもので
+はないということを心得ておきましょう。ファイルパス、各設定項目などは、攻撃
+者に対してサーバの様々な情報を与えてしまいます。</p>
+<p>また、 <tt class="docutils literal"><span class="pre">DEBUG</span></tt> をオンにして Django を起動すると、Django は実行した SQL ク
+エリを全て記憶してしまうことも忘れないでください。この機能はデバッグ時には
+便利ですが、運用時に使うとあっという間にメモリを消費してしまうでしょう。</p>
+<p>決して <tt class="docutils literal"><span class="pre">DEBUG</span></tt> をオンにしたままサーバを運用しないでください。</p>
+</div>
+<div class="section" id="s-debug-propagate-exceptions">
+<h2>DEBUG_PROPAGATE_EXCEPTIONS<a class="headerlink" href="#debug-propagate-exceptions" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、 Django が通常ビュー関数に対して行っている例外処理が抑制
+され、例外がそのまま送出されるようになります。テスト時に便利な機能ですが、
+実運用環境で使うべきではありません。</p>
+</div>
+<div class="section" id="s-default-charset">
+<span id="s-setting-DEFAULT_CHARSET"></span><h2>DEFAULT_CHARSET<a class="headerlink" href="#default-charset" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'utf-8'</span></tt></p>
+<p>全ての <tt class="docutils literal"><span class="pre">HttpResponse</span></tt> オブジェクトで、MIME タイプを手動で指定しなかった場
+合に使われるデフォルトの文字セットです。 <tt class="docutils literal"><span class="pre">Content-Type</span></tt> ヘッダの生成時に
+<tt class="docutils literal"><span class="pre">DEFAULT_CONTENT_TYPE</span></tt> とともに使われます。</p>
+</div>
+<div class="section" id="s-default-content-type">
+<span id="s-setting-DEFAULT_CONTENT_TYPE"></span><h2>DEFAULT_CONTENT_TYPE<a class="headerlink" href="#default-content-type" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'text/html'</span></tt></p>
+<p>全ての <tt class="docutils literal"><span class="pre">HttpResponse</span></tt> オブジェクトで、MIME タイプを手動で指定しなかった場
+合に使われるデフォルトのコンテンツタイプです。 <tt class="docutils literal"><span class="pre">Content-Type</span></tt> ヘッダの生
+成時に <tt class="docutils literal"><span class="pre">DEFAULT_CHARSET</span></tt> とともに使われます。</p>
+</div>
+<div class="section" id="s-default-file-storage">
+<span id="s-setting-DEFAULT_FROM_EMAIL"></span><h2>DEFAULT_FILE_STORAGE<a class="headerlink" href="#default-file-storage" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">django.core.files.storage.FileSystemStorage</span></tt></p>
+<p>特定のストレージシステムに依存せずにファイル関連の操作を行うときに使う、
+デフォルトのファイルストレージクラスです。 <a class="reference external" href="../topics/files.html#topics-files"><em>ファイルの管理</em></a> を参照してく
+ださい。</p>
+</div>
+<div class="section" id="s-default-from-email">
+<h2>DEFAULT_FROM_EMAIL<a class="headerlink" href="#default-from-email" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'webmaster&#64;localhost'</span></tt></p>
+<p>サイト管理者からのさまざまな自動応答で使われるデフォルトの e-mail アドレス
+です。</p>
+</div>
+<div class="section" id="s-default-tablespace">
+<span id="s-setting-DEFAULT_TABLESPACE"></span><h2>DEFAULT_TABLESPACE<a class="headerlink" href="#default-tablespace" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>テーブルスペース名を明示していないモデルに使われるテーブルスペース
+名です。バックエンドがサポートしている場合に限って有効です。</p>
+</div>
+<div class="section" id="s-default-index-tablespace">
+<span id="s-setting-DEFAULT_INDEX_TABLESPACE"></span><h2>DEFAULT_INDEX_TABLESPACE<a class="headerlink" href="#default-index-tablespace" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>テーブルスペース名を明示していないフィールドインデクスに使われるテーブルス
+ペース名です。バックエンドがサポートしている場合に限って有効です。</p>
+</div>
+<div class="section" id="s-disallowed-user-agents">
+<span id="s-setting-DISALLOWED_USER_AGENTS"></span><h2>DISALLOWED_USER_AGENTS<a class="headerlink" href="#disallowed-user-agents" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>システム全体にわたり、ページの閲覧を許さないクライアントの User-Agent を表
+すコンパイル済みの正規表現オブジェクトからなるリストです。相手にしたくない
+ロボットやクローラがいる場合に使って下さい。この設定は <tt class="docutils literal"><span class="pre">CommonMiddleware</span></tt>
+がインストールされている場合にしか使われません。
+(<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> を参照してください)。</p>
+</div>
+<div class="section" id="s-email-host">
+<span id="s-setting-EMAIL_HOST"></span><h2>EMAIL_HOST<a class="headerlink" href="#email-host" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'localhost'</span></tt></p>
+<p>e-mail の送信に使われるホスト名です。</p>
+<p><tt class="docutils literal"><span class="pre">EMAIL_PORT</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-email-host-password">
+<span id="s-setting-EMAIL_HOST_PASSWORD"></span><h2>EMAIL_HOST_PASSWORD<a class="headerlink" href="#email-host-password" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p><tt class="docutils literal"><span class="pre">EMAIL_HOST</span></tt> に指定した SMTP サーバにアクセスする際のパスワードです。この
+設定は <tt class="docutils literal"><span class="pre">EMAIL_HOST_USER</span></tt> と組み合わせて、 SMTP サーバの認証に使われます。
+<tt class="docutils literal"><span class="pre">EMAIL_HOST_USER</span></tt> と <tt class="docutils literal"><span class="pre">EMAIL_HOST_PASSWORD</span></tt> のどちらかが空文字列の場合、
+Django は SMTP への認証を試みません。</p>
+<p><tt class="docutils literal"><span class="pre">EMAIL_HOST_USER</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-email-host-user">
+<span id="s-setting-EMAIL_HOST_USER"></span><h2>EMAIL_HOST_USER<a class="headerlink" href="#email-host-user" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p><tt class="docutils literal"><span class="pre">EMAIL_HOST</span></tt> で定義されている SMTP サーバへのアクセスに使われるユーザ名で
+す。空文字列の場合、 Django は SMTP への認証を試みません。</p>
+<p><tt class="docutils literal"><span class="pre">EMAIL_HOST_PASSWORD</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-email-port">
+<span id="s-setting-EMAIL_PORT"></span><h2>EMAIL_PORT<a class="headerlink" href="#email-port" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">25</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">EMAIL_HOST</span></tt> で定義されている SMTP サーバのポート番号です。</p>
+</div>
+<div class="section" id="s-email-subject-prefix">
+<span id="s-setting-EMAIL_SUBJECT_PREFIX"></span><h2>EMAIL_SUBJECT_PREFIX<a class="headerlink" href="#email-subject-prefix" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'[Django]</span> <span class="pre">'</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">django.core.mail.mail_admins</span></tt> や <tt class="docutils literal"><span class="pre">django.core.mail.mail_managers</span></tt> が送
+信するメールの題名に使われるプレフィクスです。末尾にはスペースを入れておいた
+方がよいでしょう。</p>
+</div>
+<div class="section" id="s-email-use-tls">
+<span id="s-setting-EMAIL_USE_TLS"></span><h2>EMAIL_USE_TLS<a class="headerlink" href="#email-use-tls" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>SMTP サーバとの通信に TLS (安全な接続) を使うかどうかを指定します。</p>
+</div>
+<div class="section" id="s-file-charset">
+<span id="s-setting-FILE_CHARSET"></span><h2>FILE_CHARSET<a class="headerlink" href="#file-charset" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'utf-8'</span></tt></p>
+<p>テンプレートファイルや SQL のデータファイルなどのファイルをファイルシステム
+から読み出すときに使う文字エンコーディングです。</p>
+</div>
+<div class="section" id="s-file-upload-handlers">
+<span id="s-setting-FILE_UPLOAD_HANDLERS"></span><h2>FILE_UPLOAD_HANDLERS<a class="headerlink" href="#file-upload-handlers" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">&quot;django.core.files.fileuploadhandler.MemoryFileUploadHandler&quot;</span><span class="p">,</span>
+ <span class="s">&quot;django.core.files.fileuploadhandler.TemporaryFileUploadHandler&quot;</span><span class="p">,)</span>
+</pre></div>
+<p>ファイルアップロード時に使うハンドラを指定するタプルです。詳しくは
+<a class="reference external" href="../topics/files.html#topics-files"><em>ファイルの管理</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-file-upload-max-memory-size">
+<span id="s-setting-FILE_UPLOAD_MAX_MEMORY_SIZE"></span><h2>FILE_UPLOAD_MAX_MEMORY_SIZE<a class="headerlink" href="#file-upload-max-memory-size" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">2621440</span></tt> (2.5 MB).</p>
+<p>アップロード中のファイルをファイルシステム上にストリーム書き込み開始するま
+でに受け入れる最大サイズ (単位バイト) です。詳しくは <a class="reference external" href="../topics/files.html#topics-files"><em>ファイルの管理</em></a> を
+参照してください。</p>
+</div>
+<div class="section" id="s-file-upload-temp-dir">
+<span id="s-setting-FILE_UPLOAD_TEMP_DIR"></span><h2>FILE_UPLOAD_TEMP_DIR<a class="headerlink" href="#file-upload-temp-dir" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>アップロード中のファイルを一時的に保存するためのディレクトリです。 <tt class="xref docutils literal"><span class="pre">None</span></tt>
+に指定すると、オペレーティングシステムごとに標準の一時ディレクトリを使いま
+す。例えば、 *nix スタイルのオペレーティングシステムでは '/tmp' です。</p>
+<p>詳しくは <a class="reference external" href="../topics/files.html#topics-files"><em>ファイルの管理</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-file-upload-permissions">
+<span id="s-setting-FILE_UPLOAD_PERMISSIONS"></span><h2>FILE_UPLOAD_PERMISSIONS<a class="headerlink" href="#file-upload-permissions" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>アップロードされたファイルに設定するファイルモードで、数字で表現
+(例: <tt class="docutils literal"><span class="pre">0644</span></tt>) します。ファイルモードの意味は <a class="reference external" href="http://docs.python.org/lib/os-file-dir.html">os.chmod のドキュメント</a> を
+参照してください。</p>
+<p>この値を設定しないか、 <tt class="xref docutils literal"><span class="pre">None</span></tt> にすると、アップロードされたファイルのモー
+ドはオペレーティングシステムに依存します。ほとんどのプラットフォームでは、
+一時ファイルのファイルモードは <tt class="docutils literal"><span class="pre">0600</span></tt> で、メモリからファイルにデータを書
+き出すときにはシステム標準の umask を使います。</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p><strong>ファイルモードの先頭には常に ``0`` をつけてください</strong>.</p>
+<p class="last">ファイルモードにあまりくわしくないのなら、先頭の <tt class="docutils literal"><span class="pre">0</span></tt> がとても
+重要だということに注意してください。先頭の 0 は、値が 8 進数で
+あることを示しています。 <tt class="docutils literal"><span class="pre">644</span></tt> のように指定すると、全くおかし
+な挙動になってしまうでしょう。</p>
+</div>
+</div>
+<div class="section" id="s-fixture-dirs">
+<span id="s-setting-FIXTURE_DIRS"></span><h2>FIXTURE_DIRS<a class="headerlink" href="#fixture-dirs" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>フィクスチャデータファイルの検索対象ディレクトリを順に挙げたリストです。
+パスの表記は (Windows 環境でも) Unix 形式の前向きスラッシュにせねばなりませ
+ん。 <a class="reference external" href="../topics/testing.html#topics-testing"><em>Djangoアプリケーションのテスト</em></a> も参照してください。</p>
+</div>
+<div class="section" id="s-force-script-name">
+<h2>FORCE_SCRIPT_NAME<a class="headerlink" href="#force-script-name" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p><tt class="xref docutils literal"><span class="pre">None</span></tt> に指定すると、 HTTMP リクエストの <tt class="docutils literal"><span class="pre">SCRIPT_NAME</span></tt> 環境変数の代わり
+に指定値を使います。この設定は、サーバが指定する <tt class="docutils literal"><span class="pre">SCRIPT_NAME</span></tt> の内容を上
+書きしたり、 <tt class="docutils literal"><span class="pre">SCRIPT_NAME</span></tt> を空にしたりするために使えます。</p>
+</div>
+<div class="section" id="s-ignorable-404-ends">
+<span id="s-setting-IGNORABLE_404_ENDS"></span><h2>IGNORABLE_404_ENDS<a class="headerlink" href="#ignorable-404-ends" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">('mail.pl',</span> <span class="pre">'mailform.pl',</span> <span class="pre">'mail.cgi',</span> <span class="pre">'mailform.cgi',</span> <span class="pre">'favicon.ico',</span> <span class="pre">'.php')</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">IGNORABLE_404_STARTS</span></tt> と
+「 <a class="reference external" href="../howto/error-reporting.html#howto-error-reporting"><em>電子メールによるエラー通知</em></a> 」を参照してく
+ださい。</p>
+</div>
+<div class="section" id="s-ignorable-404-starts">
+<span id="s-setting-IGNORABLE_404_STARTS"></span><h2>IGNORABLE_404_STARTS<a class="headerlink" href="#ignorable-404-starts" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">('/cgi-bin/',</span> <span class="pre">'/_vti_bin',</span> <span class="pre">'/_vti_inf')</span></tt></p>
+<p>404 通知 e-mail を使っている場合、このタプルに指定した文字列から始まる URL
+は無視されます。 <tt class="docutils literal"><span class="pre">SEND_BROKEN_LINK_EMAILS</span></tt>, <tt class="docutils literal"><span class="pre">IGNORABLE_404_ENDS</span></tt> および
+<a class="reference external" href="../howto/error-reporting.html#howto-error-reporting"><em>電子メールによるエラー通知</em></a> も参照してくださ
+い。</p>
+</div>
+<div class="section" id="s-installed-apps">
+<span id="s-setting-INSTALLED_APPS"></span><h2>INSTALLED_APPS<a class="headerlink" href="#installed-apps" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>現在の Django インストール下で有効にしたい全てのアプリケーションを表す文字
+列のタプルです。各文字列は、 <tt class="xref docutils literal"><span class="pre">django-admin.py</span> <span class="pre">startapp</span></tt>
+で作成した Django アプリケーションの入った Python パッケージを示す完全な
+Python パスでなければなりません。</p>
+</div>
+<div class="section" id="s-internal-ips">
+<span id="s-setting-INTERNAL_IPS"></span><h2>INTERNAL_IPS<a class="headerlink" href="#internal-ips" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>文字列で表した IP アドレスのタプルです。</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">DEBUG</span></tt> が <tt class="xref docutils literal"><span class="pre">True</span></tt> の場合、デバッグコメント中に表示されます。</li>
+<li><tt class="docutils literal"><span class="pre">XViewMiddleware</span></tt> がインストールされている場合、X ヘッダを受信しま
+す。(<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> も参照してください。)</li>
+</ul>
+</div>
+<div class="section" id="s-jing-path">
+<span id="s-setting-JING_PATH"></span><h2>JING_PATH<a class="headerlink" href="#jing-path" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'/usr/bin/jing'</span></tt></p>
+<p>&quot;Jing&quot; 実行形式へのパスです。 Jung は RELAX NG バリデータで、 Django はモデ
+ルの <tt class="docutils literal"><span class="pre">XMLField</span></tt> のバリデーションに &quot;Jing&quot; を使います。</p>
+<p><a class="reference external" href="http://www.thaiopensource.com/relaxng/jing.html">http://www.thaiopensource.com/relaxng/jing.html</a> を参照してください。</p>
+</div>
+<div class="section" id="s-language-code">
+<span id="s-setting-LANGUAGE_CODE"></span><h2>LANGUAGE_CODE<a class="headerlink" href="#language-code" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'en-us'</span></tt></p>
+<p>現在の Django インストールにおける言語コード文字列です。この値は標準の言語
+指定形式にせねばなりません。たとえば U.S. English は <tt class="docutils literal"><span class="pre">&quot;en-us&quot;</span></tt> にします。
+<a class="reference external" href="../topics/i18n.html#topics-i18n"><em>国際化</em></a> も参照してください。</p>
+</div>
+<div class="section" id="s-language-cookie-name">
+<span id="s-setting-LANGUAGE_COOKIE_NAME"></span><h2>LANGUAGE_COOKIE_NAME<a class="headerlink" href="#language-cookie-name" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'django_language'</span></tt></p>
+<p>言語情報を記憶するために使うクッキーの名前です。 <tt class="docutils literal"><span class="pre">SESSION_COOKIE_NAME</span></tt>
+の設定値と同じでなければ、どんな名前にしてもかまいません。詳しくは
+<a class="reference external" href="../topics/i18n.html#topics-i18n"><em>国際化</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-languages">
+<span id="s-setting-LANGUAGES"></span><h2>LANGUAGES<a class="headerlink" href="#languages" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: 利用可能な言語からなるタプルです。このリストには頻繁に新たな
+言語が登場しているので、そのコピーをここに記載していてもすぐに古い情報になっ
+てしまいます。現在サポートされている言語のリストは手元のソースコード中の
+<tt class="docutils literal"><span class="pre">django/conf/global_settings.py</span></tt> (または <a class="reference external" href="http://code.djangoproject.com/browser/django/trunk/django/conf/global_settings.py">オンラインのソースコード</a>) を
+参照してください。</p>
+<p>このリストは、例えば <tt class="docutils literal"><span class="pre">('ja',</span> <span class="pre">'Japanese')</span></tt> のように、 (言語コード, 言語名)
+の形式のタプルでできており、国際化機能で選択可能な言語を指定するために使い
+ます。詳しくは <a class="reference external" href="../topics/i18n.html#topics-i18n"><em>国際化</em></a> を参照してください。</p>
+<p>一般に、デフォルト値をいじる必要はありません。Django が提供している言語セッ
+トの選択肢を狭めたい場合のみ設定してください。</p>
+<p>カスタムの <tt class="docutils literal"><span class="pre">LANGUAGE</span></tt> 設定を定義する場合、(上の例に示したように) 各言語を
+翻訳文字列として定義してかまいませんが、 <tt class="docutils literal"><span class="pre">django.utils.translation</span></tt> の
+<tt class="docutils literal"><span class="pre">gettext()</span></tt> 関数ではなく、「ダミーの」 <tt class="docutils literal"><span class="pre">gettext()</span></tt> を使うようにしてくだ
+さい。設定ファイル内では <em>決して</em> <tt class="docutils literal"><span class="pre">django.utils.translation</span></tt> を import し
+ないでください。このモジュールは settings の内容に依存しているため、循環
+import を引き起こしてしまうからです。</p>
+<p>解決方法は、上でも述べたように「ダミーの」 <tt class="docutils literal"><span class="pre">gettext()</span></tt> を使うというもので
+す。以下に設定ファイルの例を示します:</p>
+<div class="highlight"><pre><span class="n">gettext</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span>
+
+<span class="n">LANGUAGES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="n">gettext</span><span class="p">(</span><span class="s">&#39;German&#39;</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="n">gettext</span><span class="p">(</span><span class="s">&#39;English&#39;</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+<p>このような書き方をした場合、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessage</span></tt> は翻訳対象文字
+列をきちんと取り出せます。しかし、実行時に翻訳は行われません。従って、実行
+時に <tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> を使うようなコードでは、 <em>本当の</em> <tt class="docutils literal"><span class="pre">gettext()</span></tt> を使って
+言語名をラップするようにしてください。</p>
+</div>
+<div class="section" id="s-locale-paths">
+<span id="s-setting-LOCALE_PATHS"></span><h2>LOCALE_PATHS<a class="headerlink" href="#locale-paths" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>Django が翻訳ファイルを探しに行く場所を指定するためのタプルです。
+この変数の詳細とデフォルトの動作については、
+<a class="reference external" href="../topics/i18n.html#translations-in-your-own-projects"><em>自作のプロジェクトで翻訳を使う</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-login-redirect-url">
+<span id="s-setting-LOGIN_REDIRECT_URL"></span><h2>LOGIN_REDIRECT_URL<a class="headerlink" href="#login-redirect-url" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'/accounts/profile/'</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">controb.auth.login</span></tt> ビューに <tt class="docutils literal"><span class="pre">next</span></tt> パラメタが指定されていない場合の、
+デフォルトのリダイレクト先 URL です。</p>
+<p><a title="django.contrib.auth.decorators.login_required" class="reference external" href="../topics/auth.html#django.contrib.auth.decorators.login_required"><tt class="xref docutils literal"><span class="pre">login_required()</span></tt></a> デコレータを利用する
+ときなどに使う設定です。</p>
+</div>
+<div class="section" id="s-login-url">
+<span id="s-setting-LOGIN_URL"></span><h2>LOGIN_URL<a class="headerlink" href="#login-url" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'/accounts/login/'</span></tt></p>
+<p><a title="django.contrib.auth.decorators.login_required" class="reference external" href="../topics/auth.html#django.contrib.auth.decorators.login_required"><tt class="xref docutils literal"><span class="pre">login_required()</span></tt></a>  デコレータを利用す
+るときなどに、ログインページへのリダイレクト先として使う設定です。</p>
+</div>
+<div class="section" id="s-logout-url">
+<span id="s-setting-LOGOUT_URL"></span><h2>LOGOUT_URL<a class="headerlink" href="#logout-url" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'/accounts/logout/'</span></tt></p>
+<p>LOGIN_URL の対極にあたる、ログアウトページへのリダイレクト URL です。</p>
+</div>
+<div class="section" id="s-managers">
+<span id="s-setting-MANAGERS"></span><h2>MANAGERS<a class="headerlink" href="#managers" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p><tt class="docutils literal"><span class="pre">ADMINS</span></tt> と同じ形式のタプルで、 <tt class="docutils literal"><span class="pre">SEND_BROKEN_LINK_EMAILS=True</span></tt> の時に壊
+れたリンクの通知を受けるメンバを指定します。</p>
+</div>
+<div class="section" id="s-media-root">
+<span id="s-setting-MEDIA_ROOT"></span><h2>MEDIA_ROOT<a class="headerlink" href="#media-root" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>現在の Django インストールにおいて、メディアファイルを収めているディレクト
+リへの絶対パスです。例えば <tt class="docutils literal"><span class="pre">&quot;/home/media/media.lawrence.com/&quot;</span></tt> です。
+<tt class="docutils literal"><span class="pre">MEDIA_URL</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-media-url">
+<span id="s-setting-MEDIA_URL"></span><h2>MEDIA_URL<a class="headerlink" href="#media-url" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p><tt class="docutils literal"><span class="pre">MEDIA_ROOT</span></tt> で提供されているメディアファイルを扱う URL です。例えば
+<tt class="docutils literal"><span class="pre">&quot;http://media.lawrence.com&quot;</span></tt> です。</p>
+<p>URL にパス部を含める場合、末尾はスラッシュにせねばなりません。</p>
+<p>良い例: <tt class="docutils literal"><span class="pre">&quot;http://www.example.com/static/&quot;</span></tt>
+悪い例: <tt class="docutils literal"><span class="pre">&quot;http://www.example.com/static&quot;</span></tt></p>
+</div>
+<div class="section" id="s-middleware-classes">
+<span id="s-setting-MIDDLEWARE_CLASSES"></span><h2>MIDDLEWARE_CLASSES<a class="headerlink" href="#middleware-classes" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>
+ <span class="s">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
+ <span class="s">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>
+ <span class="s">&quot;django.middleware.doc.XViewMiddleware&quot;</span><span class="p">)</span>
+</pre></div>
+<p>利用するミドルウェアクラスの Python パス名からなるタプルです。
+<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> も参照してください。.</p>
+</div>
+<div class="section" id="s-month-day-format">
+<span id="s-setting-MONTH_DAY_FORMAT"></span><h2>MONTH_DAY_FORMAT<a class="headerlink" href="#month-day-format" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'F</span> <span class="pre">j'</span></tt></p>
+<p>Django の admin サイトにおける変更リストの日付フィールドの他、システムの各
+所で月と日だけを表示する際に使われるデフォルトのフォーマットです。</p>
+<p>例えば、 Django の admin サイトにおける変更リストページを日付による絞り込み
+でフィルタする場合、指定日のヘッダには日と月が表示されます。ロケールによっ
+ては異なったフォーマットになります。例えば、 U.S. English での &quot;January 1&quot;
+は、スペイン語では &quot;1 Enero.&quot; です。</p>
+<p><a class="reference external" href="templates/builtins.html#ttag-now"><tt class="xref docutils literal"><span class="pre">利用可能な日付フォーマット文字</span></tt></a> を参照してください。
+<tt class="docutils literal"><span class="pre">DATE_FORMAT</span></tt>, <tt class="docutils literal"><span class="pre">DATETIME_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">TIME_FORMAT</span></tt> ,
+<tt class="docutils literal"><span class="pre">YEAR_MONTH_FORMAT</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-prepend-www">
+<span id="s-setting-PREPEND_WWW"></span><h2>PREPEND_WWW<a class="headerlink" href="#prepend-www" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>URL にサブドメイン名 &quot;www.&quot; が付いていない場合に付加するかどうかを決めます。
+<tt class="docutils literal"><span class="pre">CommonMiddleware</span></tt> がインストールされている場合にのみ使われる設定です
+(<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> を参照してください)。 <tt class="docutils literal"><span class="pre">APPEND_SLASH</span></tt> も参
+照してください。</p>
+</div>
+<div class="section" id="s-profanities-list">
+<span id="s-setting-PROFANITIES_LIST"></span><h2>PROFANITIES_LIST<a class="headerlink" href="#profanities-list" title="Permalink to this headline">¶</a></h2>
+<p>非道徳的な言葉 (profanity) のタプルです。 <tt class="docutils literal"><span class="pre">hasNoProfanities</span></tt> バリデータが
+呼び出された際に、エラーを引き起こす単語のリストに使われます。</p>
+<p>デフォルト値はここでは示しません。不道徳な言葉が入っているからです。デフォ
+ルト値を見たければ、 <tt class="docutils literal"><span class="pre">django/conf/global_settings.py</span></tt> を参照してください。</p>
+</div>
+<div class="section" id="s-root-urlconf">
+<span id="s-setting-ROOT_URLCONF"></span><h2>ROOT_URLCONF<a class="headerlink" href="#root-urlconf" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: 定義されていません</p>
+<p>ルート URLconf への完全な Python import パスを表す表す文字列です。例えば、
+<tt class="docutils literal"><span class="pre">&quot;mydjangoapps.urls&quot;</span></tt> です。ルート URLconf は、 <tt class="docutils literal"><span class="pre">HttpRequest</span></tt> オブジェ
+クトに <tt class="docutils literal"><span class="pre">urlconf</span></tt> 属性を設定することで変更できます。
+詳しくは <a class="reference external" href="../topics/http/urls.html#how-django-processes-a-request"><em>Django のリクエスト処理</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-secret-key">
+<span id="s-setting-SECRET_KEY"></span><h2>SECRET_KEY<a class="headerlink" href="#secret-key" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>Django インストール毎に固有の秘密の鍵です。秘密鍵を使ったハッシュアルゴリズ
+ムのシードを生成するために使います。この値はランダムな文字列に指定してくだ
+さい。長ければ長いほど好ましくなります。 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">startproject</span></tt>
+を実行すると、自動的に値を生成します。</p>
+</div>
+<div class="section" id="s-send-broken-link-emails">
+<span id="s-setting-SEND_BROKEN_LINK_EMAILS"></span><h2>SEND_BROKEN_LINK_EMAILS<a class="headerlink" href="#send-broken-link-emails" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>Django で作られたページに空でないリファラつきで訪問した人が 404 に遭遇した
+(すなわち、リンクが壊れていた) 場合に、 <tt class="docutils literal"><span class="pre">MANAGERS</span></tt> に e-mail を送信するか
+どうかを決めます。この設定は <tt class="docutils literal"><span class="pre">CommonMiddleware</span></tt> がインストールされている
+場合にしか使われません。(<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> を参照してください。)
+<tt class="docutils literal"><span class="pre">IGNORABLE_404_STARTS</span></tt>, <tt class="docutils literal"><span class="pre">IGNORABLE_404_ENDS</span></tt> および
+<a class="reference external" href="../howto/error-reporting.html#howto-error-reporting"><em>電子メールによるエラー通知</em></a> も参照してください。</p>
+</div>
+<div class="section" id="s-serialization-modules">
+<span id="s-setting-SERIALIZATION_MODULES"></span><h2>SERIALIZATION_MODULES<a class="headerlink" href="#serialization-modules" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: 定義されていません</p>
+<p>シリアライザのモジュールパスを (文字列) 指定した辞書です。辞書のキーはシリ
+アライザの識別名にします。例えば、 YAML のシリアライザを定義するには以下の
+ようにします:</p>
+<div class="highlight"><pre><span class="n">SERIALIZATION_MODULES</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;yaml&#39;</span> <span class="p">:</span> <span class="s">&#39;path.to.yaml_serializer&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="s-server-email">
+<span id="s-setting-SERVER_EMAIL"></span><h2>SERVER_EMAIL<a class="headerlink" href="#server-email" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'root&#64;localhost'</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">ADMINS</span></tt> や <tt class="docutils literal"><span class="pre">MANAGERS</span></tt> にエラーメッセージを送信するときの送信元の
+e-mail アドレスです。</p>
+</div>
+<div class="section" id="s-session-engine">
+<span id="s-setting-SESSION_ENGINE"></span><h2>SESSION_ENGINE<a class="headerlink" href="#session-engine" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">django.contrib.sessions.backends.db</span></tt></p>
+<p>Django がセッションデータを保存する方法を指定します。利用できる値は以下の通
+りです:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'django.contrib.sessions.backends.db'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'django.contrib.sessions.backends.file'</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">'django.contrib.sessions.backends.cache'</span></tt></li>
+</ul>
+<p>詳しくは <a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-session-cookie-age">
+<span id="s-setting-SESSION_COOKIE_AGE"></span><h2>SESSION_COOKIE_AGE<a class="headerlink" href="#session-cookie-age" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">1209600</span></tt> (秒単位で 2 週間)</p>
+<p>セッションクッキーの寿命を秒で表したものです。 <a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a>
+も参照してください。</p>
+</div>
+<div class="section" id="s-session-cookie-domain">
+<span id="s-setting-SESSION_COOKIE_DOMAIN"></span><h2>SESSION_COOKIE_DOMAIN<a class="headerlink" href="#session-cookie-domain" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>セッションクッキーを使うドメインです。クロスドメインのクッキーを使う場合に
+は <tt class="docutils literal"><span class="pre">&quot;.lawrence.com&quot;</span></tt> といった値に、通常のドメイン内クッキーの場合には
+<tt class="xref docutils literal"><span class="pre">None</span></tt> を指定します。 <a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a>  も参照してください。</p>
+</div>
+<div class="section" id="s-session-cookie-name">
+<span id="s-setting-SESSION_COOKIE_NAME"></span><h2>SESSION_COOKIE_NAME<a class="headerlink" href="#session-cookie-name" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'sessionid'</span></tt></p>
+<p>セッションに使うクッキーの名前です。 <tt class="docutils literal"><span class="pre">LANGUAGE_COOKIE_NAME</span></tt> の値と同じで
+なければ、どんな名前にしてもかまいません。 <a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a> も参
+照してください。</p>
+</div>
+<div class="section" id="s-session-cookie-path">
+<span id="s-setting-SESSION_COOKIE_PATH"></span><h2>SESSION_COOKIE_PATH<a class="headerlink" href="#session-cookie-path" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'/'</span></tt></p>
+<p>セッションクッキーをセットするパスです。 Django インスタンスの URL パスか、
+その上の階層の URL パスでなければなりません。</p>
+<p>この設定は、同じホスト名の下で、複数の Django インスタンスが稼働している場
+合に便利です。サイト毎に別々のクッキーパスを指定でき、その場合には各サイト
+のインスタンスが固有のセッションクッキーを参照するようになります。</p>
+</div>
+<div class="section" id="s-session-cookie-secure">
+<span id="s-setting-SESSION_COOKIE_SECURE"></span><h2>SESSION_COOKIE_SECURE<a class="headerlink" href="#session-cookie-secure" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>セッションクッキーにセキュアなクッキーを使うかどうかを決めます。この値を
+<tt class="xref docutils literal"><span class="pre">True</span></tt> に設定すると、クッキーは &quot;セキュア&quot; にマークされます。クッキーがセ
+キュアにマークされると、ブラウザによっては HTTPS 接続でのみクッキーを転送す
+るようになります。詳しくは <a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-session-expire-at-browser-close">
+<span id="s-setting-SESSION_EXPIRE_AT_BROWSER_CLOSE"></span><h2>SESSION_EXPIRE_AT_BROWSER_CLOSE<a class="headerlink" href="#session-expire-at-browser-close" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>ブラウザを閉じたときにセッションを期限切れにするかどうかを決めます。
+<a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-session-file-path">
+<span id="s-setting-SESSION_FILE_PATH"></span><h2>SESSION_FILE_PATH<a class="headerlink" href="#session-file-path" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>ファイルベースのセッションストレージを使っている場合、この値でセッションデー
+タの保存場所を指定します。詳しくは <a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a> を参照してく
+ださい。デフォルト値 (<tt class="xref docutils literal"><span class="pre">None</span></tt>) にすると、システム標準の一時ディレクトリを
+使います。</p>
+</div>
+<div class="section" id="s-session-save-every-request">
+<span id="s-setting-SESSION_SAVE_EVERY_REQUEST"></span><h2>SESSION_SAVE_EVERY_REQUEST<a class="headerlink" href="#session-save-every-request" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>リクエストごとにセッションデータを保存するかどうかを決めます。
+<a class="reference external" href="../topics/http/sessions.html#topics-http-sessions"><em>セッションの使い方</em></a> も参照してください。</p>
+</div>
+<div class="section" id="s-site-id">
+<span id="s-setting-SITE_ID"></span><h2>SITE_ID<a class="headerlink" href="#site-id" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: 定義されていません</p>
+<p><tt class="docutils literal"><span class="pre">django_sites</span></tt> データベース中で現在のサイトを示す ID の整数値です。この値
+は、アプリケーションデータが特定のサイトに対してフックできるようにし、一つ
+のデータベースで複数のサイトのコンテンツを管理できるようにするためのもので
+す。</p>
+<p><a class="reference external" href="contrib/sites.html#ref-contrib-sites"><em>&quot;sites&quot; フレームワーク</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-template-context-processors">
+<span id="s-setting-TEMPLATE_CONTEXT_PROCESSORS"></span><h2>TEMPLATE_CONTEXT_PROCESSORS<a class="headerlink" href="#template-context-processors" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">&quot;django.core.context_processors.auth&quot;</span><span class="p">,</span>
+<span class="s">&quot;django.core.context_processors.debug&quot;</span><span class="p">,</span>
+<span class="s">&quot;django.core.context_processors.i18n&quot;</span><span class="p">,</span>
+<span class="s">&quot;django.core.context_processors.media&quot;</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">RequestContext</span></tt> のコンテキストに値を入れてゆく際に使われる呼び出し可能オ
+ブジェクトからなるタプルです。これらの呼び出し可能オブジェクトはリクエスト
+オブジェクトを引数にとり、コンテキストに統合する項目からなる辞書を返します。</p>
+</div>
+<div class="section" id="s-template-debug">
+<span id="s-setting-TEMPLATE_DEBUG"></span><h2>TEMPLATE_DEBUG<a class="headerlink" href="#template-debug" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>テンプレートのデバッグモードのオンオフを切替えるブール値です。この値を
+<tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、 <tt class="docutils literal"><span class="pre">TemplateSyntaxError</span></tt> を報告する際にファンシーなエラー
+ページを出力します。この報告にはエラーに関係するテンプレートの一部分が表示
+され、問題のある部分がハイライト表示されます。</p>
+<p>Django は <tt class="docutils literal"><span class="pre">DEBUG</span></tt> が <tt class="xref docutils literal"><span class="pre">True</span></tt> の場合にのみエラーページを表示するので、こ
+の設定の恩恵をうけたければ <tt class="docutils literal"><span class="pre">DEBUG</span></tt> を設定しておく必要があります。</p>
+<p><tt class="docutils literal"><span class="pre">DEBUG</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-template-dirs">
+<span id="s-setting-TEMPLATE_DIRS"></span><h2>TEMPLATE_DIRS<a class="headerlink" href="#template-dirs" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">()</span></tt> (空のタプル)</p>
+<p>テンプレートソースファイルの入っている場所を検索順に並べたリストです。パス
+の区切りには Windows であっても Unix 形式のスラッシュを使って下さい。</p>
+<p><a class="reference external" href="../topics/templates.html#topics-templates"><em>Django テンプレート言語</em></a> も参照してください。.</p>
+</div>
+<div class="section" id="s-template-loaders">
+<span id="s-setting-TEMPLATE_LOADERS"></span><h2>TEMPLATE_LOADERS<a class="headerlink" href="#template-loaders" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">&#39;django.template.loaders.filesystem.load_template_source&#39;</span><span class="p">,</span>
+ <span class="s">&#39;django.template.loaders.app_directories.load_template_source&#39;</span><span class="p">)</span>
+</pre></div>
+<p>様々なソースからのテンプレートの import を実装している、呼び出し可能オブジェ
+クト (を指す文字列) のタプルです。 <a class="reference external" href="templates/api.html#ref-templates-api"><em>Python プログラマのための Django テンプレート言語ガイド</em></a> も参照してくだ
+さい。</p>
+</div>
+<div class="section" id="s-template-string-if-invalid">
+<span id="s-setting-TEMPLATE_STRING_IF_INVALID"></span><h2>TEMPLATE_STRING_IF_INVALID<a class="headerlink" href="#template-string-if-invalid" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">''</span></tt> (空文字列)</p>
+<p>誤った (スペルを間違えたなど) 変数名に対してテンプレートシステムが出力する
+文字列です。 <a class="reference external" href="templates/api.html#invalid-template-variables"><em>無効な値の扱い</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-test-database-charset">
+<span id="s-setting-TEST_DATABASE_CHARSET"></span><h2>TEST_DATABASE_CHARSET<a class="headerlink" href="#test-database-charset" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>テストデータベースの作成に使われている文字セットエンコーディングです。この
+文字列の値はデータベースバックエンドに直接渡されるので、エンコーディングの
+名前や書式はバックエンドごとに異なります。</p>
+<p>この設定をサポートしているバックエンドは、 <a class="reference external" href="http://www.postgresql.org/docs/8.2/static/multibyte.html">PostgreSQL</a> (<tt class="docutils literal"><span class="pre">postgresql</span></tt>,
+<tt class="docutils literal"><span class="pre">postgresql_psycopg2</span></tt>) と <a class="reference external" href="http://www.mysql.org/doc/refman/5.0/en/charset-database.html">MySQL</a> (<tt class="docutils literal"><span class="pre">mysql</span></tt>) です。</p>
+</div>
+<div class="section" id="s-test-database-collation">
+<span id="s-setting-TEST_DATABASE_COLLATION"></span><h2>TEST_DATABASE_COLLATION<a class="headerlink" href="#test-database-collation" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>テストデータベースを生成する際のコレーション (collation) です。この値はデー
+タベースバックエンドに直接渡されるので、値の書式はバックエンドごとに異なり
+ます。</p>
+<p><tt class="docutils literal"><span class="pre">mysql</span></tt> バックエンドだけでサポートされています(くわしくは、MySQLマニュア
+ルの <cite>10.3.2節</cite> を参照してください)</p>
+</div>
+<div class="section" id="s-test-database-name">
+<span id="s-setting-TEST_DATABASE_NAME"></span><h2>TEST_DATABASE_NAME<a class="headerlink" href="#test-database-name" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">None</span></tt></p>
+<p>テストスイートを実行するときに使うデータベースの名前です。</p>
+<p>データベースエンジンが SQLite のときにデフォルト値 (<tt class="xref docutils literal"><span class="pre">None</span></tt>) を指定すると、
+テストのためのデータベースはメモリ上に展開されます。他のデータベースエンジ
+ンの場合、テストデータベースの名前として <tt class="docutils literal"><span class="pre">'test_'</span></tt> +
+<tt class="docutils literal"><span class="pre">settings.DATABASE_NAME</span></tt> を使います。</p>
+<p><a class="reference external" href="../topics/testing.html#topics-testing"><em>Djangoアプリケーションのテスト</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-test-runner">
+<span id="s-setting-TEST_RUNNER"></span><h2>TEST_RUNNER<a class="headerlink" href="#test-runner" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'django.test.simple.run_tests'</span></tt></p>
+<p>テストスイートを起動するためのメソッドの名前です。 <a class="reference external" href="../topics/testing.html#topics-testing"><em>Djangoアプリケーションのテスト</em></a> を
+参照してください。</p>
+</div>
+<div class="section" id="s-time-format">
+<span id="s-setting-TIME_FORMAT"></span><h2>TIME_FORMAT<a class="headerlink" href="#time-format" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'P'</span></tt> (e.g. <tt class="docutils literal"><span class="pre">4</span> <span class="pre">p.m.</span></tt>)</p>
+<p>Django の admin サイトの変更履歴ページ (や、システムの他の部分で) 時刻フィー
+ルドの表示に使うデフォルトのフォーマットです。</p>
+<p><a class="reference external" href="templates/builtins.html#ttag-now"><tt class="xref docutils literal"><span class="pre">利用可能な日付フォーマット文字</span></tt></a> を参照してください。</p>
+<p><tt class="docutils literal"><span class="pre">DATE_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">DATETIMETIME_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">YEAR_MONTH_FORMAT</span></tt> および
+<tt class="docutils literal"><span class="pre">MONTH_DAY_FORMAT</span></tt> も参照してください。</p>
+</div>
+<div class="section" id="s-time-zone">
+<span id="s-setting-TIME_ZONE"></span><h2>TIME_ZONE<a class="headerlink" href="#time-zone" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'America/Chicago'</span></tt></p>
+<p>現在の Django インストールが使うタイムゾーンを表す文字列です。
+<a class="reference external" href="http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE">利用可能な選択肢</a> を参照してください。(利用可能な選択肢には、同じ行に複数
+の選択肢をリストしていることに注意してください。あるタイムゾーンを表すには
+いずれか一つを選ぶことになります。例えば、ある行に <tt class="docutils literal"><span class="pre">'Europe/London</span> <span class="pre">GB</span>
+<span class="pre">GB-Eire'</span></tt> と書かれている場合、 <tt class="docutils literal"><span class="pre">TIME_ZONE</span></tt> の設定には、最初の部分である
+<tt class="docutils literal"><span class="pre">'Europe/London'</span></tt> だけを使います)この値は Django が全ての日付/時刻の変換
+に使うタイムゾーンであり、かならずしもサーバのタイムゾーンとは一致しないこ
+とに注意して下さい。例えば、一つのサーバで複数の Django サイトを運営し、個々
+に別々のタイムゾーン設定を持たせてもかまいません。</p>
+<p>通常、 Django は <tt class="docutils literal"><span class="pre">TIME_ZONE</span></tt> の設定に従って <tt class="docutils literal"><span class="pre">os.environ['TZ']</span></tt> 変数を設
+定します。そのため、ビューやモデルは自動的に正しいタイムゾーンを扱えるよう
+になります。しかしながら、後述の手動設定オプションを使っている場合 (下参照)、
+Django は <tt class="docutils literal"><span class="pre">TZ</span></tt> 環境変数を <em>操作しない</em> ので、ユーザは自分の責任でプロセス
+を正しい環境の下で動作させねばなりません。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Windows 環境では、 Django は信頼性のある方法でタイムゾーンを変更できま
+せん。 Windows で Django を動作させる場合、この変数はシステムのタイムゾー
+ンと一致させねばなりません。</p>
+</div>
+</div>
+<div class="section" id="s-url-validator-user-agent">
+<span id="s-setting-URL_VALIDATOR_USER_AGENT"></span><h2>URL_VALIDATOR_USER_AGENT<a class="headerlink" href="#url-validator-user-agent" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">Django/&lt;version&gt;</span> <span class="pre">(http://www.djangoproject.com/)</span></tt></p>
+<p>特定の URL が実在するかを Django が調べにゆく際に使う <tt class="docutils literal"><span class="pre">User-Agent</span></tt> ヘッダ
+の値です。 (<a title="django.db.models.URLField" class="reference external" href="models/fields.html#django.db.models.URLField"><tt class="xref docutils literal"><span class="pre">URLField</span></tt></a> の <tt class="docutils literal"><span class="pre">verify_exists</span></tt> を参照
+してください。)</p>
+</div>
+<div class="section" id="s-use-etags">
+<span id="s-setting-USE_ETAGS"></span><h2>USE_ETAGS<a class="headerlink" href="#use-etags" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">False</span></tt></p>
+<p>出力に &quot;Etag&quot; ヘッダを含めるかどうかを決めるブール値です。 &quot;Etag&quot; を含める
+と帯域の節約になりますが、パフォーマンスは低下します。この設定は
+<tt class="docutils literal"><span class="pre">CommonMiddleware</span></tt> がインストールされている場合にしか使われません。
+(<a class="reference external" href="../topics/http/middleware.html#topics-http-middleware"><em>ミドルウェア</em></a> を参照してください。)</p>
+</div>
+<div class="section" id="s-use-i18n">
+<span id="s-setting-USE_I18N"></span><h2>USE_I18N<a class="headerlink" href="#use-i18n" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="xref docutils literal"><span class="pre">True</span></tt></p>
+<p>国際化システムを有効にするかどうかを決めるブール値です。この設定を使うと、
+パフォーマンス向上のために簡単に国際化システムを無効化できます。この値を
+<tt class="xref docutils literal"><span class="pre">False</span></tt> にすると、 Django は国際化機構をロードしないような最適化を行いま
+す。</p>
+</div>
+<div class="section" id="s-year-month-format">
+<span id="s-setting-YEAR_MONTH_FORMAT"></span><h2>YEAR_MONTH_FORMAT<a class="headerlink" href="#year-month-format" title="Permalink to this headline">¶</a></h2>
+<p>デフォルト値: <tt class="docutils literal"><span class="pre">'F</span> <span class="pre">Y'</span></tt></p>
+<p>Django の admin サイトにおける変更リストの日付フィールドの他、システムの各
+所で年と月だけを表示する際に使われるデフォルトのフォーマットです。</p>
+<p>例えば、 Django の admin サイトにおける変更リストページを日付による絞り込み
+でフィルタする場合、指定月のヘッダには月と年が表示されます。ロケールによっ
+ては異なったフォーマットになります。例えば、 U.S. English での
+&quot;January 2006&quot; は、別のロケールでは &quot;2006/January&quot; になるかもしれません。</p>
+<p><a class="reference external" href="templates/builtins.html#ttag-now"><tt class="xref docutils literal"><span class="pre">利用可能な日付フォーマット文字</span></tt></a> を参照してください。
+<tt class="docutils literal"><span class="pre">DATE_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">DATETIME_FORMAT</span></tt> , <tt class="docutils literal"><span class="pre">TIME_FORMAT</span></tt> および
+<tt class="docutils literal"><span class="pre">MONTH_DAY_FORMAT</span></tt> も参照してください。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Available settings</a><ul>
+<li><a class="reference external" href="#absolute-url-overrides">ABSOLUTE_URL_OVERRIDES</a></li>
+<li><a class="reference external" href="#admin-for">ADMIN_FOR</a></li>
+<li><a class="reference external" href="#admin-media-prefix">ADMIN_MEDIA_PREFIX</a></li>
+<li><a class="reference external" href="#admins">ADMINS</a></li>
+<li><a class="reference external" href="#allowed-include-roots">ALLOWED_INCLUDE_ROOTS</a></li>
+<li><a class="reference external" href="#append-slash">APPEND_SLASH</a></li>
+<li><a class="reference external" href="#authentication-backends">AUTHENTICATION_BACKENDS</a></li>
+<li><a class="reference external" href="#auth-profile-module">AUTH_PROFILE_MODULE</a></li>
+<li><a class="reference external" href="#cache-backend">CACHE_BACKEND</a></li>
+<li><a class="reference external" href="#cache-middleware-key-prefix">CACHE_MIDDLEWARE_KEY_PREFIX</a></li>
+<li><a class="reference external" href="#cache-middleware-seconds">CACHE_MIDDLEWARE_SECONDS</a></li>
+<li><a class="reference external" href="#database-engine">DATABASE_ENGINE</a></li>
+<li><a class="reference external" href="#database-host">DATABASE_HOST</a></li>
+<li><a class="reference external" href="#database-name">DATABASE_NAME</a></li>
+<li><a class="reference external" href="#database-options">DATABASE_OPTIONS</a></li>
+<li><a class="reference external" href="#database-password">DATABASE_PASSWORD</a></li>
+<li><a class="reference external" href="#database-port">DATABASE_PORT</a></li>
+<li><a class="reference external" href="#database-user">DATABASE_USER</a></li>
+<li><a class="reference external" href="#date-format">DATE_FORMAT</a></li>
+<li><a class="reference external" href="#datetime-format">DATETIME_FORMAT</a></li>
+<li><a class="reference external" href="#debug">DEBUG</a></li>
+<li><a class="reference external" href="#debug-propagate-exceptions">DEBUG_PROPAGATE_EXCEPTIONS</a></li>
+<li><a class="reference external" href="#default-charset">DEFAULT_CHARSET</a></li>
+<li><a class="reference external" href="#default-content-type">DEFAULT_CONTENT_TYPE</a></li>
+<li><a class="reference external" href="#default-file-storage">DEFAULT_FILE_STORAGE</a></li>
+<li><a class="reference external" href="#default-from-email">DEFAULT_FROM_EMAIL</a></li>
+<li><a class="reference external" href="#default-tablespace">DEFAULT_TABLESPACE</a></li>
+<li><a class="reference external" href="#default-index-tablespace">DEFAULT_INDEX_TABLESPACE</a></li>
+<li><a class="reference external" href="#disallowed-user-agents">DISALLOWED_USER_AGENTS</a></li>
+<li><a class="reference external" href="#email-host">EMAIL_HOST</a></li>
+<li><a class="reference external" href="#email-host-password">EMAIL_HOST_PASSWORD</a></li>
+<li><a class="reference external" href="#email-host-user">EMAIL_HOST_USER</a></li>
+<li><a class="reference external" href="#email-port">EMAIL_PORT</a></li>
+<li><a class="reference external" href="#email-subject-prefix">EMAIL_SUBJECT_PREFIX</a></li>
+<li><a class="reference external" href="#email-use-tls">EMAIL_USE_TLS</a></li>
+<li><a class="reference external" href="#file-charset">FILE_CHARSET</a></li>
+<li><a class="reference external" href="#file-upload-handlers">FILE_UPLOAD_HANDLERS</a></li>
+<li><a class="reference external" href="#file-upload-max-memory-size">FILE_UPLOAD_MAX_MEMORY_SIZE</a></li>
+<li><a class="reference external" href="#file-upload-temp-dir">FILE_UPLOAD_TEMP_DIR</a></li>
+<li><a class="reference external" href="#file-upload-permissions">FILE_UPLOAD_PERMISSIONS</a></li>
+<li><a class="reference external" href="#fixture-dirs">FIXTURE_DIRS</a></li>
+<li><a class="reference external" href="#force-script-name">FORCE_SCRIPT_NAME</a></li>
+<li><a class="reference external" href="#ignorable-404-ends">IGNORABLE_404_ENDS</a></li>
+<li><a class="reference external" href="#ignorable-404-starts">IGNORABLE_404_STARTS</a></li>
+<li><a class="reference external" href="#installed-apps">INSTALLED_APPS</a></li>
+<li><a class="reference external" href="#internal-ips">INTERNAL_IPS</a></li>
+<li><a class="reference external" href="#jing-path">JING_PATH</a></li>
+<li><a class="reference external" href="#language-code">LANGUAGE_CODE</a></li>
+<li><a class="reference external" href="#language-cookie-name">LANGUAGE_COOKIE_NAME</a></li>
+<li><a class="reference external" href="#languages">LANGUAGES</a></li>
+<li><a class="reference external" href="#locale-paths">LOCALE_PATHS</a></li>
+<li><a class="reference external" href="#login-redirect-url">LOGIN_REDIRECT_URL</a></li>
+<li><a class="reference external" href="#login-url">LOGIN_URL</a></li>
+<li><a class="reference external" href="#logout-url">LOGOUT_URL</a></li>
+<li><a class="reference external" href="#managers">MANAGERS</a></li>
+<li><a class="reference external" href="#media-root">MEDIA_ROOT</a></li>
+<li><a class="reference external" href="#media-url">MEDIA_URL</a></li>
+<li><a class="reference external" href="#middleware-classes">MIDDLEWARE_CLASSES</a></li>
+<li><a class="reference external" href="#month-day-format">MONTH_DAY_FORMAT</a></li>
+<li><a class="reference external" href="#prepend-www">PREPEND_WWW</a></li>
+<li><a class="reference external" href="#profanities-list">PROFANITIES_LIST</a></li>
+<li><a class="reference external" href="#root-urlconf">ROOT_URLCONF</a></li>
+<li><a class="reference external" href="#secret-key">SECRET_KEY</a></li>
+<li><a class="reference external" href="#send-broken-link-emails">SEND_BROKEN_LINK_EMAILS</a></li>
+<li><a class="reference external" href="#serialization-modules">SERIALIZATION_MODULES</a></li>
+<li><a class="reference external" href="#server-email">SERVER_EMAIL</a></li>
+<li><a class="reference external" href="#session-engine">SESSION_ENGINE</a></li>
+<li><a class="reference external" href="#session-cookie-age">SESSION_COOKIE_AGE</a></li>
+<li><a class="reference external" href="#session-cookie-domain">SESSION_COOKIE_DOMAIN</a></li>
+<li><a class="reference external" href="#session-cookie-name">SESSION_COOKIE_NAME</a></li>
+<li><a class="reference external" href="#session-cookie-path">SESSION_COOKIE_PATH</a></li>
+<li><a class="reference external" href="#session-cookie-secure">SESSION_COOKIE_SECURE</a></li>
+<li><a class="reference external" href="#session-expire-at-browser-close">SESSION_EXPIRE_AT_BROWSER_CLOSE</a></li>
+<li><a class="reference external" href="#session-file-path">SESSION_FILE_PATH</a></li>
+<li><a class="reference external" href="#session-save-every-request">SESSION_SAVE_EVERY_REQUEST</a></li>
+<li><a class="reference external" href="#site-id">SITE_ID</a></li>
+<li><a class="reference external" href="#template-context-processors">TEMPLATE_CONTEXT_PROCESSORS</a></li>
+<li><a class="reference external" href="#template-debug">TEMPLATE_DEBUG</a></li>
+<li><a class="reference external" href="#template-dirs">TEMPLATE_DIRS</a></li>
+<li><a class="reference external" href="#template-loaders">TEMPLATE_LOADERS</a></li>
+<li><a class="reference external" href="#template-string-if-invalid">TEMPLATE_STRING_IF_INVALID</a></li>
+<li><a class="reference external" href="#test-database-charset">TEST_DATABASE_CHARSET</a></li>
+<li><a class="reference external" href="#test-database-collation">TEST_DATABASE_COLLATION</a></li>
+<li><a class="reference external" href="#test-database-name">TEST_DATABASE_NAME</a></li>
+<li><a class="reference external" href="#test-runner">TEST_RUNNER</a></li>
+<li><a class="reference external" href="#time-format">TIME_FORMAT</a></li>
+<li><a class="reference external" href="#time-zone">TIME_ZONE</a></li>
+<li><a class="reference external" href="#url-validator-user-agent">URL_VALIDATOR_USER_AGENT</a></li>
+<li><a class="reference external" href="#use-etags">USE_ETAGS</a></li>
+<li><a class="reference external" href="#use-i18n">USE_I18N</a></li>
+<li><a class="reference external" href="#year-month-format">YEAR_MONTH_FORMAT</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="request-response.html">リクエストオブジェクトとレスポンスオブジェクト</a></li>
+    
+    
+      <li>次: <a href="signals.html">組み込みシグナルリファレンス</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">API リファレンス</a>
+        
+        <ul><li>Available settings</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/settings.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="request-response.html" title="リクエストオブジェクトとレスポンスオブジェクト">前へ</a> 
+     |
+    <a href="index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="signals.html" title="組み込みシグナルリファレンス">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

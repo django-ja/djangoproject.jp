@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>databrowse &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="flatpages アプリケーション" href="flatpages.html" />
+    <link rel="prev" title="クロスサイトリクエストフォージェリ (CSRF) 対策" href="csrf.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="csrf.html" title="クロスサイトリクエストフォージェリ (CSRF) 対策">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="flatpages.html" title="flatpages アプリケーション">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-databrowse">
+            
+  
+  <div class="section" id="s-module-django.contrib.databrowse">
+<span id="s-ref-contrib-databrowse"></span><h1>databrowse<a class="headerlink" href="#module-django.contrib.databrowse" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django の Admin サイトはモデルに対するイントロスペクションによって、動的に
+管理サイトを構築しています。 databrowse も同様に、モデル定義からリッチなブ
+ラウジングウェブサイトを生成します。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p>databrowse は <strong>非常に</strong> 新しいアプリケーションで、まだ活発な開発下にあ
+ります。次の Django のリリースまでには相当変更が加えられるでしょう。</p>
+<p class="last">そのことさえ念頭におけば、 databrowse 自体はとても簡単に利用でき、コー
+ドを書く必要もありません。ですから、ごくごくわずかに時間を費してコード
+を書くだけで試せます。</p>
+</div>
+<div class="section" id="s-id1">
+<span id="s-how-to-use-databrowse"></span><h2>databrowse の使い方<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Django に databrowse のデフォルトのテンプレートを教えます。やり方は
+いくつかあります:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'django.contrib.databrowse'</span></tt> を <a class="reference external" href="../settings.html#setting-INSTALLED_APPS"><tt class="xref docutils literal"><span class="pre">INSTALLED_APPS</span></tt></a> に追加し
+ます。この方法は、 <a class="reference external" href="../settings.html#setting-TEMPLATE_LOADERS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_LOADERS</span></tt></a> 設定に
+<tt class="docutils literal"><span class="pre">app_directories</span></tt> テンプレートローダが入っている場合に使えます (デフォ
+ルトでは入っています) 。詳しくは
+<a class="reference external" href="../templates/api.html#template-loaders"><em>テンプレートローダのドキュメント</em></a> を参照して
+ください。</li>
+<li>あるいは、 <tt class="docutils literal"><span class="pre">django/contrib/databrowse/templates</span></tt> ディレクトリへ
+の完全なパスを調べ、 <a class="reference external" href="../settings.html#setting-TEMPLATE_DIRS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt></a> 設定に追加してください。</li>
+</ul>
+</li>
+<li><p class="first">databrowse サイトにいくつかモデルを登録します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">databrowse</span>
+<span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">SomeModel</span><span class="p">,</span> <span class="n">SomeOtherModel</span>
+
+<span class="n">databrowse</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">SomeModel</span><span class="p">)</span>
+<span class="n">databrowse</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">SomeOtherModel</span><span class="p">)</span>
+</pre></div>
+<p>モデルの <em>インスタンスではなくクラス</em> を登録してください。</p>
+<p>このコードは、何らかのタイミングで実行される場所であればどこに書いて
+もかまいません。例えば <a class="reference external" href="../../topics/http/urls.html#topics-http-urls"><em>URLconf</em></a> (<tt class="docutils literal"><span class="pre">urls.py</span></tt>)
+に書くのがよいでしょう。</p>
+</li>
+<li><p class="first">URLconf を変更して、mod:<cite>~django.contrib.databrowse</cite> モジュールを
+import します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">databrowse</span>
+</pre></div>
+<p>そして、以下の一行を追加します:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^databrowse/(.*)&#39;</span><span class="p">,</span> <span class="n">databrowse</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">root</span><span class="p">),</span>
+</pre></div>
+<p>プレフィクスはなんでも構いません -- <tt class="docutils literal"><span class="pre">databrowse/</span></tt> でも <tt class="docutils literal"><span class="pre">db/</span></tt> でも
+なんでも好きなプレフィクスを使ってください。</p>
+</li>
+<li><p class="first">Django サーバを起動して <tt class="docutils literal"><span class="pre">/databrowse/</span></tt> をブラウザで表示してください。</p>
+</li>
+</ol>
+</div>
+<div class="section" id="s-id2">
+<span id="s-requiring-user-login"></span><h2>ユーザにログインを要求する<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>たった数行追加するだけで、ビューへのアクセスをログインしているユーザに限定
+できます。まず、以下の import 行を URLconf に追加します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+</pre></div>
+<p>次に、 <a class="reference external" href="../../topics/http/urls.html#topics-http-urls"><em>URLconf</em></a> を変更して、
+<tt class="xref docutils literal"><span class="pre">databrowse.site.root()</span></tt> ビューを
+<a title="django.contrib.auth.decorators.login_required" class="reference external" href="../../topics/auth.html#django.contrib.auth.decorators.login_required"><tt class="xref docutils literal"><span class="pre">django.contrib.auth.decorators.login_required()</span></tt></a> で修飾 (decorate) し
+ます:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^databrowse/(.*)&#39;</span><span class="p">,</span> <span class="n">login_required</span><span class="p">(</span><span class="n">databrowse</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">root</span><span class="p">)),</span>
+</pre></div>
+<p><a class="reference external" href="auth.html#ref-contrib-auth"><em>ユーザ認証のドキュメント</em></a> にあるような、ログインを
+サポートするための <a class="reference external" href="../../topics/http/urls.html#topics-http-urls"><em>URLconf</em></a> を設定していないのなら、
+以下のようなマッピングも追加しておきます:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^accounts/login/$&#39;</span><span class="p">,</span> <span class="s">&#39;django.contrib.auth.views.login&#39;</span><span class="p">),</span>
+</pre></div>
+<p>最後のステップは、 <a title="django.contrib.auth.views.login" class="reference external" href="../../topics/auth.html#django.contrib.auth.views.login"><tt class="xref docutils literal"><span class="pre">django.contrib.auth.views.login()</span></tt></a> で必要なログイン
+フォームの作成です。 <a class="reference external" href="auth.html#ref-contrib-auth"><em>ユーザ認証のドキュメント</em></a> に
+は、テンプレートの詳細版と簡略版の両方を記載しています。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">databrowse</a><ul>
+<li><a class="reference external" href="#id1">databrowse の使い方</a></li>
+<li><a class="reference external" href="#id2">ユーザにログインを要求する</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="csrf.html">クロスサイトリクエストフォージェリ (CSRF) 対策</a></li>
+    
+    
+      <li>次: <a href="flatpages.html">flatpages アプリケーション</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>databrowse</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/databrowse.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="csrf.html" title="クロスサイトリクエストフォージェリ (CSRF) 対策">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="flatpages.html" title="flatpages アプリケーション">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>データベースのサポート状況 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="API リファレンス" href="index.html" />
+    <link rel="next" title="django-admin.py と manage.py" href="django-admin.html" />
+    <link rel="prev" title="django.contrib.webdesign" href="contrib/webdesign.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="contrib/webdesign.html" title="django.contrib.webdesign">前へ</a> 
+     |
+    <a href="index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="django-admin.html" title="django-admin.py と manage.py">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-databases">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-ref-databases"></span><h1>データベースのサポート状況<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django は可能な限り全てのデータベースバックエンドをサポートしようとしていま
+すが、残念ながら全てのサーバが全く同じ仕様というわけではないので、どの機能
+をサポートすべきか、どういった仕様を仮定するかといった設計上の判断を下して
+います。</p>
+<p>このドキュメントでは、このドキュメントでは、 Django を使う上で関係のあるデー
+タベース機能について説明します。ただし、このドキュメントは特定のデータベー
+スサーバ向けのドキュメントとして書かれたものではなく、リファレンスマニュア
+ルでもありません。</p>
+<div class="section" id="s-mysql">
+<span id="s-id2"></span><span id="s-mysql-notes"></span><h2>MySQL に関する注意<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h2>
+<p>Django はデータベースがトランザクションや参照の一貫性 (referential
+integrity)、 Unicode (UTF-8 エンコーディング) をサポートしていることを想定
+して書かれています。好運なことに、 <a class="reference external" href="http://www.mysql.com/">MySQL</a> バージョン 3.23 以降でこれらの機
+能全てをサポートしています。従って、 3.23 や 4.0 をバックエンドとして使うの
+は可能なのですが、 4.1 や 5.0 を使った方がトラブルに巻き込まれにくいでしょ
+う。</p>
+<div class="section" id="s-mysql-4-1">
+<h3>MySQL 4.1<a class="headerlink" href="#mysql-4-1" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://dev.mysql.com/doc/refman/4.1/en/index.html">MySQL 4.1</a> では、文字セットのサポートを大幅に改良しています。 4.1 では、
+データベース全体から、テーブル毎、カラム毎にいたるまで個別にデフォルトの文
+字セットを指定できます。以前のバージョンでは、サーバ全体に対する文字セット
+の設定しかできませんでした。また、 4.1 になってはじめてオンザフライで文字セッ
+トを変更できるようになりました。 4.1 にはビューのサポートもありますが、
+Django はまだこの機能をサポートしていません。</p>
+</div>
+<div class="section" id="s-mysql-5-0">
+<h3>MySQL 5.0<a class="headerlink" href="#mysql-5-0" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/index.html">MySQL 5.0</a> では、全てのデータベーススキーマに関する詳細なデータの入った
+<tt class="docutils literal"><span class="pre">information_schema</span></tt> というデータベースが追加されました。
+<tt class="docutils literal"><span class="pre">information_schema</span></tt> が存在すると、 Django はこのデータベースに対して
+<tt class="docutils literal"><span class="pre">inspectdb</span></tt> 機能を適用します。 5.0 ではまた、ストアドプロシジャのサポート
+も追加されましたが、 Django はまだこの機能をサポートしていません。</p>
+</div>
+<div class="section" id="s-id6">
+<span id="s-storage-engines"></span><h3>ストレージエンジン<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>MySQL は複数の
+<a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/storage-engines.html">ストレージエンジン</a>
+(以前はテーブルタイプ: table type と呼ばれていたもの) を選択できます。
+デフォルトのストレージエンジンはサーバ設定で変更できます。</p>
+<p>デフォルトのストレージエンジンは <a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/myisam-storage-engine.html">MyISAM</a> です。 MyISAM の短所は、現状ではト
+ランザクションや外部キーをサポートしていないという点です。一方、 MyISAM は、
+現状で、全文インデクスの生成や全文検索をサポートしている唯一のストレージエ
+ンジンです。</p>
+<p><a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/innodb.html">InnoDB</a> エンジンは完全なトランザクション機能と外部キー参照をサポートしてい
+ます。</p>
+<p><a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/bdb-storage-engine.html">BDB</a> エンジンは InnoDB と同様、完全なトランザクション機能を外部キー参照をサ
+ポートしていますが、やや時代送れになりつつあるようです。</p>
+<p><a class="reference external" href="http://forge.mysql.com/projects/project.php?id=139">SolidDB</a> や <a class="reference external" href="http://dev.mysql.com/doc/falcon/en/index.html">Falcon</a> といった <a class="reference external" href="http://dev.mysql.com/doc/refman/5.1/en/storage-engines-other.html">その他のストレージエンジン</a>
+まだまだ圏外の話です。現状では、おそらく InnoDB が最良の選択でしょう。</p>
+</div>
+<div class="section" id="s-mysqldb">
+<h3>MySQLdb<a class="headerlink" href="#mysqldb" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://sourceforge.net/projects/mysql-python">MySQLdb</a> は Python から MySQL にアクセスするためのインタフェースです。
+Django から利用できる MySQL の全ての機能を使うには、 バージョン 1.2.1p2 以
+降が必要です。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">MySQLdb を Django から使おうとして
+<tt class="docutils literal"><span class="pre">ImportError:</span> <span class="pre">cannot</span> <span class="pre">import</span> <span class="pre">name</span> <span class="pre">ImmutableSet</span></tt> が出る場合は、おそらく
+MySQLdb に古い <tt class="docutils literal"><span class="pre">sets.py</span></tt> ファイルが入っていて、 Python 2.4 の同名の組
+み込みモジュールと衝突しています。この問題を回避するには、 1.2.1p2 以降
+の MySQLdb をインストールしてください。上書きインストールした場合には、
+MySQLdb のインストールディレクトリを調べ、以前のバージョンの
+<tt class="docutils literal"><span class="pre">sets.py</span></tt> が入っていれば除去してください。</p>
+</div>
+</div>
+<div class="section" id="s-id11">
+<span id="s-creating-your-database"></span><h3>データベースを作成する<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>コマンドラインツールを使って、以下の SQL を発行すれば
+<a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/create-database.html">データベースを作成</a> できます:</p>
+<pre>CREATE DATABASE &lt;dbname&gt; CHARACTER SET utf8;</pre>
+<p>これで、全てのテーブルとカラムがデフォルトで UTF-8 を使うようになります。</p>
+<div class="section" id="s-id13">
+<span id="s-mysql-collation"></span><h4>コレーションに関する設定<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<p>カラムのコレーション設定は、データの保存方法や、文字列の等価性の定義を制御
+しています。コレーションはデータベース全体でも、テーブル単位でも、カラム単
+位でも設定できます。コレーションの詳細は MySQL のドキュメントで
+<a class="reference external" href="documentedthoroughly">詳しく解説されています</a> 。いずれの場合でも、コレー
+ションの設定は直接データベーステーブルに対して行ってください。 Django はモ
+デル定義でコレーションを設定する方法を提供していません。</p>
+<p>デフォルトの構成では、 MySQL は UTF-8 のデータベースに対して
+<tt class="docutils literal"><span class="pre">utf8_general_ci_swedish</span></tt> コレーションを使います。この設定では、全ての文
+字列の等値比較が <em>大小文字を区別</em> せず行われます。つまり、 <tt class="docutils literal"><span class="pre">&quot;Fred&quot;</span></tt> と
+<tt class="docutils literal"><span class="pre">&quot;freD&quot;</span></tt> はデータベースレベルでは同じ値だとみなされるのです。そのため、デ
+フォルトのコレーションを使っていると、フィールドに <tt class="docutils literal"><span class="pre">unique</span></tt> 制約をかけた
+ときに、 <tt class="docutils literal"><span class="pre">&quot;aa&quot;</span></tt> と <tt class="docutils literal"><span class="pre">&quot;AA&quot;</span></tt> は等しいとみなされ (一意性が破れるので) 同じ
+カラムに入れられなくなります。</p>
+<p>大抵のケースでは、デフォルトの設定はさして問題を起こしません。しかし、特定
+のカラムやテーブルで大小文字を区別させたいなら、そのカラムやテーブルに
+<tt class="docutils literal"><span class="pre">utf8_bin</span></tt> コレーションを指定せねばなりません。その場合、注意すべきなのは、
+MySQLdb 1.2.2 を使っていると、 Django のデータベースバックエンドが、データ
+ベースから取り出した文字列フィールドの値として (unicode 文字列ではなく)
+bytestring を返すということです。このふるまいは、 <em>常に</em> unicode を返す、と
+いう Django の通常のやりかたから大きくかけ離れています。コレーションを
+<tt class="docutils literal"><span class="pre">utf8_bin</span></tt> にして、 bytestring を受け取ったときの扱いは、開発者に委ねられ
+ています。 Django 自体はこのカラムを問題なく扱えますが、一貫性をもってデー
+タを処理したければ、 <tt class="docutils literal"><span class="pre">django.utils.encoding.smart_unicode()</span></tt> を何度も
+呼び出すことになるでしょう。(データベースバックエンドレイヤとモデルの操作レ
+イヤは内部的に分離しているため、変換が必要かどうかをデータベースレイヤでは
+判断できないので) Django はこの変換に関知しないのです。</p>
+<p>MySQLdb 1.2.1p2 を使っているなら、コレーションを <tt class="docutils literal"><span class="pre">utf8_bin</span></tt> にしても、
+<a title="django.db.models.CharField" class="reference external" href="models/fields.html#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> は unicode 文字列を返します。しかし、
+今度は <a title="django.db.models.TextField" class="reference external" href="models/fields.html#django.db.models.TextField"><tt class="xref docutils literal"><span class="pre">TextField</span></tt></a> が (Python 標準モジュール
+<tt class="docutils literal"><span class="pre">array</span></tt> の) <tt class="docutils literal"><span class="pre">array.array</span></tt> を返します。データをデータベースから読み出す
+ときに、変換に必要な情報が手にはいらないので、 Django 側ではどうしようもあ
+りません。
+この問題は <a class="reference external" href="fixedinMySQLdb1.2.2">MySQLdb 1.2.2 で解決済み</a> なので、
+<tt class="docutils literal"><span class="pre">itf8_bin</span></tt> コレーションで <a title="django.db.models.TextField" class="reference external" href="models/fields.html#django.db.models.TextField"><tt class="xref docutils literal"><span class="pre">TextField</span></tt></a> を使いたけ
+れば、バージョンを 1.2.2 に上げて、バイト文字列として扱うよう勧めます (それ
+ほど難しくはありません)。</p>
+<p>MySQLdb 1.2.1p2 で <tt class="docutils literal"><span class="pre">utf8_bin</span></tt> コレーションの設定されたテーブルを使うのな
+ら、 <tt class="xref docutils literal"><span class="pre">django.contrib.sessions.models.Session</span></tt> のテーブル
+(通常は <tt class="docutils literal"><span class="pre">django_session</span></tt>) や、
+<tt class="xref docutils literal"><span class="pre">django.contrib.admin.models.LogEntry</span></tt> のテーブル
+(通常は <tt class="docutils literal"><span class="pre">django_admin_log</span></tt>) のコレーションに
+<tt class="docutils literal"><span class="pre">utf8_collation_ci_swedish</span></tt> (デフォルトのコレーション) を使わねばなりませ
+ん。これらは標準の Django のテーブルのうち、内部的に
+<tt class="xref docutils literal"><span class="pre">TextField</span></tt> を使っているものだからです。</p>
+</div>
+</div>
+<div class="section" id="s-id15">
+<span id="s-connecting-to-the-database"></span><h3>データベースに接続する<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="settings.html#ref-settings"><em>設定に関するドキュメント</em></a> を参照してください。</p>
+<p>接続に関する設定は、以下の順に適用されます:</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="settings.html#setting-DATABASE_OPTIONS"><tt class="xref docutils literal"><span class="pre">DATABASE_OPTIONS</span></tt></a></li>
+<li><a class="reference external" href="settings.html#setting-DATABASE_NAME"><tt class="xref docutils literal"><span class="pre">DATABASE_NAME</span></tt></a>, <a class="reference external" href="settings.html#setting-DATABASE_USER"><tt class="xref docutils literal"><span class="pre">DATABASE_USER</span></tt></a>,
+<a class="reference external" href="settings.html#setting-DATABASE_PASSWORD"><tt class="xref docutils literal"><span class="pre">DATABASE_PASSWORD</span></tt></a>, <a class="reference external" href="settings.html#setting-DATABASE_HOST"><tt class="xref docutils literal"><span class="pre">DATABASE_HOST</span></tt></a>,
+<a class="reference external" href="settings.html#setting-DATABASE_PORT"><tt class="xref docutils literal"><span class="pre">DATABASE_PORT</span></tt></a></li>
+<li>MySQL のオプション設定ファイル</li>
+</ol>
+<p>別の言い方をするなら、 <a class="reference external" href="settings.html#setting-DATABASE_OPTIONS"><tt class="xref docutils literal"><span class="pre">DATABASE_OPTIONS</span></tt></a> 内にデータベースの名前を
+設定すると、その内容は <a class="reference external" href="settings.html#setting-DATABASE_NAME"><tt class="xref docutils literal"><span class="pre">DATABASE_NAME</span></tt></a> よりも優先順位が高くなり、
+さらに <a class="reference external" href="settings.html#setting-DATABASE_NAME"><tt class="xref docutils literal"><span class="pre">DATABASE_NAME</span></tt></a> は <a class="reference external" href="http://dev.mysql.com/doc/refman/5.0/en/option-files.html">MySQL のオプション設定ファイル</a> の内容
+をオーバライドするということです。</p>
+<p>MySQL のオプション設定ファイルを使う例を以下に示します:</p>
+<div class="highlight"><pre><span class="c"># settings.py</span>
+<span class="n">DATABASE_ENGINE</span> <span class="o">=</span> <span class="s">&quot;mysql&quot;</span>
+<span class="n">DATABASE_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;read_default_file&#39;</span><span class="p">:</span> <span class="s">&#39;/path/to/my.cnf&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="c"># my.cnf</span>
+<span class="p">[</span><span class="n">client</span><span class="p">]</span>
+<span class="n">database</span> <span class="o">=</span> <span class="n">DATABASE_NAME</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">DATABASE_USER</span>
+<span class="n">password</span> <span class="o">=</span> <span class="n">DATABASE_PASSWORD</span>
+<span class="n">default</span><span class="o">-</span><span class="n">character</span><span class="o">-</span><span class="nb">set</span> <span class="o">=</span> <span class="n">utf8</span>
+</pre></div>
+<p>この他にも、MySQLdb の接続オプションには、 <tt class="docutils literal"><span class="pre">ssl</span></tt>, <tt class="docutils literal"><span class="pre">use_unicode</span></tt>,
+<tt class="docutils literal"><span class="pre">init_command</span></tt>, <tt class="docutils literal"><span class="pre">sql_mode</span></tt> といった便利なものがあります。詳しくは
+<a class="reference external" href="http://mysql-python.sourceforge.net/">MySQLdb のドキュメント</a> を参照してください。</p>
+</div>
+<div class="section" id="s-id18">
+<span id="s-creating-your-tables"></span><h3>テーブルを作成する<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>Django はスキーマを作成する際にストレージエンジンを指定しません。そのため、
+テーブルは常にサーバに設定されたデフォルトのストレージエンジンで作成されま
+す。作成されるテーブルを特定のタイプにしたければ、データベースサーバのデフォ
+ルトストレージエンジンを Django で使いたいストレージエンジンに合わせるのが
+一番簡単です。</p>
+<p>ホスティングサービスを使っていて、サーバのデフォルトのストレージエンジンを
+変更できない場合、二つの選択肢があります。</p>
+<ul>
+<li><p class="first">テーブルが作成された後に、以下のようなクエリを発行して、ストレージ
+エンジンを (InnoDB) などに変更します:</p>
+<pre>ALTER TABLE &lt;tablename&gt; ENGINE=INNODB;</pre>
+<p>テーブルが沢山ある場合には、これは相当骨がおれることでしょう。</p>
+</li>
+<li><p class="first">あるいは、テーブルを作成する前に、 MySQLdb の <tt class="docutils literal"><span class="pre">init_command</span></tt> オプショ
+ンを使います:</p>
+<pre>DATABASE_OPTIONS = {
+  ...
+  "init_command": "SET storage_engine=INNODB",
+  ...
+  }</pre>
+<p>このように設定しておくと、接続時にデフォルトのストレージエンジンが変更
+されます。ただし、テーブルが全て作成され、運用環境で動き始めたら、この
+オプションを外しておかねばなりません。</p>
+</li>
+<li><p class="first">syncdb 時にストレージエンジンを変更するもう一つの方法は、 Wiki の
+<a class="reference external" href="http://code.djangoproject.com/wiki/AlterModelOnSyncDB">AlterModelOnSyncDB</a> に記載されています。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="s-booleanfield">
+<h3><tt class="docutils literal"><span class="pre">BooleanField</span></tt> に関する注意<a class="headerlink" href="#booleanfield" title="Permalink to this headline">¶</a></h3>
+<p>MySQL には直接的な <tt class="docutils literal"><span class="pre">BOOLEAN</span></tt> カラム型がないので、 Django は
+<a title="django.db.models.BooleanField" class="reference external" href="models/fields.html#django.db.models.BooleanField"><tt class="xref docutils literal"><span class="pre">BooleanField</span></tt></a> の値を <tt class="docutils literal"><span class="pre">TINYINT</span></tt> カラムを使って 0
+または 1 で保存します。詳しくはモデルフィールドのドキュメントを参照してくだ
+さい。ただし、フィールドの値を出力したり、値が <tt class="xref docutils literal"><span class="pre">True</span></tt> や <tt class="xref docutils literal"><span class="pre">False</span></tt> でなけ
+ればならないような場合を除いて、特に問題はありません。</p>
+</div>
+</div>
+<div class="section" id="s-sqlite">
+<span id="s-sqlite-notes"></span><h2>SQLite に関する注意<a class="headerlink" href="#sqlite" title="Permalink to this headline">¶</a></h2>
+<p>バージョン 3.3.5 以前の SQLite には、 <tt class="docutils literal"><span class="pre">ORDER_BY</span></tt> パラメタの扱いかたに
+<a class="reference external" href="containabug">バグがあります</a> 。そのため、クエリセットメソッド
+<tt class="docutils literal"><span class="pre">extra()</span></tt> を使って <tt class="docutils literal"><span class="pre">select</span></tt> のパラメタを指定しようとすると問題を引き起
+こします。このバグは、
+<tt class="docutils literal"><span class="pre">OperationalError:</span> <span class="pre">ORDER</span> <span class="pre">BY</span> <span class="pre">terms</span> <span class="pre">must</span> <span class="pre">not</span> <span class="pre">be</span> <span class="pre">non-integer</span> <span class="pre">constants</span></tt> とい
+うメッセージを出力します。 SQLite のバージョンを 3.3.6 に上げ、
+<tt class="docutils literal"><span class="pre">pysqlite2</span></tt> モジュールを更新すれば、問題を解決できます。</p>
+<p>バージョン 3.3.6 は 2006 年の 4 月にリリースされており、現在手に入る各プラッ
+トフォームのほとんどのバイナリ配布物で、Python から <tt class="docutils literal"><span class="pre">pysqlite2</span></tt> や
+<tt class="docutils literal"><span class="pre">sqlite3</span></tt> を介して使える SQLite は新しいバージョンなので、あまり大きなイ
+ンパクトはありません。</p>
+<p>ただし、 Windows の場合、 Python 2.5 の公式の安定版リリースのバイナリ配布物
+には (今のところ 2.5.2 も)、 SQLite 3.3.4 が組み込まれているため、バグが確
+認されています。このため (Django 1.0 で) 3 つのテストスイートが失敗します。
+この問題は、上で述べたように、 新しいバージョン SQLite が組み込まれた
+<tt class="docutils literal"><span class="pre">pysqlite2</span></tt> (<tt class="docutils literal"><span class="pre">pysqlite-2.x.x.win32-py2.5.exe</span></tt>) をダウンロードしてインス
+トールすれば解決できます。 Python 2.6 には新たなバージョンの SQLite が付属
+する予定なので、この問題の影響を受けないはずです。</p>
+<p>上記のプラットフォームを使っていて、 <tt class="docutils literal"><span class="pre">pysqlite</span></tt> や SQLite を更新する必要
+があるなら、Django のソースツリーの <tt class="docutils literal"><span class="pre">django/db/backends/sqlite3/base.py</span></tt>
+ファイルを手で編集して、 <tt class="docutils literal"><span class="pre">sqlite3</span></tt> より <tt class="docutils literal"><span class="pre">pysqlite2</span></tt> が先に import され
+るように変更してください。</p>
+</div>
+<div class="section" id="s-oracle">
+<span id="s-id20"></span><span id="s-oracle-notes"></span><h2>Oracle に関する注意<a class="headerlink" href="#oracle" title="Permalink to this headline">¶</a></h2>
+<p>Django はバージョン 9i 以降の <a class="reference external" href="http://www.oracle.com/">Oracle データベースサーバ</a> をサポートしてい
+ます。 Django の <tt class="docutils literal"><span class="pre">regex</span></tt> および <tt class="docutils literal"><span class="pre">iregex</span></tt> クエリオペレータを使うには、
+バージョン 10g 以降の Oracle を使う必要があります。
+バージョン 4.3.1 以降の <a class="reference external" href="http://cx-oracle.sourceforge.net/">cx_Oracle</a> ドライバが必要です。</p>
+<p>Oracle で <tt class="docutils literal"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">syncdb</span></tt> コマンドを動かすには、データベースユー
+ザに以下のコマンドを実行できる権限が必要です:</p>
+<ul class="simple">
+<li>CREATE TABLE</li>
+<li>CREATE SEQUENCE</li>
+<li>CREATE PROCEDURE</li>
+<li>CREATE TRIGGER</li>
+</ul>
+<p>Django のテストスイートを実行させるには、 <em>さらに</em> 以下の権限が必要です:</p>
+<ul class="simple">
+<li>CREATE USER</li>
+<li>DROP USER</li>
+<li>CREATE TABLESPACE</li>
+<li>DROP TABLESPACE</li>
+</ul>
+<div class="section" id="s-id22">
+<span id="s-connecting-to-the-oracle-database"></span><h3>データベースへの接続<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<p>Oracle を使う場合、 Django の settings.py は以下のように設定します:</p>
+<div class="highlight"><pre><span class="n">DATABASE_ENGINE</span> <span class="o">=</span> <span class="s">&#39;oracle&#39;</span>
+<span class="n">DATABASE_NAME</span> <span class="o">=</span> <span class="s">&#39;xe&#39;</span>
+<span class="n">DATABASE_USER</span> <span class="o">=</span> <span class="s">&#39;a_user&#39;</span>
+<span class="n">DATABASE_PASSWORD</span> <span class="o">=</span> <span class="s">&#39;a_password&#39;</span>
+<span class="n">DATABASE_HOST</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+<span class="n">DATABASE_PORT</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">tnsnames.ora</span></tt> ファイルや、 SID として扱われる名前 (上の例では &quot;xe&quot;)
+を使わない場合は、以下のように <a class="reference external" href="settings.html#setting-DATABASE_HOST"><tt class="xref docutils literal"><span class="pre">DATABASE_HOST</span></tt></a> および
+<a class="reference external" href="settings.html#setting-DATABASE_PORT"><tt class="xref docutils literal"><span class="pre">DATABASE_PORT</span></tt></a> を設定してください:</p>
+<div class="highlight"><pre><span class="n">DATABASE_ENGINE</span> <span class="o">=</span> <span class="s">&#39;oracle&#39;</span>
+<span class="n">DATABASE_NAME</span> <span class="o">=</span> <span class="s">&#39;xe&#39;</span>
+<span class="n">DATABASE_USER</span> <span class="o">=</span> <span class="s">&#39;a_user&#39;</span>
+<span class="n">DATABASE_PASSWORD</span> <span class="o">=</span> <span class="s">&#39;a_password&#39;</span>
+<span class="n">DATABASE_HOST</span> <span class="o">=</span> <span class="s">&#39;dbprod01ned.mycompany.com&#39;</span>
+<span class="n">DATABASE_PORT</span> <span class="o">=</span> <span class="s">&#39;1540&#39;</span>
+</pre></div>
+<p><a class="reference external" href="settings.html#setting-DATABASE_HOST"><tt class="xref docutils literal"><span class="pre">DATABASE_HOST</span></tt></a> と <a class="reference external" href="settings.html#setting-DATABASE_PORT"><tt class="xref docutils literal"><span class="pre">DATABASE_PORT</span></tt></a> は、両方とも指定するか、
+両方とも空にするかどちらかにしてください。</p>
+</div>
+<div class="section" id="s-id23">
+<span id="s-tablespace-options"></span><h3>テーブルスペース<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<p>Oracle ベースのシステムでパフォーマンス向上に使われているパラダイムとして、
+「 <a class="reference external" href="http://en.wikipedia.org/wiki/Tablespace">テーブルスペース</a> (tablespace)」によるディスクレイアウトの構築がありま
+す。 <tt class="docutils literal"><span class="pre">db_tablespace</span></tt> オプションを <tt class="docutils literal"><span class="pre">Meta</span></tt> と <tt class="docutils literal"><span class="pre">Field</span></tt> クラスに追加する
+と、 Oracle バックエンドはテーブルスペースを利用します (バックエンドがテー
+ブルスペースをサポートしなければ、 Django はこのオプションを無視します)。</p>
+<p>モデルのテーブルにテーブルスペースを指定するには、モデルの内部クラス
+<tt class="docutils literal"><span class="pre">Meta</span></tt> に <tt class="docutils literal"><span class="pre">db_tablespace</span></tt> オプションを指定します。モデル全体とは別のテー
+ブルスペースをフィールドのカラムインデクスに指定したければ、フィールドのコ
+ンストラクタに <tt class="docutils literal"><span class="pre">db_tablespace</span></tt> を指定します。カラムごとにインデクスを生成
+しない場合には、 <tt class="docutils literal"><span class="pre">db_tablespace</span></tt> オプションは無視されます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">TablespaceExample</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">db_tablespace</span><span class="o">=</span><span class="s">&quot;indexes&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="s">&quot;self&quot;</span><span class="p">,</span> <span class="n">db_tablespace</span><span class="o">=</span><span class="s">&quot;indexes&quot;</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">db_tablespace</span> <span class="o">=</span> <span class="s">&quot;tables&quot;</span>
+</pre></div>
+<p>上の例では、 <tt class="docutils literal"><span class="pre">TablespaceExample</span></tt> モデルの生成するテーブル
+(モデルテーブルと多対多のリレーションのテーブル) は、 <tt class="docutils literal"><span class="pre">tables</span></tt> という名前
+のテーブルスペースに保存されます。 <tt class="docutils literal"><span class="pre">name</span></tt> フィールドと、多対多リレーショ
+ンテーブルのインデクスは <tt class="docutils literal"><span class="pre">indexes</span></tt> テーブルスペースに保存されます。
+<tt class="docutils literal"><span class="pre">data</span></tt> フィールドもインデクスを生成しますが、このインデクスのテーブルスペー
+スは指定されていないので、デフォルトの挙動としてテーブルスペース
+<tt class="docutils literal"><span class="pre">tables</span></tt> に保存されます。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p><tt class="docutils literal"><span class="pre">db_tablespace</span></tt> オプションのデフォルト値を指定するには、
+<a class="reference external" href="settings.html#setting-DEFAULT_TABLESPACE"><tt class="xref docutils literal"><span class="pre">DEFAULT_TABLESPACE</span></tt></a> および <a class="reference external" href="settings.html#setting-DEFAULT_INDEX_TABLESPACE"><tt class="xref docutils literal"><span class="pre">DEFAULT_INDEX_TABLESPACE</span></tt></a> 設
+定を使います。これらの設定は、組み込みの Django アプリケーションや、ソース
+コードをいじれないアプリケーションに対してテーブルスペースを指定する場合に
+便利です。</p>
+<p>Django 自体にはテーブルスペースを作成する機能はありません。
+テーブルスペースの作成や管理の方法は、 <a class="reference external" href="http://download.oracle.com/docs/cd/B19306_01/server.102/b14200/statements_7003.htm#SQLRF01403">Oracle のドキュメント</a> を参照して
+ください。</p>
+</div>
+<div class="section" id="s-id26">
+<span id="s-naming-issues"></span><h3>名前に関する制約<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<p>Oracle は名前の長さを 30 文字以下に制限しています。この制限に合わせるために、
+バックエンドは識別子名を切り詰めて、最後の 4 文字を MD5 のハッシュ値で置き
+換えます。</p>
+</div>
+<div class="section" id="s-null">
+<span id="s-null-and-empty-strings"></span><h3>NULL 値よび空文字列<a class="headerlink" href="#null" title="Permalink to this headline">¶</a></h3>
+<p>Django は通常、 NULL ではなく空文字列を使うようにしていますが、 Oracle はこ
+れらを別々のものとして扱います。この問題を回避するには、 Oracle バックエン
+ドは空文字列を値として受け入れるフィールドに <tt class="docutils literal"><span class="pre">null=Ture</span></tt> オプションを
+強制的に付加します。データベースから値を取り出すとき、フィールドの値が NULL
+であれば、そのフィールドの値は実際には空文字列であるとみなし、値も暗黙のう
+ちに空文字列に変換されます。</p>
+</div>
+<div class="section" id="s-textfield">
+<span id="s-textfield-limitations"></span><h3><tt class="docutils literal"><span class="pre">TextField</span></tt> への制限<a class="headerlink" href="#textfield" title="Permalink to this headline">¶</a></h3>
+<p>Oracle バックエンドは <tt class="docutils literal"><span class="pre">TextField</span></tt> を <tt class="docutils literal"><span class="pre">NCLOB</span></tt> カラム形式で保存します。
+Oracle は、一般に LOB カラムに以下の制約を課しています:</p>
+<ul class="simple">
+<li>LOB カラムは主キーにできません。</li>
+<li>LOB カラムはインデクス化に使えません。</li>
+<li>LOB カラムは <tt class="docutils literal"><span class="pre">SELECT</span> <span class="pre">DISTINCT</span></tt> できません。従って、Oralce バックエン
+ドを使っていて、  <tt class="docutils literal"><span class="pre">TextField</span></tt> カラムを含むモデルに対して
+<tt class="docutils literal"><span class="pre">QuerySet.distinct</span></tt> を行うとエラーを引き起こします。このエラーを避け
+るには、 <tt class="docutils literal"><span class="pre">distinct()</span></tt> クエリの対象モデルから <tt class="docutils literal"><span class="pre">TextField</span></tt> を除去し、
+<tt class="docutils literal"><span class="pre">TextField</span></tt> を持つ他のモデルを定義しておいてリレーションを張ってくだ
+さい。</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">データベースのサポート状況</a><ul>
+<li><a class="reference external" href="#mysql">MySQL に関する注意</a><ul>
+<li><a class="reference external" href="#mysql-4-1">MySQL 4.1</a></li>
+<li><a class="reference external" href="#mysql-5-0">MySQL 5.0</a></li>
+<li><a class="reference external" href="#id6">ストレージエンジン</a></li>
+<li><a class="reference external" href="#mysqldb">MySQLdb</a></li>
+<li><a class="reference external" href="#id11">データベースを作成する</a><ul>
+<li><a class="reference external" href="#id13">コレーションに関する設定</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id15">データベースに接続する</a></li>
+<li><a class="reference external" href="#id18">テーブルを作成する</a></li>
+<li><a class="reference external" href="#booleanfield"><tt class="docutils literal"><span class="pre">BooleanField</span></tt> に関する注意</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#sqlite">SQLite に関する注意</a></li>
+<li><a class="reference external" href="#oracle">Oracle に関する注意</a><ul>
+<li><a class="reference external" href="#id22">データベースへの接続</a></li>
+<li><a class="reference external" href="#id23">テーブルスペース</a></li>
+<li><a class="reference external" href="#id26">名前に関する制約</a></li>
+<li><a class="reference external" href="#null">NULL 値よび空文字列</a></li>
+<li><a class="reference external" href="#textfield"><tt class="docutils literal"><span class="pre">TextField</span></tt> への制限</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="contrib/webdesign.html">django.contrib.webdesign</a></li>
+    
+    
+      <li>次: <a href="django-admin.html">django-admin.py と manage.py</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">API リファレンス</a>
+        
+        <ul><li>データベースのサポート状況</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/databases.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="contrib/webdesign.html" title="django.contrib.webdesign">前へ</a> 
+     |
+    <a href="index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="django-admin.html" title="django-admin.py と manage.py">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

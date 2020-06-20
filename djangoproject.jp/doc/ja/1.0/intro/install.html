@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>インストールガイド &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="さあ始めましょう" href="index.html" />
+    <link rel="next" title="はじめての Django アプリ作成、その 1" href="tutorial01.html" />
+    <link rel="prev" title="Django の概要" href="overview.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="overview.html" title="Django の概要">前へ</a> 
+     |
+    <a href="index.html" title="さあ始めましょう" accesskey="U">上へ</a>
+   |
+    <a href="tutorial01.html" title="はじめての Django アプリ作成、その 1">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="intro-install">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-intro-install"></span><h1>インストールガイド<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0pre SVN)</td>
+</tr>
+</tbody>
+</table>
+<p>Django を動かすには、まずインストールせねばなりません。ここでは、 Django を
+学んでみるにあたって必要な、簡単で最小限のインストール方法を示します。
+色々なインストール方法をカバーしている
+<a class="reference external" href="../topics/install.html#topics-install"><em>詳細なインストールガイド</em></a> も用意してあります。</p>
+<div class="section" id="s-python">
+<span id="s-install-python"></span><h2>Python のインストール<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>Django は Python の Web フレームワークなので Python が必要です。 Django は
+バージョン 2.3 以上の Python で動作しますが、 2.5 以降がお勧めです。という
+のも、 Python 2.5 からは、 <a class="reference external" href="http://sqlite.org/">SQLite</a> という軽量なデータベースが付属するからで
+す。</p>
+<p><a class="reference external" href="http://www.python.org">http://www.python.org</a> から Python を取ってきましょう。 Linux や Mac OSX を
+動かしているのなら、おそらくインストール済みのはずです。</p>
+<div class="admonition-jython-django admonition">
+<p class="first admonition-title">Jython で Django を動かす</p>
+<p class="last"><a class="reference external" href="http://jython.org/">Jython</a> (Java プラットフォームで動く Python 実装) を使っているなら、他
+にもいくつかステップを踏む必要があります。詳しくは <a class="reference external" href="../howto/jython.html#howto-jython"><em>Jython 上で Django を動かす</em></a>
+を参照してください。</p>
+</div>
+<p>インストールされている Python のバージョンを調べるには、シェル上で
+<tt class="docutils literal"><span class="pre">python</span></tt> と入力します。出力は以下のようになるでしょう:</p>
+<pre>Python 2.5.1 (r251:54863, Jan 17 2008, 19:35:17)
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt;</pre>
+</div>
+<div class="section" id="s-id2">
+<span id="s-set-up-a-database"></span><h2>データベースをセットアップする<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>バージョン 2.5 以降の Python をインストールしていれば、この節は読み飛ばして
+もかまいません。</p>
+<p>バージョン 2.5 よりも前の Python を使っているか、 PostgreSQL や MySQL,
+Oracle といった、SQLite 以外の「大掛かりな」データベースエンジンを扱いたけ
+れば、 <a class="reference external" href="../topics/install.html#database-installation"><em>データベースのインストールに関する情報</em></a>
+を参照してください。</p>
+</div>
+<div class="section" id="s-django">
+<span id="s-remove-any-old-versions-of-django"></span><h2>旧バージョンの Django の除去<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h2>
+<p>以前のバージョンからアップグレードする形で Django をインストールする場合、
+<a class="reference external" href="../topics/install.html#removing-old-versions-of-django"><em>新しいバージョンをインストールする前に、まず旧バージョンをアンインス
+トールしておく</em></a> 必要があります。</p>
+</div>
+<div class="section" id="s-id3">
+<span id="s-install-django"></span><h2>Django のインストール<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>3 通りの簡単な方法で、Django をインストールできます:</p>
+<ul class="simple">
+<li><a class="reference external" href="../misc/distributions.html#misc-distributions"><em>オペレーティングシステムの提供している</em></a>
+バージョンの Django をインストールする場合。お使いのオペレーティング
+システム向けに Django が配布されている場合はもっとも簡単な選択肢です。</li>
+<li><a class="reference external" href="../topics/install.html#installing-official-release"><em>公式リリース版のインストール</em></a> 。
+安定したバージョンの Django を使いたくて、少々古いものでも構わない場
+合にはベストのアプローチです。</li>
+<li><a class="reference external" href="../topics/install.html#installing-development-version"><em>最新の開発版のインストール</em></a>
+最新の素晴らしい機能を使ってみたい、書き立てのコードを実行することに
+抵抗のない人のための選択肢です。</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">上に挙げた選択肢のうち、最初の二つを選んだ場合は、ドキュメントを読む際
+に「 <strong>開発版で登場した機能です</strong> 」とマークされた部分に気をつけてくだ
+さい。この文は、開発版の Django でのみ利用可能な機能をマークしています。
+そうした機能を公式リリースなどで使おうとしても、動かないでしょう。</p>
+</div>
+</div>
+<div class="section" id="s-id4">
+<h2>以上です!<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>これだけです。さあ、 <a class="reference external" href="tutorial01.html#intro-tutorial01"><em>チュートリアルをやってみましょう</em></a>.</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">インストールガイド</a><ul>
+<li><a class="reference external" href="#python">Python のインストール</a></li>
+<li><a class="reference external" href="#id2">データベースをセットアップする</a></li>
+<li><a class="reference external" href="#django">旧バージョンの Django の除去</a></li>
+<li><a class="reference external" href="#id3">Django のインストール</a></li>
+<li><a class="reference external" href="#id4">以上です!</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="overview.html">Django の概要</a></li>
+    
+    
+      <li>次: <a href="tutorial01.html">はじめての Django アプリ作成、その 1</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">さあ始めましょう</a>
+        
+        <ul><li>インストールガイド</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/intro/install.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="overview.html" title="Django の概要">前へ</a> 
+     |
+    <a href="index.html" title="さあ始めましょう" accesskey="U">上へ</a>
+   |
+    <a href="tutorial01.html" title="はじめての Django アプリ作成、その 1">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
