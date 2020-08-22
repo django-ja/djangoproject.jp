@@ -1,4 +1,4 @@
 djangoproject.jp
 ================
 
-Source code of http://djangoproject.jp/
+Source code of https://djangoproject.jp/

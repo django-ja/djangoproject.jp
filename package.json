@@ -1,7 +1,7 @@
 {
   "name": "djangoproject.jp",
-  "version": "0.0.2",
-  "description": "Source code of http://djangoproject.jp/",
+  "version": "0.0.3",
+  "description": "Source code of https://djangoproject.jp/",
   "scripts": {
     "build": "npm run -s install-miyadaiku && npm run -s escape-jinja2 && npm run -s prepare-contents && npm run -s prepare-templates && miyadaiku-build work && npm run -s setup-artifacts",
     "escape-jinja2": "sed -i -e '1i {% raw %}' -e '$a {% endraw %}' $(find . -path './djangoproject.jp/doc' -prune -o -type f -name '*.html*' -print)",
