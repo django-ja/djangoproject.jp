@@ -41,40 +41,7 @@
 </div>
 <div class="navbar-collapse collapse">
        
-<ul class="nav navbar-nav"><li id="dropdown-menu-home"><a href="/">Home</a></li><li class="dropdown
-               active"
-        id="about"><a href="/about/"
-        
-        class="dropdown-toggle disabled" data-toggle="dropdown"
-        >
-            About
-            <b class="caret"></b></a><ul class="dropdown-menu"><li class="
-               "
-        id="whouses"><a href="/whouses/">利用実績</a></li></ul></li><li class="dropdown
-               "
-        id="https:--docs.djangoproject.com-ja-"><a href="https://docs.djangoproject.com/ja/"
-        
-        class="dropdown-toggle disabled" data-toggle="dropdown"
-        >
-            documentation
-            <b class="caret"></b></a><ul class="dropdown-menu"><li class="" id="https:--docs.djangoproject.com-ja"><a href="https://docs.djangoproject.com/ja/">日本語ドキュメント</a></li><li class="
-               "
-        id="translate"><a href="/translate/">翻訳への参加方法</a></li></ul></li><li class="dropdown
-               "
-        id="community"><a href="/community/"
-        
-        class="dropdown-toggle disabled" data-toggle="dropdown"
-        >
-            Community
-            <b class="caret"></b></a><ul class="dropdown-menu"><li class="
-               "
-        id="events"><a href="/events/">Events</a></li></ul></li><li class="
-               "
-        id="-weblog-"><a href="/weblog/"
-        >
-            Blog
-            
-        </a></li></ul>
+{% include 'menus_dropdown.html' %}
 
 </div>
 </div>
@@ -95,8 +62,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 <ul class="breadcrumb">
-<li id="breadcrumb-menu-home"><a href="/">Home</a></li><li id="breadcrumb-menu-about"
-        class="active">About</li>
+{% include 'menus_breadcrumb.html' %}
 </ul>
 </div>
 </div>
