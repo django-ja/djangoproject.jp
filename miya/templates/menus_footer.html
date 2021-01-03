@@ -1,0 +1,36 @@
+{% from 'data.html' import page_master, page_hierarchy_in_menus -%}
+
+{#
+  フッターのメニュー項目。 children がメニュー2階層目。
+-#}
+{% set footer_items = [
+  {'html_id': 'about', 'children': ['whouses']},
+  {'html_id': 'https:--docs.djangoproject.com-ja-', 'children': ['translate']},
+  {'html_id': 'community', 'children': ['events']},
+  {'html_id': '-weblog-', 'children': []},
+] -%}
+
+
+<div class="nav-footer">
+  {% set menu_item_list_for_page = page_hierarchy_in_menus[page.page_type] -%}
+  {% for layer_1 in footer_items -%}
+  {% set layer_1__url, layer_1__menu_title = page_master[layer_1.html_id] -%}
+  <ul class="list-unstyled">
+    <li
+      class="{{ 'active' if layer_1.html_id in menu_item_list_for_page else '' }}"
+      id="footer-menu-{{ layer_1.html_id }}"
+    >
+      <a href="{{ layer_1__url }}">{{ layer_1__menu_title }}</a>
+    </li>
+    {% for layer_2__html_id in layer_1.children -%}
+    {% set layer_2__url, layer_2__menu_title = page_master[layer_2__html_id] -%}
+    <li
+      class="{{ 'active' if layer_2__html_id in menu_item_list_for_page else '' }}"
+      id="footer-menu-{{ layer_2__html_id }}"
+    >
+      <a href="{{ layer_2__url }}">{{ layer_2__menu_title }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</div>
