@@ -30,32 +30,32 @@
            {{ 'active' if layer_1.html_id in menu_item_list_for_page else '' }}"
     id="{{ layer_1.html_id }}"
   >
-    {% set layer_1__url, layer_1__menu_title = page_master[layer_1.html_id] -%}
+    {% set layer_1_master = page_master[layer_1.html_id] -%}
     {% if len(layer_1.children) > 0 -%}
     <a
-      href="{{ layer_1__url }}"
+      href="{{ layer_1_master.url }}"
       class="dropdown-toggle disabled"
       data-toggle="dropdown"
     >
-      {{ layer_1__menu_title }}
+      {{ layer_1_master.menu_title }}
       <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
-      {% for layer_2__html_id in layer_1.children -%}
-      {% set layer_2__url, layer_2__menu_title = page_master[layer_2__html_id] -%}
+      {% for layer_2_html_id in layer_1.children -%}
+      {% set layer_2_master = page_master[layer_2_html_id] -%}
       <li
-        class="{{ 'active' if layer_2__html_id in menu_item_list_for_page else '' }}"
-        id="{{ layer_2__html_id }}"
+        class="{{ 'active' if layer_2_html_id in menu_item_list_for_page else '' }}"
+        id="{{ layer_2_html_id }}"
       >
-        <a href="{{ layer_2__url }}">{{ layer_2__menu_title }}</a>
+        <a href="{{ layer_2_master.url }}">{{ layer_2_master.menu_title }}</a>
       </li>
       {% endfor %}
     </ul>
     {% else -%}
     <a
-      href="{{ layer_1__url }}"
+      href="{{ layer_1_master.url }}"
     >
-      {{ layer_1__menu_title }}
+      {{ layer_1_master.menu_title }}
     </a>
     {% endif %}
   </li>

@@ -5,14 +5,14 @@
 </li>
 
 {% for html_id in page_hierarchy_in_menus[page.page_type] -%}
-{% set url, menu_title = page_master[html_id] -%}
+{% set master = page_master[html_id] -%}
 {% if page.page_type == html_id -%}
 <li id="breadcrumb-menu-{{ html_id }}" class="active">
-  {{ menu_title }}
+  {{ master.menu_title }}
 </li>
 {% else -%}
 <li id="breadcrumb-menu-{{ html_id }}">
-  <a href="{{ url }}">{{ menu_title }}</a>
+  <a href="{{ master.url }}">{{ master.menu_title }}</a>
 </li>
 {% endif %}
 {% endfor %}
