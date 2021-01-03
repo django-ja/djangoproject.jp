@@ -4,9 +4,9 @@
   <a href="/">Home</a>
 </li>
 
-{% for html_id in page_hierarchy_in_menus[page.page_type] -%}
+{% for html_id in page_hierarchy_in_menus[page.html_id] -%}
 {% set master = page_master[html_id] -%}
-{% if page.page_type == html_id -%}
+{% if page.html_id == html_id -%}
 <li id="breadcrumb-menu-{{ html_id }}" class="active">
   {{ master.menu_title }}
 </li>

@@ -17,13 +17,13 @@
 
 <ul class="nav navbar-nav">
   <li
-    class="{{ 'active' if page.page_type == 'home' else '' }}"
+    class="{{ 'active' if page.html_id == 'home' else '' }}"
     id="dropdown-menu-home"
   >
     <a href="/">Home</a>
   </li>
 
-  {% set menu_item_list_for_page = page_hierarchy_in_menus[page.page_type] -%}
+  {% set menu_item_list_for_page = page_hierarchy_in_menus[page.html_id] -%}
   {% for layer_1 in dropdown_items -%}
   <li
     class="{{ 'dropdown' if len(layer_1.children) > 0 else '' }}

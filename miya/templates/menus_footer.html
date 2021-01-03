@@ -12,7 +12,7 @@
 
 
 <div class="nav-footer">
-  {% set menu_item_list_for_page = page_hierarchy_in_menus[page.page_type] -%}
+  {% set menu_item_list_for_page = page_hierarchy_in_menus[page.html_id] -%}
   {% for layer_1 in footer_items -%}
   {% set layer_1_master = page_master[layer_1.html_id] -%}
   <ul class="list-unstyled">
