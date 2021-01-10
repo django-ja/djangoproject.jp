@@ -1,7 +1,7 @@
 # Miyadaiku config file
 
 # Base URL of the site
-site_url: http://localhost:8888/
+site_url: https://djangoproject.jp/
 
 # Title of the site
 site_title: djangoproject.jp
