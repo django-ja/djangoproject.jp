@@ -1,6 +1,0 @@
-# Miyadaiku config file
-site_url: https://djangoproject.jp/
-site_title: "- djangoproject.jp"
-lang: en-US
-charset: utf-8
-timezone: Etc/UTC

@@ -1,0 +1,63 @@
+{% from 'data.html' import page_master, page_hierarchy_in_menus -%}
+
+{#
+  メニュー項目 ("Home" 以外)。 children がメニュー2階層目。
+  ※"Home" はロジックが他と違うため、ここには入れていない。
+  他との相違点は以下：
+  * Home が active になるのは、現在ページが Home である場合のみ
+  * 現在ページが Home の子孫である場合 (→常にそうなる) であっても Home を active にはしない
+-#}
+{% set dropdown_items = [
+  {'html_id': 'about', 'children': ['whouses']},
+  {'html_id': 'https:--docs.djangoproject.com-ja-', 'children': ['https:--docs.djangoproject.com-ja-', 'translate']},
+  {'html_id': 'community', 'children': ['events']},
+  {'html_id': '-weblog-', 'children': []},
+] -%}
+
+
+<ul class="nav navbar-nav">
+  <li
+    class="{{ 'active' if page.html_id == 'home' else '' }}"
+    id="dropdown-menu-home"
+  >
+    <a href="/">Home</a>
+  </li>
+
+  {% set menu_item_list_for_page = page_hierarchy_in_menus[page.html_id] -%}
+  {% for layer_1 in dropdown_items -%}
+  <li
+    class="{{ 'dropdown' if len(layer_1.children) > 0 else '' }}
+           {{ 'active' if layer_1.html_id in menu_item_list_for_page else '' }}"
+    id="{{ layer_1.html_id }}"
+  >
+    {% set layer_1_master = page_master[layer_1.html_id] -%}
+    {% if len(layer_1.children) > 0 -%}
+    <a
+      href="{{ layer_1_master.url }}"
+      class="dropdown-toggle disabled"
+      data-toggle="dropdown"
+    >
+      {{ layer_1_master.menu_title }}
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      {% for layer_2_html_id in layer_1.children -%}
+      {% set layer_2_master = page_master[layer_2_html_id] -%}
+      <li
+        class="{{ 'active' if layer_2_html_id in menu_item_list_for_page else '' }}"
+        id="{{ layer_2_html_id }}"
+      >
+        <a href="{{ layer_2_master.url }}">{{ layer_2_master.menu_title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else -%}
+    <a
+      href="{{ layer_1_master.url }}"
+    >
+      {{ layer_1_master.menu_title }}
+    </a>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>

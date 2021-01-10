@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="{{ page.lang }}">
+
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="Python, Django, framework, open-source, Japanese, 日本語" />
+<meta name="description" content="{{ page.meta_description }}" />
+<title>{% block title %}{{ page.title | striptags }} | {{ page.site_title | striptags }}{% endblock %}</title>
+<link rel="shortcut icon" href="/static/img/favicon.ico">
+
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/weblog/feeds/rss/">
+<link rel="alternate" type="application/atom+xml" title="Atom" href="/weblog/feeds/atom/">
+
+
+
+{% include 'common_css.html' %}
+
+
+
+{% include 'common_script_in_head.html' %}
+
+
+</head>
+
+<body id="body">
+<div id="wrapper">
+	<header>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+<div class="container">
+<div class="navbar-header">
+   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+  <a class="navbar-brand" href="/">djangoproject.jp</a>
+    
+</div>
+<div class="navbar-collapse collapse">
+       
+{% include 'menus_dropdown.html' %}
+
+</div>
+</div>
+</div>
+	</header>
+
+<section id="featured">
+
+
+
+
+
+<div class="col-md-none ">
+
+<!-- start slider -->
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+	<!-- Slider -->
+        <div id="main-slider" class="flexslider">
+            <ul class="slides">
+              <li>
+                <img src="/static/img/slides/django-logo.jpg" alt="" />
+                <div class="flex-caption">
+                    <h3>Meet Django</h3>
+									  <p>よりよいWebを簡単に、高速に作る</p>
+									  <a href="https://djangoproject.com/download/" class="btn btn-theme">Download</a>
+                </div>
+              </li>
+              <li>
+                <img src="/static/img/slides/congress.jpg" alt="" />
+                <div class="flex-caption">
+                    <h3>DjangoCongress JP</h3>
+					<p>Djangoのユーザーに会いに行く</p>
+					<a href="/events/" class="btn btn-theme">Learn More</a>
+                </div>
+              </li>
+            </ul>
+        </div>
+	<!-- end slider -->
+			</div>
+		</div>
+	</div>	
+
+
+</div>
+
+
+
+</section>
+<section class="callaction">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="big-cta">
+					<div class="cta-text">
+						<h2><span>Django</span>をはじめよう</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</section>
+<section id="content">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="box">
+							<div class="box-gray aligncenter">
+								<h4>高速な開発</h4>
+								<div class="icon">
+								<i class="fa fa-bolt fa-3x"></i>
+								</div>
+								<p class="">
+								 コンセプトから最速でアプリケーションを完成できるよう設計されています
+								</p>
+									
+							</div>
+							<div class="box-bottom">
+								<a href="https://www.djangoproject.com/start/">Learn more</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="box">
+							<div class="box-gray aligncenter">
+								<h4>フルスタック</h4>
+								<div class="icon">
+								<i class="fa fa-suitcase fa-3x"></i>
+								</div>
+								<p>
+								 アプリケーション開発に必要な要素がすべて含まれた、フルスタックなフレームワークです
+								</p>
+									
+							</div>
+							<div class="box-bottom">
+								<a href="https://www.djangoproject.com/start/">Learn more</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="box">
+							<div class="box-gray aligncenter">
+								<h4>セキュア</h4>
+								<div class="icon">
+								<i class="fa fa-lock fa-3x"></i>
+								</div>
+								<p>
+									SQLインジェクション、XSS、CSRFなどを回避するよう作られています
+								</p>
+									
+							</div>
+							<div class="box-bottom">
+								<a href="https://www.djangoproject.com/start/">Learn more</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="box">
+							<div class="box-gray aligncenter">
+								<h4>豊富な実績</h4>
+								<div class="icon">
+								<i class="fa fa-globe fa-3x"></i>
+								</div>
+								<p>
+								 著名なWebサービス、さまざまなオープンソースプロジェクト、政府等で使われています
+								</p>
+							</div>
+							<div class="box-bottom">
+								<a href="/whouses/">Learn more</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- divider -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="solidline">
+				</div>
+			</div>
+		</div>
+		<!-- end divider -->
+	</div>
+	</section>
+
+
+{% include 'footer.html' %}
+</div>
+
+
+{% include 'common_script_in_foot.html' %}
+
+</body>
+</html>
+

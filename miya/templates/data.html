@@ -1,0 +1,91 @@
+{# Note: このファイルには定数や macro のみを書く。 -#}
+
+{#
+  各ページのマスター的な辞書。
+  辞書のキー: html_id の文字列
+  辞書の値: {
+    url: URL (リンクの `href` 属性の値として使われる)
+    menu_title: メニュー項目 (グローバルナビゲーション、パンくず) における表示文字列
+  }
+
+  ※documentation は外部サイトであるためキーの値が他と違う
+  ※menu_title はおおむね page.cta_text と同じ
+  (ただし documentation は外部ページであるため cta_text の概念が存在しない。
+  なので、 cta_text とは別の概念として menu_title を用意した)
+-#}
+{% set page_master = {
+  'home': {
+    'url': '/',
+    'menu_title': 'Home',
+  },
+
+  'about': {
+    'url': '/about/',
+    'menu_title': 'About',
+  },
+
+  'community': {
+    'url': '/community/',
+    'menu_title': 'Community',
+  },
+
+  'events': {
+    'url': '/events/',
+    'menu_title': 'Events',
+  },
+
+  'howtojoin-transifex': {
+    'url': '/howtojoin-transifex/',
+    'menu_title': 'Transifexへのユーザー登録とDjangoドキュメント翻訳プロジェクトへの参加方法',
+  },
+
+  'howtotranslate': {
+    'url': '/howtotranslate/',
+    'menu_title': 'TransifexでのDjangoドキュメント翻訳の進め方',
+  },
+
+  'translate': {
+    'url': '/translate/',
+    'menu_title': '翻訳への参加方法',
+  },
+
+  'translate_old': {
+    'url': '/translate_old/',
+    'menu_title': '旧ドキュメント翻訳方法',
+  },
+
+  'whouses': {
+    'url': '/whouses/',
+    'menu_title': '利用実績',
+  },
+
+  '-weblog-': {
+    'url': '/weblog/',
+    'menu_title': 'Blog',
+  },
+  
+  'https:--docs.djangoproject.com-ja-': {
+    'url': 'https://docs.djangoproject.com/ja/',
+    'menu_title': 'documentation',
+  },
+} -%}
+
+{#
+  ページ階層を表す辞書。
+  パンくずやグローバルナビゲーションに利用する。
+  辞書の値の list は、階層を「上からページをたどって当該ページに到達するまでの道のり」、
+  つまり path として表したもの (なお home は階層の中に含めない)。
+  dict[html_id, list[html_id]]
+-#}
+{% set page_hierarchy_in_menus = {
+  'home': [],
+  'about': ['about'],
+  'whouses': ['about', 'whouses'],
+  'translate': ['https:--docs.djangoproject.com-ja-', 'translate'],
+  'howtojoin-transifex': ['https:--docs.djangoproject.com-ja-', 'translate', 'howtojoin-transifex'],
+  'howtotranslate': ['https:--docs.djangoproject.com-ja-', 'translate', 'howtotranslate'],
+  'translate_old': ['https:--docs.djangoproject.com-ja-', 'translate', 'translate_old'],
+  'community': ['community'],
+  'events': ['community', 'events'],
+  '-weblog-': ['-weblog-'],
+} -%}
