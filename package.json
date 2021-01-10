@@ -16,6 +16,8 @@
   ],
   "author": "django-ja",
   "contributors": [
+    "Kiyohara Hiroki (https://github.com/hirokiky)",
+    "Matsumura Masayuki (https://github.com/masmatsum)",
     "Takuya Noguchi <takninnovationresearch@gmail.com> (https://github.com/tnir)"
   ],
   "license": "MIT",
