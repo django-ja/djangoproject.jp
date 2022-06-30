@@ -1,0 +1,280 @@
+.. _topics-forms-index:
+
+==================
+フォームの操作
+==================
+
+:revision-up-to: 8961 (1.0)
+
+.. admonition:: このドキュメントについて
+
+    このドキュメントでは、 Django のフォーム処理機能を紹介しています。
+    フォーム API の詳細は、 :ref:`ref-forms-api` を参照してください。
+    利用できるフィールドタイプのドキュメントは :ref:`ref-forms-fields`
+    を参照してください。
+
+``django.forms`` は、 Django のフォーム処理ライブラリです。
+
+フォームによって提出 (submit) されたデータの処理は、Django の
+:class:`~django.http.HttpRequest` クラスだけでも実現できます。しかし、フォー
+ムライブラリを使うと、フォーム処理に必要な共通のタスクの面倒を見てくれます。
+フォームライブラリを使えば、以下のようなことを実現できます:
+
+    1. フォームウィジェットから、 HTML フォームを自動的に生成して表示できま
+       す。
+    2. 提出されたデータに対して、バリデーション規則 (validation rule) を適
+       用できます。
+    3. バリデーションエラーを検出したときに、フォームをエラーメッセージ付き
+       で表示できます。
+    4. 提出されたデータを、適切な Python のデータ型に変換できます。
+
+概要
+========
+
+このライブラリでは、以下のような概念を扱います:
+
+.. glossary::
+
+    ウィジェット (Widget)
+        ``<input type="text">`` や ``<textarea>`` のような、 HTML フォーム
+        ウィジェットに対応するクラスです。ウィジェットから HTML へのレンダ
+        リングもこのクラスで行われます。
+
+    フィールド (Field)
+        データの検証を行うためのクラスです。例えば、 ``EmailField`` はデー
+        タが有効な電子メールアドレスかどうか検証します。
+
+    フォーム (Form)
+        フィールドの集まりで、データの検証や HTML への表示方法が実装された
+        ものです。
+
+    フォームメディア (Form Media)
+        フォームをレンダするときに必要な CSS や JavaScript リソースの定義です。
+
+このライブラリは、データベースレイヤやビュー、テンプレートといった他の
+Django コンポーネントに対してカップリングしていません。このライブラリが依存
+しているのは settings と ``django.utils`` の二つのヘルパ関数、そして国際化
+のためのフックだけです (ただし、このライブラリを使うために国際化の機能を使
+わねばならないわけではありません) 。
+
+.. _Form objects:
+
+フォームオブジェクト
+====================
+
+フォームオブジェクトは、フォームに含める一連のフィールドや、フォームに入力
+した値を受理するために充足しなければならないバリデーション規則をカプセル化
+します。フォームクラスは、 ``django.newforms.Form`` クラスをサブクラス化し、
+Django のデータベースモデルによく似た方法でフォームのフィールドを定義して作
+成します。
+
+一例として、個人のウェブサイトでコンタクトフォームの機能を実装するときに使
+うフォームを考えてみましょう::
+
+    from django import forms
+
+    class ContactForm(forms.Form):
+        subject = forms.CharField(max_length=100)
+        message = forms.CharField()
+        sender = forms.EmailField()
+        cc_myself = forms.BooleanField(required=False)
+
+フォームは ``Field`` オブジェクトの組み合わせでできています。今回の例では、
+``subject`` (題名)、 ``message`` (メッセージ)、 ``sender`` (送信者)、そして
+``cc_myself`` (自分に CC する)、の 4 つのフィールドをフォームに持たせます。
+``CharField`` や ``EmailField``, ``BooleanField`` はフィールド型です。
+フィールド型の一覧は :ref:`ref-forms-fields` を参照してください。
+
+:ref:`ModelForm <topics-forms-modelforms>` を使えば、フォームを使って
+Django のモデルを直接追加したり編集したりしたいときに、モデルと重複する記述
+をせずにすみます。
+
+.. _Using a form in a view:
+
+ビュー内でフォームを使う
+-----------------------------
+
+フォームをビュー内で処理するときの標準的なパターンを以下に示します::
+
+   def contact(request):
+       if request.method == 'POST': # If the form has been submitted...
+           form = ContactForm(request.POST) # A form bound to the POST data
+           if form.is_valid(): # All validation rules pass
+               # Process the data in form.cleaned_data
+               # ...
+               return HttpResponseRedirect('/thanks/') # Redirect after POST
+       else:
+           form = ContactForm() # An unbound form
+   
+       return render_to_response('contact.html', {
+           'form': form,
+       })
+
+このパターンには、 3 つのコードパスがあります:
+
+    1. フォームデータが提出されていなければ、非束縛の ``ContactForm`` イン
+       スタンスを生成して、テンプレートに渡します。
+    2. フォームデータが提出されていれば、 ``request.POST`` を使って束縛フォー
+       ムを生成します。入力データのバリデーションに成功したら、フォームデー
+       タを処理して、ユーザを「ありがとう」ページにリダイレクトします。
+    3. フォームデータが提出され、バリデーションに成功しなければ、束縛フォー
+       ムインスタンスをテンプレートに渡します。
+
+.. versionchanged:: 1.0
+    ``cleaned_data`` 属性は、以前のリリースでは ``clean_data`` という名前で
+    した。
+
+
+**束縛** フォームと **非束縛** フォームの違いはとても重要です。非束縛フォー
+ムには、何らデータが結び付いていません。非束縛フォームをレンダしてユーザに
+呈示すると、フォームには空の値かデフォルトの値が表示されます。束縛フォーム
+にはユーザから提出されたデータが入るので、そのデータが有効であるかどうか調
+べられます。入力データが無効な束縛フォームをレンダすると、入力データの何が
+おかしいのかを示すエラーメッセージが各行に出力されます。
+
+束縛フォームと非束縛フォームの違いについてもっと詳しく知りたければ、
+:ref:`ref-forms-api-bound-unbound` を参照してください。
+
+.. _Processing the data from a form:
+
+フォームから入力されたデータを処理する
+----------------------------------------
+
+フォームの ``is_valid()`` が ``True`` を返すなら、入力データはフォームに設
+定しておいたバリデーション条件を満たしているので、提出されたフォームを安全
+に処理できます。この時点でも、 ``request.POST`` には直接アクセスできますが、
+``form.cleaned_data`` にアクセスする方がよいでしょう。
+``form.cleaned_data`` 内のデータはバリデーション済みであるだけでなく、適切
+な Python の型に変換されているからです。上の例では、 ``cc_myself`` はブール
+型の値に変換されています。同様に、 ``IntegerField`` や ``FloatField`` は、
+それぞれ Python の整数型や浮動小数型の値に変換されています。
+
+上の例を拡張すると、フォームデータの処理は以下のように書けます::
+
+    if form.is_valid():
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        sender = form.cleaned_data['sender']
+        cc_myself = form.cleaned_data['cc_myself']
+    
+        recipients = ['info@example.com']
+        if cc_myself:
+            recipients.append(sender)
+    
+        from django.core.mail import send_mail
+        send_mail(subject, message, sender, recipients)
+        return HttpResponseRedirect('/thanks/') # Redirect after POST
+
+この例ではメールを送信しています。Django からメールを送信する方法の詳細は
+:ref:`topics-email` を参照してください。
+
+.. _Displaying a form using a template:
+
+テンプレートを使ってフォームを表示する
+----------------------------------------
+
+フォームは Django のテンプレート言語を使うように設計されています。上の例で
+は、コンテキスト変数 ``form`` を使ってテンプレートに ``ContactForm`` インス
+タンスを渡しています。簡単なテンプレートの例を示します::
+
+    <form action="/contact/" method="POST">
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+    </form>
+
+フォームインスタンスはフィールドのマークアップだけを出力します。前後の
+``<form>`` タグや、 submit ボタンは自分で追加します。
+
+``form.as_p`` を参照すると、各フィールドとラベルをパラグラフ (``<p>``) タグ
+で囲って出力します。上のテンプレートの例を出力すると、以下のようになります::
+
+   <form action="/contact/" method="POST">
+   <p><label for="id_subject">Subject:</label>
+       <input id="id_subject" type="text" name="subject" maxlength="100" /></p>
+   <p><label for="id_message">Message:</label>
+       <input type="text" name="message" id="id_message" /></p>
+   <p><label for="id_sender">Sender:</label>
+       <input type="text" name="sender" id="id_sender" /></p>
+   <p><label for="id_cc_myself">Cc myself:</label>
+       <input type="checkbox" name="cc_myself" id="id_cc_myself" /></p>
+   <input type="submit" value="Submit">
+   </form>
+
+各フォームフィールドには、 ``id_<field-name>`` の形式で id 属性が付加されて
+おり、すぐそばのラベルで参照されています。これは、画面読み上げソフトウェア
+のような入出力補助技術でフォームを扱うために重要な仕組みです。
+:ref:`ラベルや idの出力方法はカスタマイズできます
+<ref-forms-api-configuring-label>` 。
+
+``form.as_table`` を使うと、各フィールドがテーブルの各行になるように出力で
+きます (自分で ``<table>`` タグで囲む必要があります)。また、
+``form.as_ul`` を使えば、リストとして出力できます。
+
+フォームテンプレートのカスタマイズ
+-----------------------------------
+
+デフォルトの HTML 出力が気に入らなければ、 Django のテンプレート言語を使っ
+て、フォームの表示方法をいくらでもカスタマイズできます。例えば、前掲の例は
+以下のように拡張できます::
+
+    <form action="/contact/" method="POST">
+        <div class="fieldWrapper">
+            {{ form.subject.errors }}
+            <label for="id_subject">E-mail subject:</label>
+            {{ form.subject }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.message.errors }}
+            <label for="id_message">Your message:</label>
+            {{ form.message }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.sender.errors }}
+            <label for="id_sender">Your email address:</label>
+            {{ form.sender }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.cc_myself.errors }}
+            <label for="id_cc_myself">CC yourself?</label>
+            {{ form.cc_myself }}
+        </div>
+        <p><input type="submit" value="Send message"></p>
+    </form>
+
+各フォームフィールドは、その名前に従って、 ``{{ form.name_of_field }}``
+で出力でき、フォームウィジェットを表示するための適切な HTML を生成します。
+``{{ form.name_of_field.errors }}`` はフォームエラーのリストを以下のような
+無番号リストで表示します::
+
+   <ul class="errorlist">
+       <li>Sender is required.</li>
+   </ul>
+
+リストには ``errorlist`` という CSS があてられていて、表示スタイルを変更で
+きます。エラーの表示方法をもっと細かく制御したければ、ループを使って以下の
+ように表現できます::
+
+    {% if form.subject.errors %}
+        <ol>
+        {% for error in form.message.errors %}
+            <li><strong>{{ error|escape }}</strong></li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+    
+その他のトピック
+==================
+
+ここではフォームの基本を説明しましたが、フォームライブラリのできることはもっ
+とたくさんあります:
+
+.. toctree::
+   :maxdepth: 1
+
+   modelforms
+   formsets
+   media
+   
+.. seealso::
+
+    :ref:`フォーム API リファレンス <ref-forms-index>`

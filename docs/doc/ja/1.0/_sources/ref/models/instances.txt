@@ -1,0 +1,422 @@
+.. _ref-models-instances:
+
+========================
+Model instance reference
+========================
+
+:revision-up-to: 8961 (1.0)
+
+.. currentmodule:: django.db.models
+   
+This document describes the details of the ``Model`` API. It builds on the
+material presented in the :ref:`model <topics-db-models>` and `database query
+<topics-db-queries>` guides, so you'll probably want to read and understand
+those documents before reading this one.
+
+Throughout this reference we'll use the :ref:`example weblog models
+<queryset-model-example>` presented in the :ref:`database query guide
+<topics-db-queries>`.
+
+Creating objects
+================
+
+To create a new instance of a model, just instantiate it like any other Python class:
+
+.. class:: Model(**kwargs)
+
+The keyword arguments to are simply the names of the fields you've defined on
+your model. Note that instantiating a model in no way touches your database; for
+that, you need to ``save()``.
+
+Saving objects
+==============
+
+To save an object back to the database, call ``save()``:
+
+.. method:: Model.save([force_insert=False, force_update=False])
+
+Of course, there are some subtleties; see the sections below.
+
+.. versionadded:: 1.0
+
+The signature of the ``save()`` method has changed from earlier versions
+(``force_insert`` and ``force_update`` have been added). If you are overriding
+these methods, be sure to use the correct signature.
+
+.. _Auto-incrementing primary keys:
+
+主キーの自動インクリメント
+--------------------------
+
+モデルに ``AutoField`` 、すなわち自動インクリメントされる主キーがある場合に
+は、オブジェクトに対して最初に ``save()`` を呼び出したときに自動インクリメ
+ント値が計算され、保存されます::
+
+    >>> b2 = Blog(name='Cheddar Talk', tagline='Thoughts on cheese.')
+    >>> b2.id     # b には ID がないので None を返します。
+    >>> b2.save()
+    >>> b2.id     # 新たに保存されたオブジェクトの ID を返します。
+
+ID の値は Django ではなくデータベースによって計算されるので、 ``save()`` を
+呼び出すまでは ID の値は分かりません。
+
+(利便性のため、明示的に ``primary_key=True`` を指定したフィールドを作成しな
+いかぎり、デフォルトでは各モデルに ``id`` という名前の ``AutoField``
+が追加されます。詳しくは ``AutoField`` のドキュメントを参照してください。)
+
+.. _`The pk property`:
+
+``pk`` プロパティ
+~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.0
+
+.. attribute:: Model.pk
+
+主キーを自前で定義しているか、 Django によって供給されているかに関係なく、
+それぞれのモデルは ``pk`` と呼ばれるプロパティを持ちます。 これはモデルの通
+常の属性のように振る舞いますが、実はモデルの主キーフィールドのエイリアスで
+す。その他の属性と同じように、この値は読み書き可能で、モデルのフィールドを
+修正し更新できます。
+
+.. _Explicitly specifying auto-primary-key values:
+
+自動主キーの値を明示的に指定する
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+モデルが ``AutoField`` を持っていて、新たなオブジェクトの ID を保存時に明示
+的に指定したい場合、 ID を自動的に決定させずに保存前に明示的に指定してくだ
+さい::
+
+    >>> b3 = Blog(id=3, name='Cheddar Talk', tagline='Thoughts on cheese.')
+    >>> b3.id     # Returns 3.
+    >>> b3.save()
+    >>> b3.id     # Returns 3.
+
+自動主キーの値を手動で割り当てる場合、決して既に存在する主キーの値を割り当
+てないようにしてください! 明示的な主キー値を持った新たなオブジェクトを作成
+し、その主キーがすでにデータベース上に存在する場合、 Django は保存操作を新
+たなオブジェクトの作成ではなく、既存のオブジェクトの変更とみなします。
+
+上の ``'Cheddar Talk'`` ブログを例にとると、以下の例はデータベース上の既存
+のレコードをオーバライドしてしまいます::
+
+    b4 = Blog(id=3, name='Not Cheddar', tagline='Anything but cheese.')
+    b4.save()  # Overrides the previous blog with ID=3!
+
+この理由については後述の `UPDATE と INSERT の区別`_ を参照してください。
+
+主キーの衝突がないとはっきり判っている場合なら、自動主キーの値の明示的な指
+定は大量のオブジェクトを保存する際にきわめて便利です。
+
+.. _`What happens when you save?`:
+
+オブジェクトの保存時に何が起きるのか
+-------------------------------------
+
+Django は以下の段階を踏んでオブジェクトを保存します:
+
+    1. **``pre_save`` シグナルの発行** 
+       :attr:`django.db.models.signals.pre_save` :ref:`シグナル <ref-signals>`
+       の発行によって、何らかのオブジェクトを保存しようとしていることを通知
+       します。このシグナルを待ち受けている関数でカスタムの処理を実行できま
+       す。
+
+    2. **データの前処理** オブジェクトの各フィールドについて、保存時に自動
+       的に実行する必要があるデータ修飾処理がないか調べ、あれば実行します。
+
+       ほとんどのフィールドは前処理を *伴いません* 。フィールドのデータは 
+       そのまま保存されます。前処理が行われるのは、特殊な挙動を示すフィー
+       ルドだけです。例えば、 ``auto_now=True`` に設定された ``DateField``
+       の場合、前処理の段階で、フィールドの内容が現在の日付になるようデータ
+       を置き換えます (現時点では、「特殊な」挙動を示すフィールドのリストを
+       全て列挙したドキュメントはありません)。
+
+    3. **データベース保存用のデータ準備処理** 各フィールドについて、フィー
+       ルドの現在の値を元にデータベースに保存できる型のデータを生成します。
+
+       ほとんどのフィールドはデータ準備処理を *伴いません* 。整数や文字列は
+       Python オブジェクトとして「いつでもデータベースへの書き込みに使える」
+       形式になっています。ただ、より複雑なデータ型の場合、なにがしかの修飾
+       が必要なことがあります。
+
+       例えば、 ``DateField`` は、データの保存に Python の ``datetime`` 型
+       を使います。データベースは ``datetime`` オブジェクトを保存しないので、
+       データベースに保存するには、フィールドの値を ISO 準拠の日付文字列に
+       変換せねばなりません。
+
+    4. **データベースへの保存** 前処理と準備処理を経たデータが SQL 文に組み
+       込まれ、データベースに挿入されます。
+
+    5. **``post_save`` シグナルの発行** `
+       :attr:`django.db.models.signals.pre_save` シグナルと同じく、オブジェ
+       クトが成功理に保存されたことを通知するために 
+       :attr:`django.db.models.signals.post_save` シグナルが発行されます。
+
+
+.. _How Django knows to UPDATE vs. INSERT:
+
+UPDATE と INSERT の区別
+-----------------------
+
+Django データベースオブジェクトがオブジェクトの作成と変更に同じ ``save()``
+メソッドを使っていることにお気づきかもしれませんね。 Django は ``INSERT``
+と ``UPDATE`` SQL 文のどちらを使うべきかの判断を抽象化しています。具体的
+に言うと、 ``save()`` を呼び出したときに、Django は以下のアルゴリズムに従い
+ます:
+
+    * オブジェクトの主キー属性の評価値が ``False`` でない場合 (``None`` や
+      空文字列の場合などでない場合) 、 Django は ``SELECT`` クエリを使って、
+      該当する主キーを持つレコードが存在するかどうか調べます。
+    * 該当する主キーを持つレコードがデータベース上に存在する場合には
+      ``UPDATE`` クエリを使います。
+    * オブジェクトの主キー属性が設定 *されていない* 場合や、主キーが設定さ
+      れているが該当するレコードは存在しない場合、 ``INSERT`` を使います。
+
+新たなオブジェクトを保存する際、まだ使われていない値を主キーに指定できる保
+証がないかぎり、主キーの値を明示的に指定しないよう注意してください。詳しく
+は上記の `自動主キーの値を明示的に指定する`_ の節や、後述の
+`Forcing an INSERT or UPDATE`_ を参照してください。
+
+.. _ref-models-force-insert:
+
+Forcing an INSERT or UPDATE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.0
+
+In some rare circumstances, it's necessary to be able to force the ``save()``
+method to perform an SQL ``INSERT`` and not fall back to doing an ``UPDATE``.
+Or vice-versa: update, if possible, but not insert a new row. In these cases
+you can pass the ``force_insert=True`` or ``force_update=True`` parameters to
+the ``save()`` method. Passing both parameters is an error, since you cannot
+both insert *and* update at the same time.
+
+It should be very rare that you'll need to use these parameters. Django will
+almost always do the right thing and trying to override that will lead to
+errors that are difficult to track down. This feature is for advanced use
+only.
+
+.. _model-instance-methods:
+.. _Other model instance methods:
+
+その他のモデルインスタンスメソッド
+=====================================
+
+モデルには、特殊な使われ方をするメソッドがあります:
+
+``__str__``
+-----------
+
+.. method:: Model.__str__()
+
+``__str__()`` は、オブジェクトに対して ``str()`` を呼び出した際に返す内容を
+定義するための Python の特殊メソッドです。 Django はそこかしこで
+``str(obj)`` (または ``unicode(obj)`` -- 下記参照) を使っています。ほとんど
+は、 Django の admin サイトでオブジェクトをレンダリングして表示したときの値
+として、またオブジェクトを表示するときにテンプレートに挿入される値として使
+われています。従って、オブジェクトの ``__str__`` は、人間可読なわかりやすい
+文字列を返さねばなりません。必須ではありませんが、強く推奨します (ただし、
+そこかしこに ``__str__`` メソッドを突っ込んでしまう前に ``__unicode__`` の
+説明を良く読んでくださいね)。
+
+例を示します::
+
+    class Person(models.Model):
+        first_name = models.CharField(max_length=50)
+        last_name = models.CharField(max_length=50)
+
+        def __str__(self):
+            # Note use of django.utils.encoding.smart_str() here because
+            # first_name and last_name will be unicode strings.
+            return smart_str('%s %s' % (self.first_name, self.last_name))
+
+``__unicode__``
+---------------
+
+.. method:: Model.__unicode__()
+
+``__unicode__()`` メソッドは、オブジェクトに対して ``unicode()`` を呼び出し
+た際に呼び出されます。Django のデータベースバックエンドはモデルの属性値とし
+て Unicode 文字列を返すので、通常はモデルの ``__unicode__()`` メソッドを定
+義するとよいでしょう。前節の例を ``__unicode__()`` を使って書き直すと、以下
+のように簡単になります::
+
+    class Person(models.Model):
+        first_name = models.CharField(max_length=50)
+        last_name = models.CharField(max_length=50)
+
+        def __unicode__(self):
+            return u'%s %s' % (self.first_name, self.last_name)
+
+モデルに ``__unicode__()`` メソッドだけを定義して、 ``__str__()`` は定義し
+ないでおくと、 Django が自動的に ``__str__()`` メソッドをモデルに追加します。
+この ``__str__()`` メソッドは、 ``__unicode__()`` を呼び出して、その戻り値
+を UTF-8 でエンコードした文字列を返します。開発上はこの仕様に従い、
+``__unicode__()`` だけを定義して、文字列オブジェクトへの変換は Django 任せ
+にするよう勧めます。
+
+``get_absolute_url``
+--------------------
+
+.. method:: Model.get_absolute_url()
+
+オブジェクトの URL を演算する方法を Django に教えるには
+``get_absolute_url`` メソッドを定義してください。例えば::
+
+    def get_absolute_url(self):
+        return "/people/%i/" % self.id
+
+Django はこのメソッドを admin インタフェースで使います。オブジェクトが
+``get_absolute_url()`` を定義していた場合、オブジェクトの詳細ページには「サ
+イト上で表示 (View on site)」というリンクが表示されます。このリンクは、オブ
+ジェクトの ``get_absolute_url()`` に基づいて、オブジェクトを公開しているビュー
+に直接飛べるようになっています。
+
+また、その他にも、例えば 
+:ref:`配信フィードフレームワーク <ref-contrib-syndication>` などで、
+``get_absolute_url()`` を使うことでユーザの利便性を高めています。
+
+テンプレートでオブジェクトの URL を表示する場合、ハードコードするのでは
+なく ``get_absolute_url()`` を使うようにするとよいでしょう。例えば、以下の
+テンプレート::
+
+    <a href="/people/{{ object.id }}/">{{ object.name }}</a>
+
+は良い例ではなく、以下のようにするとよいでしょう::
+
+    <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+
+.. note::
+    ``get_absolute_url()`` の返す文字列は ASCII 文字だけで構成しなければな
+    りません (`RFC 2396`_ の URI 仕様でそのように要求されています)。また、
+    必要に応じて URL エンコードせねばなりません。 ``get_absolute_url()`` を
+    使うコードやテンプレートが、 ``get_absolute_url()`` の返す文字列を、追
+    加の処理を施さなくても直接利用できるようにせねばならないのです。
+    URI に Unicode 文字列を沢山使っているのなら、
+    ``django.utils.encoding.iri_to_uri`` も使うことになるでしょう。
+
+.. _RFC 2396: http://www.ietf.org/rfc/rfc2396.txt
+
+.. _`The permalink decorator`:
+
+``permalink`` デコレータ
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+上に述べた ``get_absolute_url()`` には、いささか DRY 則の侵犯である、すなわ
+ちURLconf とモデルの両方で URL が定義されているという問題があります。
+
+``permalink`` デコレータを使うと、 URLconf からモデルを脱カップリングできま
+す:
+
+.. function:: django.db.models.permalink()
+
+このデコレータには、ビュー関数、引数のリスト、そして (オプションとして)
+名前つきパラメタの入った辞書を指定します。これらの情報から、 Django は
+指定したパラメタで URLconf を置き換えて完全な URL パスを計算します。例えば、
+以下のような URLconf が定義されていたとしましょう::
+
+    (r'^people/(\d+)/$', 'people.views.details'),
+
+また、モデルの ``get_absolute_url`` メソッドは以下のように定義できます::
+
+    from django.db import models
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('people.views.details', [str(self.id)])
+
+また、以下のような URLconf のエントリがあったとします::
+
+    (r'/archive/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$', archive_view)
+
+``permalink`` は以下のように使えます::
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('archive_view', (), {
+            'year': self.created.year,
+            'month': self.created.month,
+            'day': self.created.day})
+
+この例では、第 2 引数に空の配列 (空のタプル) を指定していますが、これは引数
+リストを渡さず、キーワード引数だけを渡したいからです。
+
+``permalink`` を使えば、 URL に関する情報を繰り返すことなく、モデルの絶対
+URL と表示に使ったビューを結びつけられます。以前と同様、
+``get_absolute_url`` はテンプレート中でも使えます。
+
+汎用ビューを使う場合や、複数のモデルに対して同じビューを再利用する場合、ビュー
+関数そのものを指定すると、（複数のパターンが同じビューを指してしまうため）
+URLディスパッチャが混乱をきたします。
+
+この問題を解決するために、 Django には **名前つき URL パターン** があります。
+名前つき URL パターンを使えば、 URL パターンに固有の名前をつけておき、ビュー
+関数の代わりに参照できます。名前つき URL パターンを定義するには、タプル表記
+の URL パターンを ``url`` 関数に置き換えます::
+
+    from django.conf.urls.defaults import *
+
+    url(r'^people/(\d+)/$',
+        'django.views.generic.list_detail.object_detail',
+        name='people_view'),
+
+この名前を使って、URL からビューの名前を以下のようにして逆解決します::
+
+    from django.db.models import permalink
+
+    def get_absolute_url(self):
+        return ('people_view', [str(self.id)])
+    get_absolute_url = permalink(get_absolute_url)
+
+名前つき URL パターンの詳細は 
+:ref:`URL ディスパッチャのドキュメント<topics-http-urls>` を参照してください。
+
+.. _Extra instance methods:
+
+追加のインスタンスメソッド
+==========================
+
+``save()``, ``delete()`` に加えて、モデルオブジェクトは以下のいずれか、あるい
+は全てのメソッドを持つことがあります:
+
+get_FOO_display()
+-----------------
+
+``choices`` セットを持つ全てのフィールドについて、オブジェクトは
+``get_FOO_display()`` メソッドを持ちます。 ``FOO`` はフィールド名です。この
+メソッドは、「人間可読な」フィールド名を返します。例えば、以下のモデル::
+
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
+    class Person(models.Model):
+        name = models.CharField(max_length=20)
+        gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+では、各 ``Person`` インスタンスは ``get_gender_display()`` メソッド
+を持ちます::
+
+    >>> p = Person(name='John', gender='M')
+    >>> p.save()
+    >>> p.gender
+    'M'
+    >>> p.get_gender_display()
+    'Male'
+
+get_next_by_FOO(\**kwargs) and get_previous_by_FOO(\**kwargs)
+-------------------------------------------------------------
+
+``null=True`` であるような ``DateField`` および ``DateTimeField`` フィール
+ドについて、オブジェクトは ``get_next_by_FOO()`` および 
+``get_previous_by_FOO()`` メソッドを持ちます。 ``FOO`` はフィールド名です。
+このメソッドは該当の日付フィールドに応じて前のオブジェクトや次のオブジェク
+トを返します。適切なオブジェクトがなければ ``DoesNotExist`` を送出します。
+
+これらのメソッドはいずれもオプションのキーワード引数をとります。引数は
+前述の「 :ref:`Field lookups <field-lookups>` 」で解説した形式にします。
+
+同じ日付値を持つオブジェクトがある場合、このメソッドは ID を使ったチェック
+にフォールバックします。これにより、レコードがスキップしたり重複したりしな
+いことが保証されています。

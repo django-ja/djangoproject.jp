@@ -1,0 +1,1129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django admin サイト &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+    <link rel="next" title="django.contrib.auth" href="auth.html" />
+    <link rel="prev" title="&#8220;django.contrib&#8221; 下のアドオン" href="index.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="&amp;#8220;django.contrib&amp;#8221; 下のアドオン">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="auth.html" title="&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;django.contrib.auth&lt;/span&gt;&lt;/tt&gt;">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-admin">
+            
+  
+  <div class="section" id="s-django-admin">
+<span id="s-the-django-admin-site"></span><span id="s-ref-contrib-admin"></span><h1>Django admin サイト<a class="headerlink" href="#django-admin" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django の最も強力な機能の一つに、自動生成される admin インタフェースがあり
+ます。 admin はモデルのメタデータを読み込んで、強力で実運用に耐えるインタ
+フェースを生成し、コンテンツの製作者がすぐにサイトにコンテンツを投入できる
+ようにします。このドキュメントでは、 Django の admin インタフェースを有効に
+したり、カスタマイズしたりする方法を解説します。</p>
+<div class="admonition- admonition">
+<p class="first admonition-title">注意</p>
+<p class="last">admin サイトは Django 0.96 から大幅にリファクタされました。このドキュメ
+ントでは、よりカスタマイズ機能の充実した新しい admin サイトについて解説
+しています。この admin サイトの仕様は、 Django の開発をよく追いかけてい
+る人なら、一度は &#8220;newforms-admin&#8221; という名前で耳にしたことがあるはずで
+す。</p>
+</div>
+<div class="section" id="s-id1">
+<span id="s-overview"></span><h2>概要<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Django admin サイトは、以下の 5 つのステップを通して有効化します:</p>
+<ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">django.contrib.admin</span></tt> を <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> に追加します。</li>
+<li>admin インタフェースでの編集を可能にするモデルを決めます。</li>
+<li>2 で決めたモデルに対して、必要なら <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> クラスを定義します。
+<tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> はモデルごとにカスタマイズした admin の機能やオプショ
+ンをカプセル化しています。</li>
+<li><tt class="docutils literal"><span class="pre">AdminSite</span></tt> をインスタンス化して、モデルや <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> クラスを
+指定します。</li>
+<li><tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスを URLconf にフックします。</li>
+</ol>
+</div>
+<div class="section" id="s-modeladmin">
+<span id="s-modeladmin-objects"></span><h2><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> オブジェクト<a class="headerlink" href="#modeladmin" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> クラスは、 admin インタフェース上のモデルを表現しています。
+このクラスは、アプリケーションの <tt class="docutils literal"><span class="pre">admin.py</span></tt> という名前のファイルに保存し
+ます。 <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> の簡単な例を以下に示します:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">myproject.myapp.models</span> <span class="kn">import</span> <span class="n">Author</span>
+
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Author</span><span class="p">,</span> <span class="n">AuthorAdmin</span><span class="p">)</span>
+</pre></div>
+<div class="section" id="s-id2">
+<span id="s-modeladmin-options"></span><h3><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のオプション<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> はとてもフレキシブルなクラスです。このクラスには、 admin イ
+ンタフェースをカスタマイズするためのオプションがいくつもあります。オプショ
+ンは、全て、 <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のサブクラスで以下のように指定します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">date_hierarchy</span> <span class="o">=</span> <span class="s">&#39;pub_date&#39;</span>
+</pre></div>
+<div class="section" id="s-date-hierarchy">
+<h4><tt class="docutils literal"><span class="pre">date_hierarchy</span></tt><a class="headerlink" href="#date-hierarchy" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">date_hierarchy</span></tt> をモデルの <tt class="docutils literal"><span class="pre">DateField</span></tt> や <tt class="docutils literal"><span class="pre">DateTimeField</span></tt> に指定する
+と、変更リストのページに、指定フィールドの日付を使って日付ベースで絞り込み
+できるナビゲーションが組み込まれます。</p>
+<p>例:</p>
+<div class="highlight"><pre><span class="n">date_hierarchy</span> <span class="o">=</span> <span class="s">&#39;pub_date&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="s-form">
+<h4><tt class="docutils literal"><span class="pre">form</span></tt><a class="headerlink" href="#form" title="Permalink to this headline">¶</a></h4>
+<p>デフォルトの設定では、モデルに対して <tt class="docutils literal"><span class="pre">ModelForm</span></tt> が動的に生成され、追加／
+変更ページでフォームを生成するときに使われます。 <tt class="docutils literal"><span class="pre">form</span></tt> を独自の
+<tt class="docutils literal"><span class="pre">ModelForm</span></tt> と置き換えれば、追加／変更ページのふるまいを変更できます。</p>
+<p>詳しくは、  <a class="reference internal" href="#admin-add-custom-validation"><em>admin にカスタムのバリデーションを追加する</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-fieldsets">
+<h4><tt class="docutils literal"><span class="pre">fieldsets</span></tt><a class="headerlink" href="#fieldsets" title="Permalink to this headline">¶</a></h4>
+<p>admin の「追加 (add)」および「変更 (change)」ページのレイアウトを制御するに
+は、 <tt class="docutils literal"><span class="pre">fieldsets</span></tt> を使います。</p>
+<p><tt class="docutils literal"><span class="pre">fieldsets</span></tt> は 2 要素のタプルのリストです。各タプルは admin フォームペー
+ジ上の <tt class="docutils literal"><span class="pre">&lt;fieldset&gt;</span></tt> を表します (<tt class="docutils literal"><span class="pre">&lt;fieldset&gt;</span></tt> はいわばフォームの「セクショ
+ン」です)。</p>
+<p>フィールドセットは <tt class="docutils literal"><span class="pre">(name,</span> <span class="pre">field_options)</span></tt> の形式をとります。 <tt class="docutils literal"><span class="pre">name</span></tt>
+はフィールドセットの名前を表す文字列で、 <tt class="docutils literal"><span class="pre">field_options</span></tt> はフィールドセッ
+ト内で表示したいフィールドの情報を入れた辞書です。この情報の中に、表示した
+いフィールドのリストも指定します。</p>
+<p><tt class="docutils literal"><span class="pre">django.contrib.flatpages.FlatPage</span></tt> モデルから抜き出した例を示します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">FlatPageAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&#39;sites&#39;</span><span class="p">)</span>
+        <span class="p">}),</span>
+        <span class="p">(</span><span class="s">&#39;Advanced options&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">&#39;classes&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;collapse&#39;</span><span class="p">,),</span>
+            <span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;enable_comments&#39;</span><span class="p">,</span> <span class="s">&#39;registration_required&#39;</span><span class="p">,</span> <span class="s">&#39;template_name&#39;</span><span class="p">)</span>
+        <span class="p">}),</span>
+    <span class="p">)</span>
+</pre></div>
+<p>このフィールドセットによって、 admin のページは以下のようになります:</p>
+<blockquote>
+<img alt="../../_images/flatfiles_admin.png" src="../../_images/flatfiles_admin.png" />
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">fieldsets</span></tt> を指定しない場合、 Django は <tt class="docutils literal"><span class="pre">AutoField</span></tt> でなく、かつ
+<tt class="docutils literal"><span class="pre">editable=True</span></tt> であるようなフィールドを、モデルに定義した順番に個別のフィー
+ルドセットとして表示します。</p>
+<p><tt class="docutils literal"><span class="pre">field_options</span></tt> 辞書には以下のようなキーを指定できます:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">fields</span></tt> フィールドセット内に表示するフィールド名からなるタプルです。
+必須のキーです。</p>
+<blockquote>
+<p>使い方:</p>
+<div class="highlight"><pre><span class="p">{</span>
+<span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;address&#39;</span><span class="p">,</span> <span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;state&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+<p>同じ行に複数のフィールドを表示したい場合、それらのフィールドをタプ
+ルでラップして入れます。下の例では、 <tt class="docutils literal"><span class="pre">first_name</span></tt> と
+<tt class="docutils literal"><span class="pre">last_name</span></tt> が同じ行に表示されます:</p>
+<div class="highlight"><pre><span class="p">{</span>
+<span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="p">((</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">),</span> <span class="s">&#39;address&#39;</span><span class="p">,</span> <span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;state&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</blockquote>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">classes</span></tt></dt>
+<dd><p class="first">フィールドセットに適用される追加の CSS クラス名です。</p>
+<p>使い方:</p>
+<div class="highlight"><pre><span class="p">{</span>
+<span class="s">&#39;classes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;wide&#39;</span><span class="p">,</span> <span class="s">&#39;extrapretty&#39;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+<p class="last">admin サイトのデフォルトのスタイルシートで定義されている便利なクラ
+スとして <tt class="docutils literal"><span class="pre">collapse</span></tt> と <tt class="docutils literal"><span class="pre">wide</span></tt> があります。 <tt class="docutils literal"><span class="pre">collapse</span></tt> スタイ
+ルのフィールドセットは、 admin ページでは最初折り畳まれ (collapse)
+ており、小さな&quot;クリックして展開 (click to expand)&quot; リンクに置き換わっ
+ています。 <tt class="docutils literal"><span class="pre">wide</span></tt> スタイルのフィールドセットには水平方向に追加のス
+ペースが加わります。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">description</span></tt></dt>
+<dd><p class="first">各フィールドセットの先頭の、ヘッダのすぐ下に表示する追加の文字列で、
+オプションです。</p>
+<p class="last">この文字列は admin 上で HTML エスケープ <em>されません</em> 。そのため、必
+要ならそのまま HTML を入れられます。また、 HTML 固有の文字をエスケー
+プしたければ、 <tt class="docutils literal"><span class="pre">django.utils.html.escape()</span></tt> を使ってください。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="s-fields">
+<h4><tt class="docutils literal"><span class="pre">fields</span></tt><a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h4>
+<p>レイアウトを気にせず、単にモデルの一部のフィールドだけをフォームに表示した
+いだけの場合に、 <tt class="docutils literal"><span class="pre">fieldsets</span></tt> の代わりに使ってください。例えば、
+<tt class="docutils literal"><span class="pre">django.contrib.flatpages.FlatPage</span></tt> モデルの admin フォームの簡単なバージョ
+ンを以下のように定義できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">FlatPageAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">)</span>
+</pre></div>
+<p>上の例では、 'url', 'title', 'content' フィールドだけが順番にフォームに表示
+されます。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">この <tt class="docutils literal"><span class="pre">fields</span></tt> オプションと <tt class="docutils literal"><span class="pre">fieldsets</span></tt> オプションの中の <tt class="docutils literal"><span class="pre">fields</span></tt>
+キーとを混同しないでくださいね。</p>
+</div>
+</div>
+<div class="section" id="s-exclude">
+<h4><tt class="docutils literal"><span class="pre">exclude</span></tt><a class="headerlink" href="#exclude" title="Permalink to this headline">¶</a></h4>
+<p>この属性にフィールドの名前のリストを指定すると、指定したフィールドがフォー
+ムから除去されます。</p>
+<p>例えば、以下のようなモデルがあったとします:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">birth_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">name</span></tt> と <tt class="docutils literal"><span class="pre">title</span></tt> フィールドだけを含む <tt class="docutils literal"><span class="pre">Author</span></tt> モデルのフォームを
+表示したければ、 <tt class="docutils literal"><span class="pre">fields</span></tt> や <tt class="docutils literal"><span class="pre">exclude</span></tt> を使って、それぞれ以下のように
+定義できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;birth_date&#39;</span><span class="p">,)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">Author</span></tt> モデルは 3 つのフィールド <tt class="docutils literal"><span class="pre">name</span></tt>, <tt class="docutils literal"><span class="pre">title</span></tt>, <tt class="docutils literal"><span class="pre">birth_date</span></tt>
+しか持たないので、上の 2 つの例は全く同じフィールドを含むフォームを生成しま
+す。</p>
+</div>
+<div class="section" id="s-filter-horizontal">
+<h4><tt class="docutils literal"><span class="pre">filter_horizontal</span></tt><a class="headerlink" href="#filter-horizontal" title="Permalink to this headline">¶</a></h4>
+<p>ユーザビリティが紙一重の <tt class="docutils literal"><span class="pre">&lt;select</span> <span class="pre">multiple&gt;</span></tt> の代わりに、気の利いた控えめ
+な Javascript の「フィルタ」インタフェースを使います。フィルタインタフェー
+スを横並びにして表示させたいフィールドのリストを指定してください。フィルタ
+インタフェースを縦並びにしたい場合は <tt class="docutils literal"><span class="pre">filter_vertical</span></tt> を使ってください。</p>
+</div>
+<div class="section" id="s-filter-vertical">
+<h4><tt class="docutils literal"><span class="pre">filter_vertical</span></tt><a class="headerlink" href="#filter-vertical" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">filter_horizontal</span></tt> とほぼ同じですが、フィルタインタフェースを縦並びで表
+示します。</p>
+</div>
+<div class="section" id="s-list-display">
+<h4><tt class="docutils literal"><span class="pre">list_display</span></tt><a class="headerlink" href="#list-display" title="Permalink to this headline">¶</a></h4>
+<p>admin の変更リストページに表示するフィールドを制御するには <tt class="docutils literal"><span class="pre">list_display</span></tt>
+を使います。</p>
+<p>使い方:</p>
+<div class="highlight"><pre><span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">list_display</span></tt> を指定しなければ、 admin サイトは各オブジェクトの
+<tt class="docutils literal"><span class="pre">__unicode__()</span></tt> 表現を表示するカラムを一つだけ表示します。</p>
+<p><tt class="docutils literal"><span class="pre">list_display</span></tt> には 4 通りの設定方法があります:</p>
+<ul>
+<li><p class="first">モデルのフィールド名:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first">モデルインスタンスを引数にとる呼び出し可能オブジェクト:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">upper_case_name</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="n">upper_case_name</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s">&#39;Name&#39;</span>
+
+<span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="n">upper_case_name</span><span class="p">,)</span>
+</pre></div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> の属性名を表す文字列。呼び出し可能オブジェクトと同じよ
+うに動作します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;upper_case_name&#39;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">upper_case_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+      <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">upper_case_name</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s">&#39;Name&#39;</span>
+</pre></div>
+</li>
+<li><p class="first">モデルの属性名を表す文字列。ただし、 <tt class="docutils literal"><span class="pre">self</span></tt> はモデルインスタンスを
+表します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">birthday</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">decade_born_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">birthday</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y&#39;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;0&#39;s&quot;</span>
+    <span class="n">decade_born_in</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s">&#39;Birth decade&#39;</span>
+
+<span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;decade_born_in&#39;</span><span class="p">)</span>
+</pre></div>
+</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">list_display</span></tt> にはいくつか特殊なケースがあります:</p>
+<ul>
+<li><p class="first">フィールドが <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> の場合、関連づけられているオブジェクトの
+<tt class="docutils literal"><span class="pre">__unicode__()</span></tt> を表示します。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> フィールドの表示は、テーブルの各行に対して個別に
+SQL 文を実行することになってしまうのでサポートしていません。どうして
+も表示させたいなら、カスタムメソッドをモデルに実装して、メソッドの名
+前を <tt class="docutils literal"><span class="pre">list_display</span></tt> に追加してください (<tt class="docutils literal"><span class="pre">list_display</span></tt> へのカスタ
+ムメソッドの追加については、後で詳しく説明しています)。</p>
+</li>
+<li><p class="first">フィールドが <tt class="docutils literal"><span class="pre">BooleanField</span></tt> や <tt class="docutils literal"><span class="pre">NullBooleanField</span></tt> の場合、
+<tt class="xref docutils literal"><span class="pre">True</span></tt> や <tt class="xref docutils literal"><span class="pre">False</span></tt> の代りに &quot;オン&quot; や &quot;オフ&quot; を示すアイコンを表示
+します。</p>
+</li>
+<li><p class="first">モデルや <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のメソッド、呼び出し可能オブジェクトの名前を
+指定した場合、 Django はデフォルトでメソッドの出力を HTML エスケープ
+します。メソッドの出力をエスケープしたくない場合には、メソッドの
+<tt class="docutils literal"><span class="pre">allow_tags</span></tt> 属性の値を <tt class="xref docutils literal"><span class="pre">True</span></tt> にしてください。</p>
+<p>以下に例を示します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">color_code</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">colored_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;span style=&quot;color: #</span><span class="si">%s</span><span class="s">;&quot;&gt;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&lt;/span&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
+    <span class="n">colored_name</span><span class="o">.</span><span class="n">allow_tags</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;colored_name&#39;</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first"><tt class="xref docutils literal"><span class="pre">True</span></tt> か <tt class="xref docutils literal"><span class="pre">False</span></tt> を返すようなモデルの <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のメソッド、
+呼び出し可能オブジェクトの名前を指定した返す場合、メソッドの
+<tt class="docutils literal"><span class="pre">boolean</span></tt> 属性を <tt class="xref docutils literal"><span class="pre">True</span></tt> に設定しておくと、Django は「オン」や「オ
+フ」のアイコンを表示します。</p>
+<p>以下に例を示します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">birthday</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">born_in_fifties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">birthday</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y&#39;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span>
+    <span class="n">born_in_fifties</span><span class="o">.</span><span class="n">boolean</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;born_in_fifties&#39;</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">__str__()</span></tt> および <tt class="docutils literal"><span class="pre">__unicode__()</span></tt> メソッドは他のモデルメソッドと
+同じように <tt class="docutils literal"><span class="pre">list_display</span></tt> に入れられるので、以下のように書いても全
+く問題ありません:</p>
+<div class="highlight"><pre><span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;__unicode__&#39;</span><span class="p">,</span> <span class="s">&#39;some_other_field&#39;</span><span class="p">)</span>
+</pre></div>
+</li>
+<li><p class="first">通常、 <tt class="docutils literal"><span class="pre">list_display</span></tt> の要素のうち、実際のデータベースのフィールド
+に対応していないものは、変更リストページで並び順を変えるときのカラム
+には使えません。 Django はソートをすべてデータベースレベルで行うから
+です。</p>
+<p>ただし、 <tt class="docutils literal"><span class="pre">list_display</span></tt> のいずれかの要素が実際にデータベース上のあ
+るフィールドを指している場合、 <tt class="docutils literal"><span class="pre">admin_order_field</span></tt> という属性を使っ
+て、 Django にそのことを教えられます。</p>
+<p>例を示しましょう:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">color_code</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">colored_first_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;span style=&quot;color: #</span><span class="si">%s</span><span class="s">;&quot;&gt;</span><span class="si">%s</span><span class="s">&lt;/span&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span>
+    <span class="n">colored_first_name</span><span class="o">.</span><span class="n">allow_tags</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">colored_first_name</span><span class="o">.</span><span class="n">admin_order_field</span> <span class="o">=</span> <span class="s">&#39;first_name&#39;</span>
+
+<span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;colored_first_name&#39;</span><span class="p">)</span>
+</pre></div>
+<p>この例では、 Django は Admin 上で <tt class="docutils literal"><span class="pre">colored_first_name</span></tt> を並べ変える
+際に <tt class="docutils literal"><span class="pre">first_name</span></tt> フィールドを使います。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="s-list-display-links">
+<h4><tt class="docutils literal"><span class="pre">list_display_links</span></tt><a class="headerlink" href="#list-display-links" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">list_display_links</span></tt> を設定すると、 <tt class="docutils literal"><span class="pre">list_display</span></tt> のどのフィールドを
+オブジェクトの「変更」ページにリンクするかを制御できます。</p>
+<p>デフォルトでは、変更リストページはオブジェクトの変更ページ中の第一カラム、
+すなわち <tt class="docutils literal"><span class="pre">list_display</span></tt> の先頭に指定したフィールドにリンクを張ります。
+<tt class="docutils literal"><span class="pre">list_display_links</span></tt> を使うと、リンク先のカラムを変更できます。
+<tt class="docutils literal"><span class="pre">list_display_links</span></tt> には、フィールド名のリストまたはタプルを
+(<tt class="docutils literal"><span class="pre">list_display</span></tt> と同じ形式で) 指定します。</p>
+<p><tt class="docutils literal"><span class="pre">list_display_links</span></tt> に指定するフィールド名は、一つでも複数でも構いません。
+フィールド名が <tt class="docutils literal"><span class="pre">list_display</span></tt> に列挙されている限り、 Django はどんなに多
+くの (あるいはどんなにわずかな) フィールドがリンクされていても問題にしませ
+ん。必要なのは、 <tt class="docutils literal"><span class="pre">list_display_links</span></tt> を使うには <tt class="docutils literal"><span class="pre">list_display</span></tt> を定義
+しておかねばならない、ということだけです。</p>
+<p>以下の例では、 <tt class="docutils literal"><span class="pre">first_name</span></tt> および <tt class="docutils literal"><span class="pre">last_name</span></tt> フィールドが変更リス
+トページにリンクされます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;birthday&#39;</span><span class="p">)</span>
+    <span class="n">list_display_links</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">)</span>
+</pre></div>
+<p>最後に、 <tt class="docutils literal"><span class="pre">list_display_links</span></tt> を使うには <tt class="docutils literal"><span class="pre">list_display</span></tt> も指定せねばな
+らないので注意しましょう。</p>
+</div>
+<div class="section" id="s-list-filter">
+<h4><tt class="docutils literal"><span class="pre">list_filter</span></tt><a class="headerlink" href="#list-filter" title="Permalink to this headline">¶</a></h4>
+<p>admin の変更リストページの右側のサイドバーにあるフィルタを有効にするには、
+<tt class="docutils literal"><span class="pre">list_filter</span></tt> を設定します。この値はフィールド名のリストにします。
+各フィールド名は <tt class="docutils literal"><span class="pre">BooleanField</span></tt>, <tt class="docutils literal"><span class="pre">CharField</span></tt>, <tt class="docutils literal"><span class="pre">DateField</span></tt>,
+<tt class="docutils literal"><span class="pre">DateTimeField</span></tt>, <tt class="docutils literal"><span class="pre">IntegerField</span></tt>, <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> のいずれかでなければ
+なりません。</p>
+<p>以下の例は <tt class="docutils literal"><span class="pre">django.contrib.auth.models.User</span></tt> モデルからとったもので、
+<tt class="docutils literal"><span class="pre">list_display</span></tt> と <tt class="docutils literal"><span class="pre">list_filter</span></tt> の仕組みを示しています:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">UserAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;username&#39;</span><span class="p">,</span> <span class="s">&#39;email&#39;</span><span class="p">,</span> <span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;is_staff&#39;</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;is_staff&#39;</span><span class="p">,</span> <span class="s">&#39;is_superuser&#39;</span><span class="p">)</span>
+</pre></div>
+<p>上のコードによって、 admin の変更リストは以下のようになります:</p>
+<blockquote>
+<img alt="../../_images/users_changelist.png" src="../../_images/users_changelist.png" />
+</blockquote>
+<p>(この例では、後述の <tt class="docutils literal"><span class="pre">search_fields</span></tt> も定義しています。)</p>
+</div>
+<div class="section" id="s-list-per-page">
+<h4><tt class="docutils literal"><span class="pre">list_per_page</span></tt><a class="headerlink" href="#list-per-page" title="Permalink to this headline">¶</a></h4>
+<p>admin 変更リストをページ分割 (paginate) で表示するときに、各ページに何個の
+アイテムを表示するかを決めます。デフォルト値は <tt class="docutils literal"><span class="pre">100</span></tt> です。</p>
+</div>
+<div class="section" id="s-list-select-related">
+<h4><tt class="docutils literal"><span class="pre">list_select_related</span></tt><a class="headerlink" href="#list-select-related" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">list_select_related</span></tt> を設定すると、 admin の変更リストページに表示するオ
+ブジェクトリストを取得する際に <tt class="docutils literal"><span class="pre">select_related()</span></tt> を使うよう Django に指
+示できます。これにより、データベースクエリの発行数を抑えられます。</p>
+<p>値は <tt class="xref docutils literal"><span class="pre">True</span></tt> または <tt class="xref docutils literal"><span class="pre">False</span></tt> にします。デフォルトは <tt class="xref docutils literal"><span class="pre">False</span></tt> です。</p>
+<p><tt class="docutils literal"><span class="pre">list_display</span></tt> のいずれかのフィールドが <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> の場合、 Django は
+この設定に関わらず <tt class="docutils literal"><span class="pre">select_related()</span></tt> を使います。</p>
+<p><tt class="docutils literal"><span class="pre">select_related()</span></tt> の詳細は
+<a class="reference external" href="../models/querysets.html#select-related"><em>select_related() のドキュメント</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-inlines">
+<h4><tt class="docutils literal"><span class="pre">inlines</span></tt><a class="headerlink" href="#inlines" title="Permalink to this headline">¶</a></h4>
+<p>後述の <tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> を参照してください。</p>
+</div>
+<div class="section" id="s-ordering">
+<h4><tt class="docutils literal"><span class="pre">ordering</span></tt><a class="headerlink" href="#ordering" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">ordering</span></tt> を設定すると、 admin の変更リストにおける整列順を指定できます。
+値はタプルからなるリストで、モデルの <tt class="docutils literal"><span class="pre">ordering</span></tt> パラメタと同じ形式で指定
+します。</p>
+<p>この値を指定しない場合、 Django はモデルのデフォルトの整列順を使います。</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">Django はリストやタプルの最初の要素だけを考慮して、後の要素は無視します。</p>
+</div>
+</div>
+<div class="section" id="s-prepopulated-fields">
+<h4><tt class="docutils literal"><span class="pre">prepopulated_fields</span></tt><a class="headerlink" href="#prepopulated-fields" title="Permalink to this headline">¶</a></h4>
+<p>フィールドの値を別のフィールドの値からセットさせたい場合は、以下のように、
+<tt class="docutils literal"><span class="pre">prepopulated_fields</span></tt> にフィールド名を対応付けた辞書を設定してください:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">ArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">prepopulated_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;slug&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">,)}</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">prepopulated_fields</span></tt> をセットすると、フィールドに小さな JavaScript のア
+クションが設定され、引数に指定したフィールドから値を自動的に取り込みます。
+<tt class="docutils literal"><span class="pre">prepopulated_fields</span></tt> は、主に他の複数のフィールドから <tt class="docutils literal"><span class="pre">SlugField</span></tt> フィー
+ルドの値を生成するときに使います。値は、まず各ソースフィールドの値を結合し
+て、その結果が有効なスラグになるよう変換 (スペースをダッシュに置換するなど)
+して生成します。</p>
+<p><tt class="docutils literal"><span class="pre">DateTimeField</span></tt>, <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> および <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> は
+<tt class="docutils literal"><span class="pre">prepopulated_fields</span></tt> に指定できません。</p>
+</div>
+<div class="section" id="s-radio-fields">
+<h4><tt class="docutils literal"><span class="pre">radio_fields</span></tt><a class="headerlink" href="#radio-fields" title="Permalink to this headline">¶</a></h4>
+<p>デフォルトでは、Django の admin は <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> のフィールドや
+<tt class="docutils literal"><span class="pre">choices</span></tt> の設定されたフィールドに対してセレクタボックス (&lt;select&gt;) イン
+タフェースを使います。 <tt class="docutils literal"><span class="pre">radio_fields</span></tt> にフィールド名を指定しておくと、
+Django はセレクタボックスの代りにラジオボタンのインタフェースを使います。
+例えば、 <tt class="docutils literal"><span class="pre">group</span></tt> が <tt class="docutils literal"><span class="pre">Person</span></tt> モデル上の  <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> フィールド
+であれば、以下のように書けます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">radio_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;group&quot;</span><span class="p">:</span> <span class="n">admin</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">}</span>
+</pre></div>
+<p>ラジオボタンの並び方を指定するシンボル、 <tt class="docutils literal"><span class="pre">HORIZONTAL</span></tt> または <tt class="docutils literal"><span class="pre">VERTICAL</span></tt>
+は <tt class="docutils literal"><span class="pre">django.contrib.admin</span></tt> モジュールにあります。</p>
+<p><tt class="docutils literal"><span class="pre">ForeignKey</span></tt> や <tt class="docutils literal"><span class="pre">choices</span></tt> パラメタのセットされたフィールド以外に
+<tt class="docutils literal"><span class="pre">radio_fields</span></tt> を使ってはなりません。</p>
+</div>
+<div class="section" id="s-raw-id-fields">
+<h4><tt class="docutils literal"><span class="pre">raw_id_fields</span></tt><a class="headerlink" href="#raw-id-fields" title="Permalink to this headline">¶</a></h4>
+<p>デフォルトでは、Django の admin サイトは <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> フィールドに対して
+セレクタボックス (&lt;select&gt;) インタフェースを使います。しかし、時にはリレー
+ション先の全てのオブジェクトの入ったセレクタボックスが生成され、ドロップダ
+ウン表示されるのを避けたい場合もあります。</p>
+<p><tt class="docutils literal"><span class="pre">raw_id_fields</span></tt> には、ウィジェットを <tt class="docutils literal"><span class="pre">Input</span></tt> に変更したいフィールドのリ
+ストを指定します。 <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> または <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> を指定できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">ArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;newspaper&quot;</span><span class="p">,)</span>
+</pre></div>
+</div>
+<div class="section" id="s-save-as">
+<h4><tt class="docutils literal"><span class="pre">save_as</span></tt><a class="headerlink" href="#save-as" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">save_as</span></tt> を指定すると、 admin の編集フォームで「別名で保存 (save as)」機
+能を使えるようになります。</p>
+<p>通常、編集フォームには三つの保存オプション、すなわち「保存 (Save)」、「保存
+して編集を続ける (Save and continue editing)」、「保存してもう一つ追加
+(Save and add another)」があります。 <tt class="docutils literal"><span class="pre">save_as</span></tt> を <tt class="xref docutils literal"><span class="pre">True</span></tt> にすると「保存
+してもう一つ追加」は「別名で保存 (Save as)」に置き換わります。</p>
+<p>「別名で保存」は、現在のオブジェクトをそのまま保存するのではなく、(新たな
+ID を持った) 別のオブジェクトとして保存することです。</p>
+<p>デフォルトでは、 <tt class="docutils literal"><span class="pre">save_as</span></tt> は <tt class="xref docutils literal"><span class="pre">False</span></tt> に設定されています。</p>
+</div>
+<div class="section" id="s-save-on-top">
+<h4><tt class="docutils literal"><span class="pre">save_on_top</span></tt><a class="headerlink" href="#save-on-top" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">save_on_top</span></tt> を指定すると、 admin の変更フォームの最上部に保存ボタンを追
+加できます。</p>
+<p>通常、保存ボタンはフォームの最下部だけに表示されます。 <tt class="docutils literal"><span class="pre">save_on_top</span></tt> を指
+定すると、ボタンは最下部だけでなく最上部にも表示されます。</p>
+<p>デフォルトでは、 <tt class="docutils literal"><span class="pre">save_on_top</span></tt> は <tt class="xref docutils literal"><span class="pre">False</span></tt> です。</p>
+</div>
+<div class="section" id="s-search-fields">
+<h4><tt class="docutils literal"><span class="pre">search_fields</span></tt><a class="headerlink" href="#search-fields" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">search_fields</span></tt> を指定すると、 admin の変更リストページで検索ボックスを使
+えるようになります。この値は、ユーザが検索クエリをテキストボックスに入力し
+たときに検索の対象に含めるフィールド名のリストです。</p>
+<p>フィールドは <tt class="docutils literal"><span class="pre">CharField</span></tt> や <tt class="docutils literal"><span class="pre">TextField</span></tt> のような何らかのテキストフィー
+ルドでなければなりません。 DB API の「リレーションを追跡する」表記を使えば、
+<tt class="docutils literal"><span class="pre">ForeignKey</span></tt> を介したフィールドの指定も行えます:</p>
+<div class="highlight"><pre><span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;foreign_key__related_fieldname&#39;</span><span class="p">]</span>
+</pre></div>
+<p>admin の検索ボックスで検索を実行すると、 Django は検索クエリを単語に分解し
+て、各単語を含むような全てのオブジェクトを返します。検索は大小文字を区別せ
+ず、 <tt class="docutils literal"><span class="pre">search_fields</span></tt> に指定したフィールドのうち少なくとも一つに単語が入っ
+ていればヒットします。例えば、 <tt class="docutils literal"><span class="pre">search_fields</span></tt> が
+<tt class="docutils literal"><span class="pre">['first_name',</span> <span class="pre">'last_name']</span></tt> に設定されている場合、ユーザが
+<tt class="docutils literal"><span class="pre">john</span> <span class="pre">lennon</span></tt> を検索すると、 Django は以下のような <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節を持った
+SQL と等価な検索を実行します:</p>
+<pre>WHERE (first_name ILIKE '%john%' OR last_name ILIKE '%john%')
+AND (first_name ILIKE '%lennon%' OR last_name ILIKE '%lennon%')</pre>
+<p>より高速な、あるいはより制約の厳しい検索を行うには、フィールド名の前に以下
+のような演算子を置きます:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">^</span></tt></dt>
+<dd><p class="first">フィールドの先頭にマッチします。例えば、 <tt class="docutils literal"><span class="pre">search_fields</span></tt> を
+<tt class="docutils literal"><span class="pre">['^first_name',</span> <span class="pre">'^last_name']</span></tt> にして、ユーザが <tt class="docutils literal"><span class="pre">john</span> <span class="pre">lennon</span></tt> を検
+索した場合、Django は以下のような <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節の SQL に等価な検索を実行
+します:</p>
+<pre>WHERE (first_name ILIKE 'john%' OR last_name ILIKE 'john%')
+AND (first_name ILIKE 'lennon%' OR last_name ILIKE 'lennon%')</pre>
+<p class="last">このクエリを使うと、データベースはカラムの先頭部分だけをチェックすれば
+よく、カラム中のデータ全体を調べなくてもよくなるため、通常の
+<tt class="docutils literal"><span class="pre">'%john%'</span></tt> クエリよりも効率的に検索を実行できます。加えて、カラムにイ
+ンデクスが設定されていれば、データベースによっては  <tt class="docutils literal"><span class="pre">LIKE</span></tt> クエリであっ
+てもインデクスを使ったクエリを実行できるという利点があります。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">=</span></tt></dt>
+<dd><p class="first">大小文字を区別しない厳密一致です。例えば、 <tt class="docutils literal"><span class="pre">search_fields</span></tt> を
+<tt class="docutils literal"><span class="pre">['=first_name',</span> <span class="pre">'=last_name']</span></tt> にして、ユーザが <tt class="docutils literal"><span class="pre">john</span> <span class="pre">lennon</span></tt> を検
+索した場合、 Django は以下のような <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節の SQL に等価な検索を実行
+します:</p>
+<pre>WHERE (first_name ILIKE 'john' OR last_name ILIKE 'john')
+AND (first_name ILIKE 'lennon' OR last_name ILIKE 'lennon')</pre>
+<p class="last">クエリ入力はスペース区切りなので、この例に従うと、 <tt class="docutils literal"><span class="pre">first_name</span></tt> が
+<tt class="docutils literal"><span class="pre">'john</span> <span class="pre">winston'</span></tt> である (スペースを含む) ようなレコードは検索でき
+ないので注意してください。</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">&#64;</span></tt></dt>
+<dd>全文検索マッチを実行します。デフォルトの search メソッドに似ていますが、
+インデクスを使います。現在のところ MySQL でしか使えません。</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="s-id3">
+<span id="s-modeladmin-methods"></span><h3><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のメソッド<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="s-save-model-self-request-obj-form-change">
+<h4><tt class="docutils literal"><span class="pre">save_model(self,</span> <span class="pre">request,</span> <span class="pre">obj,</span> <span class="pre">form,</span> <span class="pre">change)</span></tt><a class="headerlink" href="#save-model-self-request-obj-form-change" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">save_model</span></tt> メソッドは <tt class="docutils literal"><span class="pre">HttpRequest</span></tt>, モデルインスタンス、
+<tt class="docutils literal"><span class="pre">ModelForm</span></tt> インスタンス、オブジェクトの追加か変更かを表すブール値 (変更
+の場合には <tt class="xref docutils literal"><span class="pre">True</span></tt>) を引数にとります。このメソッドを使えば、オブジェクトの
+保存前 (pre-save) および保存後 (post-save) 処理を実行できます。</p>
+<p>保存前に <tt class="docutils literal"><span class="pre">request.user</span></tt> をオブジェクトに保存するには、以下のようにします:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">ArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="s-save-formset-self-request-form-formset-change">
+<h4><tt class="docutils literal"><span class="pre">save_formset(self,</span> <span class="pre">request,</span> <span class="pre">form,</span> <span class="pre">formset,</span> <span class="pre">change)</span></tt><a class="headerlink" href="#save-formset-self-request-form-formset-change" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">save_formset</span></tt> メソッドは <tt class="docutils literal"><span class="pre">HttpRequest</span></tt>, モデルインスタンス、親クラスの
+<tt class="docutils literal"><span class="pre">ModelForm</span></tt> インスタンス、オブジェクトの追加か変更かを表すブール値 (変更
+の場合には <tt class="xref docutils literal"><span class="pre">True</span></tt>) を引数にとります。</p>
+<p>フォームセットの各モデルインスタンスの保存前に <tt class="docutils literal"><span class="pre">request.user</span></tt> をオブジェ
+クトに保存するには、以下のようにします:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">ArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_formset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">formset</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="n">formset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">formset</span><span class="o">.</span><span class="n">save_m2m</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-id4">
+<span id="s-modeladmin-media-definitions"></span><h3><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のメディア定義<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>たまに、 CSS や JavaScript を追加・変更ビューに追加したい場合があります。
+<tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> に内部クラス <tt class="docutils literal"><span class="pre">Media</span></tt> を定義すれば、これを実現できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">ArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Media</span><span class="p">:</span>
+        <span class="n">css</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&quot;all&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;my_styles.css&quot;</span><span class="p">,)</span>
+        <span class="p">}</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;my_code.js&quot;</span><span class="p">,)</span>
+</pre></div>
+<p>これらのメディア名のパスには <tt class="docutils literal"><span class="pre">MEDIA_URL</span></tt> の内容が前置されます。また、
+<a class="reference external" href="../../topics/forms/media.html#topics-forms-media"><em>forms の通常のメディア定義</em></a> と同じ規則が当てはま
+ります。</p>
+</div>
+<div class="section" id="s-admin">
+<span id="s-admin-add-custom-validation"></span><h3>admin にカスタムのバリデーションを追加する<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h3>
+<p>admin にカスタムのバリデーションを追加するのはとても簡単です。 admin インタ
+フェースは <tt class="xref docutils literal"><span class="pre">django.forms</span></tt> を再利用しているので、 <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> クラス
+を使えばフォームを指定できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">ArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">MyArticleAdminForm</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">MyArticleAdminForm</span></tt> は、 import できる場所ならどこにでも置けます。フォー
+ムの中で、任意のフィールドにカスタムのバリデーションコードを追加できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyArticleAdminForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Article</span>
+
+    <span class="k">def</span> <span class="nf">clean_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># do something that validates your data</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span>
+</pre></div>
+<p>このとき、 <tt class="docutils literal"><span class="pre">ModelForm</span></tt> を使うことが重要です。他のクラスではうまくいきませ
+ん。詳しくは <a class="reference external" href="../forms/index.html#ref-forms-index"><em>forms</em></a> ドキュメント内の
+<a class="reference external" href="../forms/validation.html#ref-forms-validation"><em>カスタムのバリデーション</em></a> を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-inlinemodeladmin">
+<span id="s-inlinemodeladmin-objects"></span><span id="s-admin-inlines"></span><h2><tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> オブジェクト<a class="headerlink" href="#inlinemodeladmin" title="Permalink to this headline">¶</a></h2>
+<p>admin インタフェースには、他のモデルクラスのインスタンスを同じページで編集
+する機能があります。この機能をインライン編集と呼びます。インラインモデルを
+指定するには、 <tt class="docutils literal"><span class="pre">ModelAdmin.inlines</span></tt> 属性を使います:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">BookInline</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">TabularInline</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Book</span>
+
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">BookInline</span><span class="p">,</span>
+    <span class="p">]</span>
+</pre></div>
+<p>Django は、 <tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> のサブクラスとして、以下の二つを提供してい
+ます:</p>
+<pre>* ``TabularInline``
+* ``StackedInline``</pre>
+<p>これら二つの違いは、単にレンダリングに使われるテンプレートに過ぎません。</p>
+<div class="section" id="s-id5">
+<span id="s-inlinemodeladmin-options"></span><h3><tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> のオプション<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> クラスは <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のサブクラスなので、以下に挙げ
+る独自の機能の他に、 <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> の機能を全て継承しています:</p>
+<div class="section" id="s-model">
+<h4><tt class="docutils literal"><span class="pre">model</span></tt><a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h4>
+<p>インライン編集する対象のモデルです。必須の引数です。</p>
+</div>
+<div class="section" id="s-fk-name">
+<h4><tt class="docutils literal"><span class="pre">fk_name</span></tt><a class="headerlink" href="#fk-name" title="Permalink to this headline">¶</a></h4>
+<p>モデルの外部キーの名前です。たいていの場合、外部キーは自動的に決定できます
+が、親モデルに対して外部キーを複数張っているようなモデルの場合は、
+<tt class="docutils literal"><span class="pre">fk_name</span></tt> を明示的に決める必要があります。</p>
+</div>
+<div class="section" id="s-formset">
+<h4><tt class="docutils literal"><span class="pre">formset</span></tt><a class="headerlink" href="#formset" title="Permalink to this headline">¶</a></h4>
+<p>デフォルト値は <tt class="docutils literal"><span class="pre">BaseInlineFormset</span></tt> です。独自のフォームセットを指定すれば、
+色々とカスタマイズできます。インラインオブジェクトのフォームは
+<a class="reference external" href="../../topics/forms/modelforms.html#model-formsets"><em>モデルフォームセット</em></a> で生成されています。</p>
+</div>
+<div class="section" id="s-id6">
+<h4><tt class="docutils literal"><span class="pre">form</span></tt><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">form</span></tt> の値は <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> から継承されます。この値は、インラインオブジェ
+クトのフォームセットを生成するときに <tt class="docutils literal"><span class="pre">fomrset_factory</span></tt> に渡されます。</p>
+</div>
+<div class="section" id="s-extra">
+<h4><tt class="docutils literal"><span class="pre">extra</span></tt><a class="headerlink" href="#extra" title="Permalink to this headline">¶</a></h4>
+<p>フォームセットが、初期のフォームに加えて表示する追加のフォーム数を制御しま
+す。詳しくは <a class="reference external" href="../../topics/forms/formsets.html#topics-forms-formsets"><em>formsets のドキュメント</em></a> を参照
+してください。</p>
+</div>
+<div class="section" id="s-max-num">
+<h4><tt class="docutils literal"><span class="pre">max_num</span></tt><a class="headerlink" href="#max-num" title="Permalink to this headline">¶</a></h4>
+<p>インラインで表示するフォームの最大個数を制御します。この値は直接オブジェク
+トの数には関係しませんが、あまり小さな値が設定されていると、影響することも
+あります。詳しくは <a class="reference external" href="../../topics/forms/modelforms.html#model-formsets-max-num"><em>編集可能なオブジェクトの数を制限する</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-id7">
+<h4><tt class="docutils literal"><span class="pre">raw_id_fields</span></tt><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p>デフォルトの設定では、 Django の admin は <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> の選択に選択ボック
+スインタフェース (&lt;select&gt;) を使います。しかし、リレーション先の全てのイン
+スタンスをドロップダウンに表示するときのオーバヘッドを防ぎたいときがありま
+す。</p>
+<p><tt class="docutils literal"><span class="pre">raw_id_fields</span></tt> には、モデルの <tt class="docutils literal"><span class="pre">ForeignKey</span></tt> や <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> をリ
+ストで指定します。 <tt class="docutils literal"><span class="pre">raw_id_fields</span></tt> に指定したフィールドは、 <tt class="docutils literal"><span class="pre">Input</span></tt> ウィ
+ジェットを使います:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">BookInline</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">TabularInline</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Book</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;pages&quot;</span><span class="p">,)</span>
+</pre></div>
+</div>
+<div class="section" id="s-template">
+<h4><tt class="docutils literal"><span class="pre">template</span></tt><a class="headerlink" href="#template" title="Permalink to this headline">¶</a></h4>
+<p>インラインオブジェクトをレンダリングするときに使われるテンプレートです。</p>
+</div>
+<div class="section" id="s-verbose-name">
+<h4><tt class="docutils literal"><span class="pre">verbose_name</span></tt><a class="headerlink" href="#verbose-name" title="Permalink to this headline">¶</a></h4>
+<p>モデルの内部クラス <tt class="docutils literal"><span class="pre">Meta</span></tt> の <tt class="docutils literal"><span class="pre">verbose_name</span></tt> の設定をオーバライドします。</p>
+</div>
+<div class="section" id="s-verbose-name-plural">
+<h4><tt class="docutils literal"><span class="pre">verbose_name_plural</span></tt><a class="headerlink" href="#verbose-name-plural" title="Permalink to this headline">¶</a></h4>
+<p>モデルの内部クラス <tt class="docutils literal"><span class="pre">Meta</span></tt> の <tt class="docutils literal"><span class="pre">verbose_name_plural</span></tt> の設定をオーバライド
+します。</p>
+</div>
+</div>
+<div class="section" id="s-id8">
+<span id="s-working-with-a-model-with-two-or-more-foreign-keys-to-the-same-parent-model"></span><h3>一つのモデルから複数の外部キーが張られている場合のインライン編集の扱い<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>一つのモデルに対して、複数の外部キーが張られている場合があります。以下のよ
+うなモデルを例に考えてみましょう:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Friendship</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">to_person</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;friends&quot;</span><span class="p">)</span>
+    <span class="n">from_person</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;from_friends&quot;</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">Person</span></tt> の admin サイトで、インラインの追加・編集ページを表示したくても、
+どの外部キーを辿らせるかは自動で決められません。従って、明示的に決めてやる
+必要があります:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">FriendshipInline</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">TabularInline</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Friendship</span>
+    <span class="n">fk_name</span> <span class="o">=</span> <span class="s">&quot;to_person&quot;</span>
+
+<span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">FriendshipInline</span><span class="p">,</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="s-id9">
+<h3>中間モデルを介した多対多リレーションを扱う<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>デフォルトの設定では、 admin で多対多のリレーションを表す場合、
+<tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> を定義しているモデルの中でインライン表示されるウィジェッ
+トを使います。しかし、 <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> の <tt class="docutils literal"><span class="pre">through</span></tt> 引数に中間モデル
+を指定した場合、 admin は <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> のウィジェットを表示しません。
+これは、中間モデルの各インスタンスを表示するのに一つのウィジェットでは足り
+ないためと、複数ウィジェットを表示するために必要なレイアウトが中間モデルに
+よって変わってしまうためです。</p>
+<p>しかし、それでもインラインで編集を行いたい場合があります。好運なことに、イ
+ンライン admin モデル (inline admin model) を使えば簡単に実現できます。
+例として、以下のようなモデルを考えましょう:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Group</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="n">members</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="n">through</span><span class="o">=</span><span class="s">&#39;Membership&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Membership</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">person</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Group</span><span class="p">)</span>
+    <span class="n">date_joined</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">invite_reason</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+</pre></div>
+<p>中間モデルを admin で表示するには、まず <tt class="docutils literal"><span class="pre">Membership</span></tt> モデルに対するインラ
+インクラスを作成します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MembershipInline</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">TabularInline</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Membership</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+<p>上の簡単な例では、デフォルトの <tt class="docutils literal"><span class="pre">Membership</span></tt> モデルを扱うインライン admin
+クラスを定義して、追加用のフォームの数を 1 つに制限する他はデフォルトの
+<tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> クラスの値を使っています。他にも、
+<tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> クラスのオプションを使って色々と設定できます。</p>
+<p>次に、 <tt class="docutils literal"><span class="pre">Person</span></tt> や <tt class="docutils literal"><span class="pre">Group</span></tt> モデルの <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> クラスを定義します:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">PersonAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">(</span><span class="n">MembershipInline</span><span class="p">,)</span>
+
+<span class="k">class</span> <span class="nc">GroupAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">(</span><span class="n">MembershipInline</span><span class="p">,)</span>
+</pre></div>
+<p>最後に、 <tt class="docutils literal"><span class="pre">Person</span></tt> と <tt class="docutils literal"><span class="pre">Group</span></tt> を admin サイトに登録します:</p>
+<div class="highlight"><pre><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="n">PersonAdmin</span><span class="p">)</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">GroupAdmin</span><span class="p">)</span>
+</pre></div>
+<p>これで、 admin サイトの <tt class="docutils literal"><span class="pre">Person</span></tt> と <tt class="docutils literal"><span class="pre">Group</span></tt> の両方で、
+<tt class="docutils literal"><span class="pre">MembershipInline</span></tt> オブジェクトをインライン編集できます。</p>
+</div>
+<div class="section" id="s-id10">
+<h3>一般化リレーションをインラインで扱う<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>一般化リレーションオブジェクトもインラインで扱えます。以下のようなモデルが
+定義されていたとしましょう:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&quot;images&quot;</span><span class="p">)</span>
+    <span class="n">content_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ContentType</span><span class="p">)</span>
+    <span class="n">object_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">()</span>
+    <span class="n">content_object</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericForeignKey</span><span class="p">(</span><span class="s">&quot;content_type&quot;</span><span class="p">,</span> <span class="s">&quot;object_id&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">Product</span></tt> の追加／変更ビューで <tt class="docutils literal"><span class="pre">Image</span></tt> インスタンスを編集したり追加した
+りしたいなら、 <tt class="docutils literal"><span class="pre">django.contrib.contenttypes.generic</span></tt> の
+<tt class="docutils literal"><span class="pre">GenericInlineModelAdmin</span></tt> を使います。 <tt class="docutils literal"><span class="pre">admin.py</span></tt> で、以下のように設定
+してください:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">django.contrib.contenttypes</span> <span class="kn">import</span> <span class="n">generic</span>
+
+<span class="kn">from</span> <span class="nn">myproject.myapp.models</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">Product</span>
+
+<span class="k">class</span> <span class="nc">ImageInline</span><span class="p">(</span><span class="n">generic</span><span class="o">.</span><span class="n">GenericTabularInline</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Image</span>
+
+<span class="k">class</span> <span class="nc">ProductAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ImageInline</span><span class="p">,</span>
+    <span class="p">]</span>
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Product</span><span class="p">,</span> <span class="n">ProductAdmin</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">django.contrib.contenttypes.generic</span></tt> は <tt class="docutils literal"><span class="pre">GenericTabularInline</span></tt> と
+<tt class="docutils literal"><span class="pre">GenericStackedInline</span></tt> を提供していて、その動作は通常のインライン編集と
+同じです。詳しくは <a class="reference external" href="contenttypes.html#ref-contrib-contenttypes"><em>contenttypes のドキュメント</em></a> を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-id11">
+<h2>admin テンプレートのオーバライド<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>admin モジュールが admin サイトの様々なページを生成するときに使うテンプレー
+トは、その大半を比較的簡単にオーバライドできます。オーバライドは、特定のア
+プリケーションやモデルだけのためにもオーバライドできます。</p>
+<div class="section" id="s-id12">
+<h3>プロジェクトの admin テンプレートディレクトリを設定する<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>admin テンプレートファイルは <tt class="docutils literal"><span class="pre">contrib/admin/templates/admin</span></tt> ディレクトリ
+に入っています。</p>
+<p>テンプレートをオーバライドするには、まずプロジェクトの <tt class="docutils literal"><span class="pre">templates</span></tt> ディレ
+クトリ内に <tt class="docutils literal"><span class="pre">admin</span></tt> ディレクトリを作成します。プロジェクトのテンプレートディ
+レクトリとは、 <tt class="docutils literal"><span class="pre">TEMPLATE_DIRS</span></tt> の中に設定されているディレクトリのいずれか
+です。</p>
+<p>次に、 <tt class="docutils literal"><span class="pre">admin</span></tt> ディレクトリ内に、アプリケーションの名前から取った名前のディ
+レクトリを作成します。アプリケーションのサブディレクトリの中に、さらにモデ
+ルからとった名前のサブディレクトリを作成します。このとき、 admin アプリケー
+ションはモデル名を小文字に変換した名前でディレクトリを探すことに注意しましょ
+う。ですから、大小文字を区別するファイルシステム上にアプリケーションを配置
+しているのなら、ディレクトリ名が全て小文字で構成されているか確認してくださ
+い。</p>
+<p>特定のアプリケーション向けに admin テンプレートをオーバライドしたければ、テ
+ンプレートを <tt class="docutils literal"><span class="pre">django/contrib/admin/templates/admin</span></tt> からアプリケーション
+名のディレクトリ下にコピーして編集してください。</p>
+<p>例えば、 <tt class="docutils literal"><span class="pre">my_app</span></tt> の全てのモデルの変更リストにツールメニューを追加したい
+なら、 <tt class="docutils literal"><span class="pre">contrib/admin/templates/admin/change_list.html</span></tt> をプロジェクトの
+<tt class="docutils literal"><span class="pre">templates/admin/my_app/</span></tt> ディレクトリにコピーして必要な変更を施します。</p>
+<p><tt class="docutils literal"><span class="pre">Page</span></tt> という名前のモデルの変更リストだけにツールメニューを追加したいなら、
+ファイルを <tt class="docutils literal"><span class="pre">templates/admin/my_app/page</span></tt> ディレクトリにコピーします。</p>
+</div>
+<div class="section" id="s-id13">
+<h3>admin テンプレートのオーバライドと置き換え<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>admin テンプレートはモジュラー構造で設計されているので、必ずしもいつもテン
+プレート全体を置き換える必要はありませんし、そうしないよう勧めます。基本的
+には、変更の必要のあるセクションだけをオーバライドするのがよいでしょう。</p>
+<p>上に挙げた例の続きとして説明しましょう。 <tt class="docutils literal"><span class="pre">Page</span></tt> モデルの <tt class="docutils literal"><span class="pre">History</span></tt> ツー
+ルの隣に新しくリンクを追加したいとします。 <tt class="docutils literal"><span class="pre">change_from.html</span></tt> を眺めたあ
+と、オーバライドする必要があるのは <tt class="docutils literal"><span class="pre">object-tools</span></tt> ブロックだけだと分かっ
+たとしましょう。その場合、新たな <tt class="docutils literal"><span class="pre">change_form.html</span></tt> は以下のように書けま
+す:</p>
+<pre>{% extends "admin/change_form.html" %}
+{% load i18n %}
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  &lt;ul class="object-tools"&gt;
+    &lt;li&gt;&lt;a href="history/" class="historylink"&gt;{% trans "History" %}&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="mylink/" class="historylink"&gt;My Link&lt;/a&gt;&lt;/li&gt;
+    {% if has_absolute_url %}
+        &lt;li&gt;&lt;a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink"&gt;
+            {% trans "View on site" %}&lt;/a&gt;
+        &lt;/li&gt;
+    {% endif%}
+  &lt;/ul&gt;
+{% endif %}{% endif %}
+{% endblock %}</pre>
+<p>これだけです！このファイルを <tt class="docutils literal"><span class="pre">templates/admin/my_app</span></tt> ディレクトリに置け
+ば、全てのモデル変更フォームでリンクが表示されるでしょう。</p>
+</div>
+<div class="section" id="s-id14">
+<h3>アプリケーションやモデル単位でオーバライドできるテンプレート<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">contrib/admin/templates/admin</span></tt> のテンプレートの全てが、アプリケーション
+やモデル単位でオーバライドできるわけではありません。以下のテンプレートはオー
+バライドできます:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">change_form.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">change_list.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">delete_confirmation.html</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">object_history.html</span></tt></li>
+</ul>
+<p>この節で述べた方法でテンプレートをオーバライドできなくても、オーバライドし
+たい内容を <tt class="docutils literal"><span class="pre">templates/admin</span></tt> ディレクトリに配置することで、プロジェクト全
+体の設定としてオーバライドできます。この方法は、カスタムの 404 ページや 500
+ページをオーバライドするときに特に便利です。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="docutils literal"><span class="pre">change_list_request.html</span></tt> のようなテンプレートは、カスタムの
+inclusion タグをレンダするために使われています。このテンプレートはオー
+バライドできますが、テンプレートを変更するときには、独自の inclusion タ
+グを作成しておいて、別の名前を付けておき、テンプレートで呼び出す方が
+よいでしょう。そうすれば、テンプレートを選択して使えるからです。</p>
+</div>
+</div>
+<div class="section" id="s-id15">
+<h3>ルートテンプレートとログインテンプレート<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>インデクスページやログインページのテンプレートを変更したければ、
+<tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスを自作して、 <tt class="docutils literal"><span class="pre">index_template</span></tt> や
+<tt class="docutils literal"><span class="pre">login_template</span></tt> プロパティの値を変更してください。</p>
+</div>
+</div>
+<div class="section" id="s-adminsite">
+<span id="s-adminsite-objects"></span><h2><tt class="docutils literal"><span class="pre">AdminSite</span></tt> オブジェクト<a class="headerlink" href="#adminsite" title="Permalink to this headline">¶</a></h2>
+<p>Django の管理サイトは <tt class="docutils literal"><span class="pre">django.contrib.admin.sites.AdminSite</span></tt> のインスタン
+スを使って表現しています。デフォルトでは、このクラスのインスタンスは
+<tt class="docutils literal"><span class="pre">django.contrib.admin.site</span></tt> としてすでに作成されていて、モデルや
+<tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> インスタンスを登録できます。</p>
+<p>独自のふるまいを実現する管理サイトを作りたければ、 <tt class="docutils literal"><span class="pre">AdminSite</span></tt> のサブクラ
+スを作成して、 (他の Python クラスと同様に) 必要な機能をオーバライドし、
+作成したインスタンスにモデルや <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> サブクラスを登録してください。</p>
+<div class="section" id="s-urlconf-adminsite">
+<span id="s-hooking-adminsite-instances-into-your-urlconf"></span><h3>URLconf に <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスをフックする<a class="headerlink" href="#urlconf-adminsite" title="Permalink to this headline">¶</a></h3>
+<p>Django admin サイト構築の最後のステップは、 <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスの
+URLconf への設置です。設置を行うには、 URL を <tt class="docutils literal"><span class="pre">AdminSite.root</span></tt> メソッドに
+振り向けます。</p>
+<p>以下の例では、デフォルトの <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスである
+<tt class="docutils literal"><span class="pre">django.contrib.admin.site</span></tt> を、 <tt class="docutils literal"><span class="pre">/admin/</span></tt> という URL にマップしていま
+す:</p>
+<div class="highlight"><pre><span class="c"># urls.py</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+
+<span class="n">admin</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;^admin/(.*)&#39;</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">root</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+<p>この例では、 <tt class="docutils literal"><span class="pre">admin.autodiscover()</span></tt> を使って、 <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> の
+<tt class="docutils literal"><span class="pre">admin.py</span></tt> モジュールを自動的にロードしています。</p>
+<p>次の例では、 <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンス <tt class="docutils literal"><span class="pre">myproject.admin.admin_site</span></tt>
+を <tt class="docutils literal"><span class="pre">/myadmin/</span></tt> という URL にマップしています:</p>
+<div class="highlight"><pre><span class="c"># urls.py</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">myproject.admin</span> <span class="kn">import</span> <span class="n">admin_site</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;^myadmin/(.*)&#39;</span><span class="p">,</span> <span class="n">admin_site</span><span class="o">.</span><span class="n">root</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+<p>このように、 <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスを自作している場合は、
+<tt class="docutils literal"><span class="pre">myproject.admin</span></tt> モジュールの中で各アプリケーションの admin.py モジュー
+ルを import しているはずなので、 <tt class="docutils literal"><span class="pre">autodiscover</span></tt> を呼ぶ必要はありません。</p>
+<p>URLパターンの正規表現には、 admin サイトのルート URL の後ろ全ての URL 部分
+を含むようなグループ表記を <em>必ず</em> 入れておかねばなりません。この例では
+<tt class="docutils literal"><span class="pre">(.*)</span></tt> を使っています。</p>
+</div>
+<div class="section" id="s-urlconf-admin">
+<span id="s-multiple-admin-sites-in-the-same-urlconf"></span><h3>一つの URLconf で複数の admin サイトを使う<a class="headerlink" href="#urlconf-admin" title="Permalink to this headline">¶</a></h3>
+<p>Django で作られた一つの Web サイト上で、複数の admin サイトインスタンスを簡
+単に運営できます。方法は、単に <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスを複数にして別々の
+URL で設置するだけです。</p>
+<p>下の例では、  <tt class="docutils literal"><span class="pre">/basic-admin/</span></tt> と <tt class="docutils literal"><span class="pre">/advanced-admin/</span></tt> という二つの URL で、
+<tt class="docutils literal"><span class="pre">myproject.admin.basic_site</span></tt> と <tt class="docutils literal"><span class="pre">myproject.admin.advanced_site</span></tt> という
+<tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスを使って、別々のバージョンの admin サイトを運営し
+ています:</p>
+<div class="highlight"><pre><span class="c"># urls.py</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">myproject.admin</span> <span class="kn">import</span> <span class="n">basic_site</span><span class="p">,</span> <span class="n">advanced_site</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">&#39;^basic-admin/(.*)&#39;</span><span class="p">,</span> <span class="n">basic_site</span><span class="o">.</span><span class="n">root</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;^advanced-admin/(.*)&#39;</span><span class="p">,</span> <span class="n">advanced_site</span><span class="o">.</span><span class="n">root</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django admin サイト</a><ul>
+<li><a class="reference external" href="#id1">概要</a></li>
+<li><a class="reference external" href="#modeladmin"><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> オブジェクト</a><ul>
+<li><a class="reference external" href="#id2"><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のオプション</a><ul>
+<li><a class="reference external" href="#date-hierarchy"><tt class="docutils literal"><span class="pre">date_hierarchy</span></tt></a></li>
+<li><a class="reference external" href="#form"><tt class="docutils literal"><span class="pre">form</span></tt></a></li>
+<li><a class="reference external" href="#fieldsets"><tt class="docutils literal"><span class="pre">fieldsets</span></tt></a></li>
+<li><a class="reference external" href="#fields"><tt class="docutils literal"><span class="pre">fields</span></tt></a></li>
+<li><a class="reference external" href="#exclude"><tt class="docutils literal"><span class="pre">exclude</span></tt></a></li>
+<li><a class="reference external" href="#filter-horizontal"><tt class="docutils literal"><span class="pre">filter_horizontal</span></tt></a></li>
+<li><a class="reference external" href="#filter-vertical"><tt class="docutils literal"><span class="pre">filter_vertical</span></tt></a></li>
+<li><a class="reference external" href="#list-display"><tt class="docutils literal"><span class="pre">list_display</span></tt></a></li>
+<li><a class="reference external" href="#list-display-links"><tt class="docutils literal"><span class="pre">list_display_links</span></tt></a></li>
+<li><a class="reference external" href="#list-filter"><tt class="docutils literal"><span class="pre">list_filter</span></tt></a></li>
+<li><a class="reference external" href="#list-per-page"><tt class="docutils literal"><span class="pre">list_per_page</span></tt></a></li>
+<li><a class="reference external" href="#list-select-related"><tt class="docutils literal"><span class="pre">list_select_related</span></tt></a></li>
+<li><a class="reference external" href="#inlines"><tt class="docutils literal"><span class="pre">inlines</span></tt></a></li>
+<li><a class="reference external" href="#ordering"><tt class="docutils literal"><span class="pre">ordering</span></tt></a></li>
+<li><a class="reference external" href="#prepopulated-fields"><tt class="docutils literal"><span class="pre">prepopulated_fields</span></tt></a></li>
+<li><a class="reference external" href="#radio-fields"><tt class="docutils literal"><span class="pre">radio_fields</span></tt></a></li>
+<li><a class="reference external" href="#raw-id-fields"><tt class="docutils literal"><span class="pre">raw_id_fields</span></tt></a></li>
+<li><a class="reference external" href="#save-as"><tt class="docutils literal"><span class="pre">save_as</span></tt></a></li>
+<li><a class="reference external" href="#save-on-top"><tt class="docutils literal"><span class="pre">save_on_top</span></tt></a></li>
+<li><a class="reference external" href="#search-fields"><tt class="docutils literal"><span class="pre">search_fields</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id3"><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のメソッド</a><ul>
+<li><a class="reference external" href="#save-model-self-request-obj-form-change"><tt class="docutils literal"><span class="pre">save_model(self,</span> <span class="pre">request,</span> <span class="pre">obj,</span> <span class="pre">form,</span> <span class="pre">change)</span></tt></a></li>
+<li><a class="reference external" href="#save-formset-self-request-form-formset-change"><tt class="docutils literal"><span class="pre">save_formset(self,</span> <span class="pre">request,</span> <span class="pre">form,</span> <span class="pre">formset,</span> <span class="pre">change)</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id4"><tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> のメディア定義</a></li>
+<li><a class="reference external" href="#admin">admin にカスタムのバリデーションを追加する</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#inlinemodeladmin"><tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> オブジェクト</a><ul>
+<li><a class="reference external" href="#id5"><tt class="docutils literal"><span class="pre">InlineModelAdmin</span></tt> のオプション</a><ul>
+<li><a class="reference external" href="#model"><tt class="docutils literal"><span class="pre">model</span></tt></a></li>
+<li><a class="reference external" href="#fk-name"><tt class="docutils literal"><span class="pre">fk_name</span></tt></a></li>
+<li><a class="reference external" href="#formset"><tt class="docutils literal"><span class="pre">formset</span></tt></a></li>
+<li><a class="reference external" href="#id6"><tt class="docutils literal"><span class="pre">form</span></tt></a></li>
+<li><a class="reference external" href="#extra"><tt class="docutils literal"><span class="pre">extra</span></tt></a></li>
+<li><a class="reference external" href="#max-num"><tt class="docutils literal"><span class="pre">max_num</span></tt></a></li>
+<li><a class="reference external" href="#id7"><tt class="docutils literal"><span class="pre">raw_id_fields</span></tt></a></li>
+<li><a class="reference external" href="#template"><tt class="docutils literal"><span class="pre">template</span></tt></a></li>
+<li><a class="reference external" href="#verbose-name"><tt class="docutils literal"><span class="pre">verbose_name</span></tt></a></li>
+<li><a class="reference external" href="#verbose-name-plural"><tt class="docutils literal"><span class="pre">verbose_name_plural</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id8">一つのモデルから複数の外部キーが張られている場合のインライン編集の扱い</a></li>
+<li><a class="reference external" href="#id9">中間モデルを介した多対多リレーションを扱う</a></li>
+<li><a class="reference external" href="#id10">一般化リレーションをインラインで扱う</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id11">admin テンプレートのオーバライド</a><ul>
+<li><a class="reference external" href="#id12">プロジェクトの admin テンプレートディレクトリを設定する</a></li>
+<li><a class="reference external" href="#id13">admin テンプレートのオーバライドと置き換え</a></li>
+<li><a class="reference external" href="#id14">アプリケーションやモデル単位でオーバライドできるテンプレート</a></li>
+<li><a class="reference external" href="#id15">ルートテンプレートとログインテンプレート</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#adminsite"><tt class="docutils literal"><span class="pre">AdminSite</span></tt> オブジェクト</a><ul>
+<li><a class="reference external" href="#urlconf-adminsite">URLconf に <tt class="docutils literal"><span class="pre">AdminSite</span></tt> インスタンスをフックする</a></li>
+<li><a class="reference external" href="#urlconf-admin">一つの URLconf で複数の admin サイトを使う</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a></li>
+    
+    
+      <li>次: <a href="auth.html"><tt class="docutils literal"><span class="pre">django.contrib.auth</span></tt></a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">&#8220;django.contrib&#8221; 下のアドオン</a>
+        
+        <ul><li>Django admin サイト</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/contrib/admin.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="&amp;#8220;django.contrib&amp;#8221; 下のアドオン">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="auth.html" title="&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;django.contrib.auth&lt;/span&gt;&lt;/tt&gt;">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

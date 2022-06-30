@@ -1,0 +1,96 @@
+.. _intro-install:
+
+インストールガイド
+=====================
+
+:revision-up-to: 8961 (1.0pre SVN)
+
+Django を動かすには、まずインストールせねばなりません。ここでは、 Django を
+学んでみるにあたって必要な、簡単で最小限のインストール方法を示します。
+色々なインストール方法をカバーしている
+:ref:`詳細なインストールガイド <topics-install>` も用意してあります。
+
+.. _Install Python:
+
+Python のインストール
+---------------------
+
+Django は Python の Web フレームワークなので Python が必要です。 Django は
+バージョン 2.3 以上の Python で動作しますが、 2.5 以降がお勧めです。という
+のも、 Python 2.5 からは、 SQLite_ という軽量なデータベースが付属するからで
+す。
+
+.. _sqlite: http://sqlite.org/
+
+http://www.python.org から Python を取ってきましょう。 Linux や Mac OSX を
+動かしているのなら、おそらくインストール済みのはずです。
+
+.. admonition:: Jython で Django を動かす
+
+    Jython_ (Java プラットフォームで動く Python 実装) を使っているなら、他
+    にもいくつかステップを踏む必要があります。詳しくは :ref:`howto-jython`
+    を参照してください。
+
+.. _jython: http://jython.org/
+
+インストールされている Python のバージョンを調べるには、シェル上で
+``python`` と入力します。出力は以下のようになるでしょう::
+
+    Python 2.5.1 (r251:54863, Jan 17 2008, 19:35:17) 
+    [GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>>
+     
+.. _Set up a database:
+
+データベースをセットアップする
+----------------------------------
+
+バージョン 2.5 以降の Python をインストールしていれば、この節は読み飛ばして
+もかまいません。
+
+バージョン 2.5 よりも前の Python を使っているか、 PostgreSQL や MySQL,
+Oracle といった、SQLite 以外の「大掛かりな」データベースエンジンを扱いたけ
+れば、 :ref:`データベースのインストールに関する情報 <database-installation>`
+を参照してください。
+ 
+.. _Remove any old versions of Django:
+
+旧バージョンの Django の除去
+-----------------------------
+
+以前のバージョンからアップグレードする形で Django をインストールする場合、
+:ref:`新しいバージョンをインストールする前に、まず旧バージョンをアンインス
+トールしておく <removing-old-versions-of-django>` 必要があります。
+
+.. _Install Django:
+
+Django のインストール
+--------------------------------
+
+3 通りの簡単な方法で、Django をインストールできます:
+
+    * :ref:`オペレーティングシステムの提供している <misc-distributions>`
+      バージョンの Django をインストールする場合。お使いのオペレーティング
+      システム向けに Django が配布されている場合はもっとも簡単な選択肢です。
+
+    * :ref:`公式リリース版のインストール <installing-official-release>` 。
+      安定したバージョンの Django を使いたくて、少々古いものでも構わない場
+      合にはベストのアプローチです。
+      
+    * :ref:`最新の開発版のインストール <installing-development-version>`
+      最新の素晴らしい機能を使ってみたい、書き立てのコードを実行することに
+      抵抗のない人のための選択肢です。
+      
+.. warning::
+
+    上に挙げた選択肢のうち、最初の二つを選んだ場合は、ドキュメントを読む際
+    に「 **開発版で登場した機能です** 」とマークされた部分に気をつけてくだ
+    さい。この文は、開発版の Django でのみ利用可能な機能をマークしています。
+    そうした機能を公式リリースなどで使おうとしても、動かないでしょう。
+    
+以上です!
+----------
+
+これだけです。さあ、 :ref:`チュートリアルをやってみましょう <intro-tutorial01>`.
+ 

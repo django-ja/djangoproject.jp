@@ -1,0 +1,1128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>モデルフィールドリファレンス &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../../contents.html" />
+    <link rel="index" title="Global index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../../index.html" />
+    <link rel="up" title="モデル" href="index.html" />
+    <link rel="next" title="リレーションオブジェクトリファレンス" href="relations.html" />
+    <link rel="prev" title="モデル" href="index.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../../contents.html">目次</a>  |
+        <a title="Global index" href="../../genindex.html">索引</a>  |
+        <a title="Search" href="../../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="index.html" title="モデル">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="relations.html" title="リレーションオブジェクトリファレンス">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-models-fields">
+            
+  
+  <div class="section" id="s-module-django.db.models.fields">
+<span id="s-model-field-reference"></span><span id="s-ref-models-fields"></span><h1>モデルフィールドリファレンス<a class="headerlink" href="#module-django.db.models.fields" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントは、 Django が提供している <a class="reference external" href="fieldoptions">フィールドのオプション</a> や <a class="reference external" href="fieldtypes">フィールド型</a> の雑多で細かい解説です。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">組み込みのフィールド型で不足なことがあれば、簡単に <a class="reference external" href="../../howto/custom-model-fields.html#howto-custom-model-fields"><em>独自のカスタム
+モデルフィールドを作成できます</em></a> 。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">技術的には、モデルフィールドは <tt class="xref docutils literal"><span class="pre">django.db.models.fields</span></tt> モジュー
+ルで定義されていますが、便宜上、 <a title="" class="reference external" href="../../topics/db/models.html"><tt class="xref docutils literal"><span class="pre">django.db.models</span></tt></a> 内で import さ
+れています。モデルフィールドを使うときは、慣習的に
+<tt class="docutils literal"><span class="pre">from</span> <span class="pre">django.db</span> <span class="pre">import</span> <span class="pre">models</span></tt> として、 <tt class="docutils literal"><span class="pre">models.&lt;Foo&gt;Field</span></tt> のよう
+に参照します。</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-field-options"></span><span id="s-common-model-field-options"></span><h2>フィールドオプション<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>全てのフィールド型で、以下の引数を指定できます。これらの引数はすべてオプショ
+ンです。</p>
+<div class="section" id="s-null">
+<h3><tt class="docutils literal"><span class="pre">null</span></tt><a class="headerlink" href="#null" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.null">
+<!--[django.db.models.fields.Field.null]--><tt class="descclassname">Field.</tt><tt class="descname">null</tt><a class="headerlink" href="#django.db.models.fields.Field.null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、 Django は空の値を <tt class="docutils literal"><span class="pre">NULL</span></tt> としてデータベースに入れます。
+デフォルト値は <tt class="xref docutils literal"><span class="pre">False</span></tt> です。</p>
+<p>空の文字列値は <tt class="docutils literal"><span class="pre">NULL</span></tt> ではなく空文字列として保存されることに注意して下さ
+い。 <tt class="docutils literal"><span class="pre">null=True</span></tt> が使えるのは、整数型やブール型、日付のような、文字列では
+ないフィールド型の場合だけです。 <a title="django.db.models.fields.Field.null" class="reference internal" href="#django.db.models.fields.Field.null"><tt class="xref docutils literal"><span class="pre">null</span></tt></a> はデータベースでの記録
+操作にのみかかわるパラメタなので、フォーム上で空の値を入力できるようにした
+ければ <tt class="docutils literal"><span class="pre">blank=True</span></tt> も指定する必要があるでしょう (<a title="django.db.models.fields.Field.blank" class="reference internal" href="#django.db.models.fields.Field.blank"><tt class="xref docutils literal"><span class="pre">blank</span></tt></a> も
+参照してください)。</p>
+<p>特別な理由のない限り、 <tt class="xref docutils literal"><span class="pre">CharField</span></tt> や <tt class="xref docutils literal"><span class="pre">TextField</span></tt> のような、
+文字列ベースのフィールドには <a title="django.db.models.fields.Field.null" class="reference internal" href="#django.db.models.fields.Field.null"><tt class="xref docutils literal"><span class="pre">null</span></tt></a> を指定しないでください。
+文字列ベースのフィールドが <tt class="docutils literal"><span class="pre">nill=True</span></tt> であるということは、「データがない」
+ことを表すのに <tt class="docutils literal"><span class="pre">NULL</span></tt> と空文字列という二つの値が存在することを示します。
+多くの場合、「データがない」ことを表すのに二つのを取り得るのは冗長でしかあ
+りません。 Django の慣習では、データのない文字列フィールドの値は <tt class="docutils literal"><span class="pre">NULL</span></tt>
+ではなく空文字列です。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Oracle バックエンドを使っている場合、データベースの制約のため、
+空文字列を許すような文字列ベースのフィールドは、 <tt class="docutils literal"><span class="pre">null=True</span></tt> オプショ
+ンが強制的に付加され、 <tt class="docutils literal"><span class="pre">NULL</span></tt> は空の文字列を指します。</p>
+</div>
+</div>
+<div class="section" id="s-blank">
+<h3><tt class="docutils literal"><span class="pre">blank</span></tt><a class="headerlink" href="#blank" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.blank">
+<!--[django.db.models.fields.Field.blank]--><tt class="descclassname">Field.</tt><tt class="descname">blank</tt><a class="headerlink" href="#django.db.models.fields.Field.blank" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、フィールドの値を空白 (blank) にできます。デフォルト値は
+<tt class="xref docutils literal"><span class="pre">False</span></tt> です。</p>
+<p><a title="django.db.models.fields.Field.null" class="reference internal" href="#django.db.models.fields.Field.null"><tt class="xref docutils literal"><span class="pre">null</span></tt></a> とは違うことに注意してください。 <a title="django.db.models.fields.Field.null" class="reference internal" href="#django.db.models.fields.Field.null"><tt class="xref docutils literal"><span class="pre">null</span></tt></a> が
+純粋にデータベース上の表現に関わる概念であるのに対し、 <a title="django.db.models.fields.Field.blank" class="reference internal" href="#django.db.models.fields.Field.blank"><tt class="xref docutils literal"><span class="pre">blank</span></tt></a>
+とは値の検証 (validation) に関わる概念です。あるフィールドに <tt class="docutils literal"><span class="pre">blank=True</span></tt>
+を指定すると、 Django の admin サイト上で、空の値のエントリを作成できます。
+<tt class="docutils literal"><span class="pre">blank=False</span></tt> にすると、そのフィールドには必ず値を入れねばなりません。</p>
+</div>
+<div class="section" id="s-choices">
+<h3><tt class="docutils literal"><span class="pre">choices</span></tt><a class="headerlink" href="#choices" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.choices">
+<!--[django.db.models.fields.Field.choices]--><tt class="descclassname">Field.</tt><tt class="descname">choices</tt><a class="headerlink" href="#django.db.models.fields.Field.choices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>2 要素のタプルからなる iterable (リストまたはタプル) を、フィールドの値の選
+択肢にします。</p>
+<p>この値を指定すると、 Django の admin には標準的なテキストフィールドの代わり
+に選択ボックスが表示され、指定された選択肢だけをえらべます。</p>
+<p>選択肢リストは以下のように指定します:</p>
+<div class="highlight"><pre><span class="n">YEAR_IN_SCHOOL_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;FR&#39;</span><span class="p">,</span> <span class="s">&#39;Freshman&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;SO&#39;</span><span class="p">,</span> <span class="s">&#39;Sophomore&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;JR&#39;</span><span class="p">,</span> <span class="s">&#39;Junior&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;SR&#39;</span><span class="p">,</span> <span class="s">&#39;Senior&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;GR&#39;</span><span class="p">,</span> <span class="s">&#39;Graduate&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+<p>各タプルの最初の要素は、データベースに実際に保存される値です。二つ目の値は
+各オプションに対する人間可読な名前です。</p>
+<p>選択肢リストは、モデルクラスの一部として定義できます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">GENDER_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="s">&#39;Male&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;Female&#39;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">GENDER_CHOICES</span><span class="p">)</span>
+</pre></div>
+<p>また、モデルクラスの外でも定義できます:</p>
+<div class="highlight"><pre><span class="n">GENDER_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="s">&#39;Male&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;Female&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">GENDER_CHOICES</span><span class="p">)</span>
+</pre></div>
+<p>また、選択肢をグループごとに集めて、名前をつけられます:</p>
+<div class="highlight"><pre><span class="n">MEDIA_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;Audio&#39;</span><span class="p">,</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s">&#39;vinyl&#39;</span><span class="p">,</span> <span class="s">&#39;Vinyl&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&#39;cd&#39;</span><span class="p">,</span> <span class="s">&#39;CD&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;Video&#39;</span><span class="p">,</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s">&#39;vhs&#39;</span><span class="p">,</span> <span class="s">&#39;VHS Tape&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&#39;dvd&#39;</span><span class="p">,</span> <span class="s">&#39;DVD&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;unknown&#39;</span><span class="p">,</span> <span class="s">&#39;Unknown&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+<p>各タプルの最初の要素は、選択肢グループの名前です。二つ目の要素は、2 要素の
+タプルからなるイテレーション可能なオブジェクトです。各 2 要素タプルには、
+選択肢の値と、人間可読な名前を指定します。(上の例の <tt class="docutils literal"><span class="pre">unknown</span></tt> オプション
+のように) グループ化されたオプションとされていないオプションを混ぜても構い
+ません。</p>
+<p><a title="django.db.models.fields.Field.choices" class="reference internal" href="#django.db.models.fields.Field.choices"><tt class="xref docutils literal"><span class="pre">choices</span></tt></a> セットを持つモデルフィールド各々について、 Django は
+特殊なメソッドを追加し、フィールドの現在値を人間可読な形式で取得できるよう
+にします。データベース API ドキュメントの
+<tt class="xref docutils literal"><span class="pre">get_FOO_display()</span></tt> を参照してください。</p>
+<p>最後に、 choices はリストやタプルでなくてもよく、任意の iterable オブジェク
+トでかまわないことに注意してください。つまり、 choices は動的生成できるので
+す。とはいえ、 <a title="django.db.models.fields.Field.choices" class="reference internal" href="#django.db.models.fields.Field.choices"><tt class="xref docutils literal"><span class="pre">choices</span></tt></a> を動的生成するようなハックをするくら
+いなら、適当なデータベーステーブルを <tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt> で参照した方がよい
+でしょう。というのも、 <a title="django.db.models.fields.Field.choices" class="reference internal" href="#django.db.models.fields.Field.choices"><tt class="xref docutils literal"><span class="pre">choices</span></tt></a> はあまり変更のない静的な選択
+肢のためのオプションだからです。</p>
+</div>
+<div class="section" id="s-db-column">
+<h3><tt class="docutils literal"><span class="pre">db_column</span></tt><a class="headerlink" href="#db-column" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.db_column">
+<!--[django.db.models.fields.Field.db_column]--><tt class="descclassname">Field.</tt><tt class="descname">db_column</tt><a class="headerlink" href="#django.db.models.fields.Field.db_column" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>フィールドに使うデータベースカラム名です。この値を指定しなければ、 Django
+はフィールド名を使います。</p>
+<p>データベースカラム名が SQL の予約語であったり、 Python で変数名として使えな
+い文字を含んでいる (よくあるのはハイフンです) 場合でも問題ありません。
+Django は必要に応じてカラム名やテーブル名をクオートします。</p>
+</div>
+<div class="section" id="s-db-index">
+<h3><tt class="docutils literal"><span class="pre">db_index</span></tt><a class="headerlink" href="#db-index" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.db_index">
+<!--[django.db.models.fields.Field.db_index]--><tt class="descclassname">Field.</tt><tt class="descname">db_index</tt><a class="headerlink" href="#django.db.models.fields.Field.db_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> にすると <tt class="xref docutils literal"><span class="pre">django-admin.py</span> <span class="pre">sqlindexes</span></tt>
+を実行した時に、フィールドに対して <tt class="docutils literal"><span class="pre">CREATE</span> <span class="pre">INDEX</span></tt> 文を出力します。</p>
+</div>
+<div class="section" id="s-db-tablespace">
+<h3><tt class="docutils literal"><span class="pre">db_tablespace</span></tt><a class="headerlink" href="#db-tablespace" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.db_tablespace">
+<!--[django.db.models.fields.Field.db_tablespace]--><tt class="descclassname">Field.</tt><tt class="descname">db_tablespace</tt><a class="headerlink" href="#django.db.models.fields.Field.db_tablespace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>フィールドの値をインデクス化する際、フィールドのインデクスとして使うデータ
+ベースのテーブル空間 (tablespace) の名前です。デフォルトの値は、プロジェク
+トで設定されている <a class="reference external" href="../settings.html#setting-DEFAULT_INDEX_TABLESPACE"><tt class="xref docutils literal"><span class="pre">DEFAULT_INDEX_TABLESPACE</span></tt></a> です。この値がなけれ
+ば、モデルの <a title="django.db.models.fields.Field.db_tablespace" class="reference internal" href="#django.db.models.fields.Field.db_tablespace"><tt class="xref docutils literal"><span class="pre">db_tablespace</span></tt></a> を使います。データベースバックエ
+ンドがテーブルスペースをサポートしていなければ、このオプションは無視されま
+す。</p>
+</div>
+<div class="section" id="s-default">
+<h3><tt class="docutils literal"><span class="pre">default</span></tt><a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.default">
+<!--[django.db.models.fields.Field.default]--><tt class="descclassname">Field.</tt><tt class="descname">default</tt><a class="headerlink" href="#django.db.models.fields.Field.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>フィールドのデフォルト値です。この値は、何らかの値でも、呼び出し可能オブジェ
+クトでもかまいません。呼び出し可能オブジェクトの場合、新たなオブジェクトが
+生成されるたびに呼び出されます。</p>
+</div>
+<div class="section" id="s-editable">
+<h3><tt class="docutils literal"><span class="pre">editable</span></tt><a class="headerlink" href="#editable" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.editable">
+<!--[django.db.models.fields.Field.editable]--><tt class="descclassname">Field.</tt><tt class="descname">editable</tt><a class="headerlink" href="#django.db.models.fields.Field.editable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">False</span></tt> にすると、 admin 上や、モデルクラスから生成したフォームの上でフィー
+ルドの値を編集できなくなります。デフォルト値は <tt class="xref docutils literal"><span class="pre">True</span></tt> です。</p>
+</div>
+<div class="section" id="s-help-text">
+<h3><tt class="docutils literal"><span class="pre">help_text</span></tt><a class="headerlink" href="#help-text" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.help_text">
+<!--[django.db.models.fields.Field.help_text]--><tt class="descclassname">Field.</tt><tt class="descname">help_text</tt><a class="headerlink" href="#django.db.models.fields.Field.help_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>オブジェクトの admin フォームの下に表示される、追加の「ヘルプ」テキストです。
+とはいえ、オブジェクトが admin のフォームを持っていなくてもドキュメントとし
+て有用でしょう。</p>
+<p>この値は admin インタフェース上に表示されるときに HTML エスケープされ
+<em>ない</em> ので注意してください。必要ならば、下記の例のように
+<a title="django.db.models.fields.Field.help_text" class="reference internal" href="#django.db.models.fields.Field.help_text"><tt class="xref docutils literal"><span class="pre">help_text</span></tt></a> にHTML を含めてもかまいません:</p>
+<div class="highlight"><pre><span class="n">help_text</span><span class="o">=</span><span class="s">&quot;Please use the following format: &lt;em&gt;YYYY-MM-DD&lt;/em&gt;.&quot;</span>
+</pre></div>
+<p>プレーンテキストを使って、 <tt class="docutils literal"><span class="pre">django.utils.html.escape()</span></tt> でHTML の特殊文字
+をエスケープしてもかまいません。</p>
+</div>
+<div class="section" id="s-primary-key">
+<h3><tt class="docutils literal"><span class="pre">primary_key</span></tt><a class="headerlink" href="#primary-key" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.primary_key">
+<!--[django.db.models.fields.Field.primary_key]--><tt class="descclassname">Field.</tt><tt class="descname">primary_key</tt><a class="headerlink" href="#django.db.models.fields.Field.primary_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> に指定すると、フィールドをモデルの主キーにします。</p>
+<p>モデルのどのフィールドにも <tt class="docutils literal"><span class="pre">primary_key=True</span></tt> を指定しなければ、Django は
+自動的に <tt class="xref docutils literal"><span class="pre">IntegerField</span></tt> を追加して主キーを保存します。従って、デフォ
+ルトの主キーの振舞いを変更したいのでないかぎり、 <tt class="docutils literal"><span class="pre">primary_key=True</span></tt> をフィー
+ルドに指定しておく必要はありません。詳しくは
+<a class="reference external" href="../../topics/db/models.html#automatic-primary-key-fields"><em>自動的な主キーフィールド</em></a> を参照してください。</p>
+<p><tt class="docutils literal"><span class="pre">primary_key=True</span></tt> であるということは、 <a title="django.db.models.fields.Field.null" class="reference internal" href="#django.db.models.fields.Field.null"><tt class="xref docutils literal"><span class="pre">null=False</span></tt></a>
+かつ <a title="django.db.models.fields.Field.unique" class="reference internal" href="#django.db.models.fields.Field.unique"><tt class="xref docutils literal"><span class="pre">unique=True</span></tt></a> であることを指します。一つのオブジェ
+クトには一つしか主キーを指定できません。</p>
+</div>
+<div class="section" id="s-unique">
+<h3><tt class="docutils literal"><span class="pre">unique</span></tt><a class="headerlink" href="#unique" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.unique">
+<!--[django.db.models.fields.Field.unique]--><tt class="descclassname">Field.</tt><tt class="descname">unique</tt><a class="headerlink" href="#django.db.models.fields.Field.unique" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">True</span></tt> であれば、フィールドはテーブル全体で一意の値を取らねばなりません。</p>
+<p>この制約は、データベースレベルと Django の admin のレベルで適用されます。
+重複した値を持つ <a title="django.db.models.fields.Field.unique" class="reference internal" href="#django.db.models.fields.Field.unique"><tt class="xref docutils literal"><span class="pre">unique</span></tt></a> フィールドを含んだモデルを保存しよう
+とすると、モデルの <a title="django.db.models.Model.save" class="reference external" href="instances.html#django.db.models.Model.save"><tt class="xref docutils literal"><span class="pre">save()</span></tt></a>  メソッドによって
+<tt class="xref docutils literal"><span class="pre">django.db.IntegrityError</span></tt> が送出されます。</p>
+<p>このオプションは、 <tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt> 以外の全てのフィールドで利用で
+きます。</p>
+</div>
+<div class="section" id="s-unique-for-date">
+<h3><tt class="docutils literal"><span class="pre">unique_for_date</span></tt><a class="headerlink" href="#unique-for-date" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.unique_for_date">
+<!--[django.db.models.fields.Field.unique_for_date]--><tt class="descclassname">Field.</tt><tt class="descname">unique_for_date</tt><a class="headerlink" href="#django.db.models.fields.Field.unique_for_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="xref docutils literal"><span class="pre">DateField</span></tt> や <tt class="xref docutils literal"><span class="pre">DateTimeField</span></tt> 型のフィールドの名前を指定して
+おくと、そのフィールドの日付に対して一意な値になるように制約します。</p>
+<p>例えば、 <tt class="docutils literal"><span class="pre">title</span></tt> という名前のフィールドがあり、
+<tt class="docutils literal"><span class="pre">unique_for_date=&quot;pub_date&quot;</span></tt> が指定されていたとすると、 Django は同じ
+<tt class="docutils literal"><span class="pre">title</span></tt> や <tt class="docutils literal"><span class="pre">pub_date</span></tt> の値を持つようなエントリを受け入れません。</p>
+<p>この制約は Django の admin フォームのレベルで適用され、データベースレベルで
+は適用されません。</p>
+</div>
+<div class="section" id="s-unique-for-month">
+<h3><tt class="docutils literal"><span class="pre">unique_for_month</span></tt><a class="headerlink" href="#unique-for-month" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.unique_for_month">
+<!--[django.db.models.fields.Field.unique_for_month]--><tt class="descclassname">Field.</tt><tt class="descname">unique_for_month</tt><a class="headerlink" href="#django.db.models.fields.Field.unique_for_month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.fields.Field.unique_for_date" class="reference internal" href="#django.db.models.fields.Field.unique_for_date"><tt class="xref docutils literal"><span class="pre">unique_for_date</span></tt></a> と同様ですが、フィールドの値が月ごとに一意で
+あるように制約します。</p>
+</div>
+<div class="section" id="s-unique-for-year">
+<h3><tt class="docutils literal"><span class="pre">unique_for_year</span></tt><a class="headerlink" href="#unique-for-year" title="Permalink to this headline">¶</a></h3>
+<dl class="attribute">
+<dt id="django.db.models.fields.Field.unique_for_year">
+<!--[django.db.models.fields.Field.unique_for_year]--><tt class="descclassname">Field.</tt><tt class="descname">unique_for_year</tt><a class="headerlink" href="#django.db.models.fields.Field.unique_for_year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.fields.Field.unique_for_date" class="reference internal" href="#django.db.models.fields.Field.unique_for_date"><tt class="xref docutils literal"><span class="pre">unique_for_date</span></tt></a> や <a title="django.db.models.fields.Field.unique_for_month" class="reference internal" href="#django.db.models.fields.Field.unique_for_month"><tt class="xref docutils literal"><span class="pre">unique_for_month</span></tt></a> と同じで
+す。</p>
+</div>
+</div>
+<div class="section" id="s-field-types">
+<span id="s-model-field-types"></span><h2>Field types<a class="headerlink" href="#field-types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-autofield">
+<h3><tt class="docutils literal"><span class="pre">AutoField</span></tt><a class="headerlink" href="#autofield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.AutoField">
+<!--[django.db.models.AutoField]-->class <tt class="descname">AutoField</tt>(<em>**options</em>)<a class="headerlink" href="#django.db.models.AutoField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.IntegerField" class="reference internal" href="#django.db.models.IntegerField"><tt class="xref docutils literal"><span class="pre">IntegerField</span></tt></a> の一種で、利用可能な ID の中から自動的にインクリメン
+トしていきます。通常、このフィールドが直接必要になることはないでしょう。主
+キーのフィールドは、特に指定しない限り自動的に追加されます。
+<a class="reference external" href="../../topics/db/models.html#automatic-primary-key-fields"><em>自動的な主キーフィールド</em></a> を参照してください。</p>
+</div>
+<div class="section" id="s-booleanfield">
+<h3><tt class="docutils literal"><span class="pre">BooleanField</span></tt><a class="headerlink" href="#booleanfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.BooleanField">
+<!--[django.db.models.BooleanField]-->class <tt class="descname">BooleanField</tt>(<em>**options</em>)<a class="headerlink" href="#django.db.models.BooleanField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>真偽 (true/false) 値を表すフィールドです。</p>
+<p>admin ではこのフィールドはチェックボックスとして表現されます。</p>
+<div class="admonition-mysql admonition">
+<p class="first admonition-title">MySQL ユーザへの注意</p>
+<p class="last">MySQL では、ブール型のフィールドの値を <tt class="docutils literal"><span class="pre">TINYINT</span></tt> カラムに 0 または 1
+で保存します (ほとんどのデータベースでは、適切な <tt class="docutils literal"><span class="pre">BOOLEAN</span></tt> 型を使いま
+す)。従って、 MySQL に限って、 <tt class="docutils literal"><span class="pre">BooleanField</span></tt> の値をデータベースから
+取り出してモデルの属性に保存すると、その値は <tt class="xref docutils literal"><span class="pre">True</span></tt> や <tt class="xref docutils literal"><span class="pre">False</span></tt> では
+なく 1 や 0 になります。 Python は <tt class="docutils literal"><span class="pre">1</span> <span class="pre">==</span> <span class="pre">True</span></tt> かつ <tt class="docutils literal"><span class="pre">0</span> <span class="pre">==</span> <span class="pre">False</span></tt> を
+保証しているので、通常、この動作が問題になることはありません。ただし、
+<tt class="docutils literal"><span class="pre">obj</span> <span class="pre">is</span> <span class="pre">True</span></tt> のような式を書いていて、 <tt class="docutils literal"><span class="pre">obj</span></tt> がモデルのブール型属性
+を指してるときには注意してください。 <tt class="docutils literal"><span class="pre">mysql</span></tt> バックエンドを使ってモデ
+ルを構築すると、この <tt class="docutils literal"><span class="pre">is</span></tt> テストは常に失敗します。 (<tt class="docutils literal"><span class="pre">==</span></tt> を使って)
+等値比較を行ってください。</p>
+</div>
+</div>
+<div class="section" id="s-charfield">
+<h3><tt class="docutils literal"><span class="pre">CharField</span></tt><a class="headerlink" href="#charfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.CharField">
+<!--[django.db.models.CharField]-->class <tt class="descname">CharField</tt>(<em>max_length=None</em><span class="optional">[</span>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.CharField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>文字列フィールドで、短い文字列からやや長いものに適しています。</p>
+<p>大量のテキストを入れたい場合には <a title="django.db.models.TextField" class="reference internal" href="#django.db.models.TextField"><tt class="xref docutils literal"><span class="pre">TextField</span></tt></a> を使っ
+て下さい。</p>
+<p>admin では <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> (一行の入力フィールド) で表現されます。</p>
+<p><a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> 必須の引数があります:</p>
+<dl class="attribute">
+<dt id="django.db.models.CharField.max_length">
+<!--[django.db.models.CharField.max_length]--><tt class="descclassname">CharField.</tt><tt class="descname">max_length</tt><a class="headerlink" href="#django.db.models.CharField.max_length" title="Permalink to this definition">¶</a></dt>
+<dd>フィールドの (文字数で表した) 最大長です。 <tt class="docutils literal"><span class="pre">max_length</span></tt> への制約はデー
+タベースと Django 内の検証の両方のレベルで行われます。</dd></dl>
+
+<div class="admonition-mysql admonition">
+<p class="first admonition-title">MySQL ユーザへの注意</p>
+<p class="last">MySQLdb 1.2.2 でこのフィールドを使っていて、コレーションを (デフォルト
+設定 <em>でない</em>) <tt class="docutils literal"><span class="pre">utf8_bin</span></tt> に設定していると、いろいろと問題を引き起こ
+します。詳しくは <a class="reference external" href="../databases.html#mysql-collation"><em>MySQL データベースに関する注意</em></a> を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-commaseparatedintegerfield">
+<h3><tt class="docutils literal"><span class="pre">CommaSeparatedIntegerField</span></tt><a class="headerlink" href="#commaseparatedintegerfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.CommaSeparatedIntegerField">
+<!--[django.db.models.CommaSeparatedIntegerField]-->class <tt class="descname">CommaSeparatedIntegerField</tt>(<em>max_length=None</em><span class="optional">[</span>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.CommaSeparatedIntegerField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>カンマで区切った整数からなるフィールドです。 <a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> と同じく、
+<a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> 引数が必要です。</p>
+</div>
+<div class="section" id="s-datefield">
+<h3><tt class="docutils literal"><span class="pre">DateField</span></tt><a class="headerlink" href="#datefield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.DateField">
+<!--[django.db.models.DateField]-->class <tt class="descname">DateField</tt>(<span class="optional">[</span><em>auto_now=False</em>, <em>auto_now_add=False</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.DateField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>日付フィールドです。オプションの引数がいくつかあります:</p>
+<dl class="attribute">
+<dt id="django.db.models.DateField.auto_now">
+<!--[django.db.models.DateField.auto_now]--><tt class="descclassname">DateField.</tt><tt class="descname">auto_now</tt><a class="headerlink" href="#django.db.models.DateField.auto_now" title="Permalink to this definition">¶</a></dt>
+<dd>オブジェクトを保存する度に、その時の時刻を自動的に設定します。
+&quot;last-modified&quot;  タイムスタンプの実現に便利です。この値はオーバライドで
+きるデフォルト値ではなく、 <em>常に</em> 現在の日付になるので注意してください。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.DateField.auto_now_add">
+<!--[django.db.models.DateField.auto_now_add]--><tt class="descclassname">DateField.</tt><tt class="descname">auto_now_add</tt><a class="headerlink" href="#django.db.models.DateField.auto_now_add" title="Permalink to this definition">¶</a></dt>
+<dd>オブジェクトを生成した時の時刻を自動的に設定します。タイムスタンプの生
+成に便利です。この値はオーバライドできるデフォルト値ではなく、 <em>常に</em>
+現在の日付になるので注意してください。</dd></dl>
+
+<p>admin では、 JavaScript のカレンダーと 「今日」へのショートカットのついた
+<tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> として表現されます。 JavaScript カレンダーは常に日
+曜日から週が始まります。</p>
+</div>
+<div class="section" id="s-datetimefield">
+<h3><tt class="docutils literal"><span class="pre">DateTimeField</span></tt><a class="headerlink" href="#datetimefield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.DateTimeField">
+<!--[django.db.models.DateTimeField]-->class <tt class="descname">DateTimeField</tt>(<span class="optional">[</span><em>auto_now=False</em>, <em>auto_now_add=False</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.DateTimeField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>日付と時刻のフィールドです。 <a title="django.db.models.DateField" class="reference internal" href="#django.db.models.DateField"><tt class="xref docutils literal"><span class="pre">DateField</span></tt></a> と同じオプションを取ります。</p>
+<p>admin では JavaScript のショートカットのついた <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt>
+フィールドで表現されます。</p>
+</div>
+<div class="section" id="s-decimalfield">
+<h3><tt class="docutils literal"><span class="pre">DecimalField</span></tt><a class="headerlink" href="#decimalfield" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<dl class="class">
+<dt id="django.db.models.DecimalField">
+<!--[django.db.models.DecimalField]-->class <tt class="descname">DecimalField</tt>(<em>max_digits=None</em>, <em>decimal_places=None</em><span class="optional">[</span>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.DecimalField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>固定精度の 10 進小数です。 Python の <tt class="xref docutils literal"><span class="pre">Decimal</span></tt> 型インスタン
+スとして表現されます。 <strong>必須の</strong> 引数が 2 つあります:</p>
+<dl class="attribute">
+<dt id="django.db.models.DecimalField.max_digits">
+<!--[django.db.models.DecimalField.max_digits]--><tt class="descclassname">DecimalField.</tt><tt class="descname">max_digits</tt><a class="headerlink" href="#django.db.models.DecimalField.max_digits" title="Permalink to this definition">¶</a></dt>
+<dd>値を表現するのに使える最大桁数です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.DecimalField.decimal_places">
+<!--[django.db.models.DecimalField.decimal_places]--><tt class="descclassname">DecimalField.</tt><tt class="descname">decimal_places</tt><a class="headerlink" href="#django.db.models.DecimalField.decimal_places" title="Permalink to this definition">¶</a></dt>
+<dd>小数部の保存に使われる桁数です。</dd></dl>
+
+<p>例えば、小数部が 2 桁で、 999 までの数を表現できるようなフィールドを作成す
+るには、以下のようにします:</p>
+<div class="highlight"><pre><span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">max_digits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+<p>小数部の精度が 10 桁で、 10 億までの数を表現できるようにしたければ、以下の
+ようにします:</p>
+<div class="highlight"><pre><span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">max_digits</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+<p>admin では、 <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> (一行のテキスト入力) で表現されます。</p>
+</div>
+<div class="section" id="s-emailfield">
+<h3><tt class="docutils literal"><span class="pre">EmailField</span></tt><a class="headerlink" href="#emailfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.EmailField">
+<!--[django.db.models.EmailField]-->class <tt class="descname">EmailField</tt>(<span class="optional">[</span><em>max_length=75</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.EmailField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>値が有効な e-mail アドレスであるかチェックする <a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> です。</p>
+<p>Django 0.96 では、 <a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> を指定できません。
+<a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> は常に 75 にセットされるからです。
+バージョン 1.0 の Django では、 <a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> はデフォルト
+で 75 にセットされますが、デフォルト値を書き換えるよう指定できます。</p>
+</div>
+<div class="section" id="s-filefield">
+<h3><tt class="docutils literal"><span class="pre">FileField</span></tt><a class="headerlink" href="#filefield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.FileField">
+<!--[django.db.models.FileField]-->class <tt class="descname">FileField</tt>(<em>upload_to=None</em><span class="optional">[</span>, <em>max_length=100</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.FileField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>ファイルアップロードのためのフィールドです。 <strong>必須の</strong> 引数を一つ持ちます:</p>
+<dl class="attribute">
+<dt id="django.db.models.FileField.upload_to">
+<!--[django.db.models.FileField.upload_to]--><tt class="descclassname">FileField.</tt><tt class="descname">upload_to</tt><a class="headerlink" href="#django.db.models.FileField.upload_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>ローカルのファイルシステム上のパスです。このパスは
+<a class="reference external" href="../settings.html#setting-MEDIA_ROOT"><tt class="xref docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a> に設定したパスの後ろにつけられ、
+<a title="django.core.files.File.url" class="reference external" href="../files/file.html#django.core.files.File.url"><tt class="xref docutils literal"><span class="pre">url</span></tt></a> 属性の値を決める際に使われます。</p>
+<p>パスには <a class="reference external" href="http://www.python.jp/doc/release/lib/module-time.html#l2h-1915">strftime によるフォーマット</a> を入れてもかまいません、フォー
+マット文字列が入っていれば、(ディレクトリが同名のアップロードファイルで
+埋まらないように)ファイルのアップロード日時に置き換わります。</p>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました.</span> </div>
+<p><tt class="docutils literal"><span class="pre">upload_to</span></tt> には、関数のような呼び出し可能オブジェクトも指定できます。
+呼び出し可能オブジェクトを指定すると、ファイル名を含むアップロードパス
+を決めるために呼び出されます。この呼び出し可能オブジェクトを定義する場
+合、二つの引数をとり、 (スラッシュで始まる) Unix 形式のパスを返さねば
+なりません。返したパスはストレージシステムで使われます。二つの引数の説
+明を以下に示します:</p>
+<table class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">引数</th>
+<th class="head">説明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">instance</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">FileField</span></tt> を定義しているモデルのインス
+タンスです。もっと正確には、ファイルを添付
+しようとしているインスタンスです。ほとんど
+の場合、このオブジェクトはまだデータベース
+に保存されていないので、デフォルトの
+<tt class="docutils literal"><span class="pre">AutoField</span></tt> を使っている場合、
+<em>まだ主キーフィールドの値が決まっていない</em>
+ことがあります。</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">filename</span></tt></td>
+<td>もともとファイルに付けられていたファイル名
+です。最終的なファイルの保存パスを決めると
+きに考慮してもよいですし、しなくてもかまい
+ません。</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>また、オプションの引数を一つとります:</p>
+<dl class="attribute">
+<dt id="django.db.models.FileField.storage">
+<!--[django.db.models.FileField.storage]--><tt class="descclassname">FileField.</tt><tt class="descname">storage</tt><a class="headerlink" href="#django.db.models.FileField.storage" title="Permalink to this definition">¶</a></dt>
+<dd><div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました.</span> </div>
+<p>省略可能です。ストレージの操作と、ファイルの取得を行うストレージオブジェ
+クトです。このオブジェクトの作り方は、 <a class="reference external" href="../../topics/files.html#topics-files"><em>ファイルの管理</em></a> を参照してく
+ださい。</p>
+</dd></dl>
+
+<p>admin では、 <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;file&quot;&gt;</span></tt> (ファイルアップロードウィジェット)
+で表現されます。</p>
+<p>モデル中で <a title="django.db.models.FileField" class="reference internal" href="#django.db.models.FileField"><tt class="xref docutils literal"><span class="pre">FileField</span></tt></a> や <a title="django.db.models.ImageField" class="reference internal" href="#django.db.models.ImageField"><tt class="xref docutils literal"><span class="pre">ImageField</span></tt></a> (下記参照) を使うには、
+以下のようなステップが必要です:</p>
+<ol class="arabic simple">
+<li>Django にアップロードされたファイルを保存させたい場所のフルパスを設
+定ファイル中の <a class="reference external" href="../settings.html#setting-MEDIA_ROOT"><tt class="xref docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a> に指定します。(パフォーマンス上
+の理由から、アップロードされたファイルはデータベースに保存されませ
+ん。) 保存場所への公開 URL を <a class="reference external" href="../settings.html#setting-MEDIA_URL"><tt class="xref docutils literal"><span class="pre">MEDIA_URL</span></tt></a> に指定します。
+ディレクトリが Web サーバのユーザアカウントによって書き込み可能であ
+るか確認してください。</li>
+<li><a title="django.db.models.FileField" class="reference internal" href="#django.db.models.FileField"><tt class="xref docutils literal"><span class="pre">FileField</span></tt></a> や <a title="django.db.models.ImageField" class="reference internal" href="#django.db.models.ImageField"><tt class="xref docutils literal"><span class="pre">ImageField</span></tt></a> をモデルに定義します。この
+とき、 <a title="django.db.models.FileField.upload_to" class="reference internal" href="#django.db.models.FileField.upload_to"><tt class="xref docutils literal"><span class="pre">upload_to</span></tt></a> オプションを指定して、
+<a class="reference external" href="../settings.html#setting-MEDIA_ROOT"><tt class="xref docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a> 下のサブディレクトリのどこにアップロードされた
+ファイルを置くべきかを Django に教えます。</li>
+<li>データベースに保存されるのはファイルへのパス (<a class="reference external" href="../settings.html#setting-MEDIA_ROOT"><tt class="xref docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a>
+からの相対) です。Django の提供している
+<a title="django.core.files.File.url" class="reference external" href="../files/file.html#django.core.files.File.url"><tt class="xref docutils literal"><span class="pre">url</span></tt></a> を使うことになるでしょう。例えば、
+<tt class="docutils literal"><span class="pre">mug_shot</span></tt> という名前の <a title="django.db.models.ImageField" class="reference internal" href="#django.db.models.ImageField"><tt class="xref docutils literal"><span class="pre">ImageField</span></tt></a> があれば、画像への絶対
+URL は <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">object.get_mug_shot_url</span> <span class="pre">}}</span></tt> で取得できます。</li>
+</ol>
+<p>例えば、 <a class="reference external" href="../settings.html#setting-MEDIA_ROOT"><tt class="xref docutils literal"><span class="pre">MEDIA_ROOT</span></tt></a> を <tt class="docutils literal"><span class="pre">'/home/media'</span></tt> にして、
+<a title="django.db.models.FileField.upload_to" class="reference internal" href="#django.db.models.FileField.upload_to"><tt class="xref docutils literal"><span class="pre">upload_to</span></tt></a> を <tt class="docutils literal"><span class="pre">'photos/%Y/%m/%d'</span></tt> に設定したとします。
+<tt class="docutils literal"><span class="pre">upload_to</span></tt> の <tt class="docutils literal"><span class="pre">'%Y/%m/%d'</span></tt> の部分は strftime と同じフォーマット文字を
+使っています。すなわち、 <tt class="docutils literal"><span class="pre">'%Y'</span></tt> が 4 桁の年号、 <tt class="docutils literal"><span class="pre">'%m'</span></tt> が 2 桁の月、
+<tt class="docutils literal"><span class="pre">'%d'</span></tt> が 2 桁の日を表します。従って、ファイルを 2007 年の 1 月 15 日にアッ
+プロードすると、 <tt class="docutils literal"><span class="pre">/home/media/photos/2007/01/15</span></tt> に保存されます。</p>
+<p>アップロードファイルのディスク上でのファイル名を取得したい場合や、ファイル
+にアクセスするための URL を調べたい場合、ファイルのサイズを知りたい場合は、
+それぞれ <a title="django.core.files.File.name" class="reference external" href="../files/file.html#django.core.files.File.name"><tt class="xref docutils literal"><span class="pre">name</span></tt></a>,
+<a title="django.core.files.File.url" class="reference external" href="../files/file.html#django.core.files.File.url"><tt class="xref docutils literal"><span class="pre">url</span></tt></a>, <a title="django.core.files.File.size" class="reference external" href="../files/file.html#django.core.files.File.size"><tt class="xref docutils literal"><span class="pre">size</span></tt></a>
+メソッドを使えます。詳しくは <a class="reference external" href="../../topics/files.html#topics-files"><em>ファイルの管理</em></a> を参照してください。</p>
+<p>ファイルのアップロードを処理するときには、常にアップロード先の場所やアップ
+ロードされるファイルに注意して、セキュリティホールを避けるようにしてくださ
+い。 <em>アップロードされる全てのファイルをチェックして</em> 、予想外のファイルが
+アップロードされないようにしましょう。例えば、バリデーションを行わずに Web
+サーバのドキュメントルート下へのファイルのアップロードを盲目的に受け入れる
+と、そこに誰かが CGI や PHP スクリプトをアップロードして、あなたのサイト上
+の URL を訪問した人にスクリプトを実行させられてしまいます。そんなことを許し
+てはなりません。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました:</span> <tt class="docutils literal"><span class="pre">max_length</span></tt> 引数が追加されました。</div>
+<p>デフォルトでは、 <a title="django.db.models.FileField" class="reference internal" href="#django.db.models.FileField"><tt class="xref docutils literal"><span class="pre">FileField</span></tt></a> インスタンスは <tt class="docutils literal"><span class="pre">varchar(100)</span></tt> カラム
+をデータベースに作成します。他のフィールドと同様、
+<a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> 引数を使って最大長を変更できます。</p>
+</div>
+<div class="section" id="s-filepathfield">
+<h3><tt class="docutils literal"><span class="pre">FilePathField</span></tt><a class="headerlink" href="#filepathfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.FilePathField">
+<!--[django.db.models.FilePathField]-->class <tt class="descname">FilePathField</tt>(<em>path=None</em><span class="optional">[</span>, <em>match=None</em>, <em>recursive=False</em>, <em>max_length=100</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.FilePathField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>ファイルシステム上のあるディレクトリ下のファイル名だけを選べるようになって
+いる <a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> です。 3 つの特別な引数があり、そのうち最初の一つは
+<strong>必須</strong> です:</p>
+<dl class="attribute">
+<dt id="django.db.models.FilePathField.path">
+<!--[django.db.models.FilePathField.path]--><tt class="descclassname">FilePathField.</tt><tt class="descname">path</tt><a class="headerlink" href="#django.db.models.FilePathField.path" title="Permalink to this definition">¶</a></dt>
+<dd>必須です。 <a title="django.db.models.FilePathField" class="reference internal" href="#django.db.models.FilePathField"><tt class="xref docutils literal"><span class="pre">FilePathField</span></tt></a> が選択肢を作成するためのディレクトリ
+への絶対パスです。例: <tt class="docutils literal"><span class="pre">&quot;/home/images&quot;</span></tt></dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.FilePathField.match">
+<!--[django.db.models.FilePathField.match]--><tt class="descclassname">FilePathField.</tt><tt class="descname">match</tt><a class="headerlink" href="#django.db.models.FilePathField.match" title="Permalink to this definition">¶</a></dt>
+<dd>オプションです。正規表現を表す文字列で、 <a title="django.db.models.FilePathField" class="reference internal" href="#django.db.models.FilePathField"><tt class="xref docutils literal"><span class="pre">FilePathField</span></tt></a> がファ
+イル名のフィルタに使います。正規表現はフルパスではなくファイル名に適用
+されるので注意してください。 例: <tt class="docutils literal"><span class="pre">&quot;foo.*\.txt$&quot;</span></tt> は <tt class="docutils literal"><span class="pre">foo23.txt</span></tt> に
+はマッチしますが、 <tt class="docutils literal"><span class="pre">bar.txt</span></tt> や <tt class="docutils literal"><span class="pre">foo23.gif</span></tt> にはマッチしません。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.FilePathField.recursive">
+<!--[django.db.models.FilePathField.recursive]--><tt class="descclassname">FilePathField.</tt><tt class="descname">recursive</tt><a class="headerlink" href="#django.db.models.FilePathField.recursive" title="Permalink to this definition">¶</a></dt>
+<dd>オプションです。 <tt class="xref docutils literal"><span class="pre">True</span></tt> または <tt class="xref docutils literal"><span class="pre">False</span></tt> です。デフォルトは <tt class="xref docutils literal"><span class="pre">False</span></tt>
+で、 <a title="django.db.models.FilePathField.path" class="reference internal" href="#django.db.models.FilePathField.path"><tt class="xref docutils literal"><span class="pre">path</span></tt></a> のサブディレクトリを含めるかどうかを指
+定します。</dd></dl>
+
+<p>もちろん、これらの引数を組み合わせて使ってもかまいません。</p>
+<p>よくある勘違いは、 <a title="django.db.models.FilePathField.match" class="reference internal" href="#django.db.models.FilePathField.match"><tt class="xref docutils literal"><span class="pre">match</span></tt></a> がファイル名ではなくフルパ
+スに適用されると思ってしまうことです。以下の例:</p>
+<div class="highlight"><pre><span class="n">FilePathField</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s">&quot;/home/images&quot;</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s">&quot;foo.*&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+<p>は <tt class="docutils literal"><span class="pre">/home/images/foo.gif</span></tt> にはマッチしますが、ファイル名本体 (<tt class="docutils literal"><span class="pre">foo.gif</span></tt>
+や <tt class="docutils literal"><span class="pre">bar.gif</span></tt>) にマッチするため、 <tt class="docutils literal"><span class="pre">/home/images/foo/bar.gif</span></tt> にはマッチ
+しません。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました:</span> <tt class="docutils literal"><span class="pre">max_length</span></tt> 引数が追加されました。</div>
+<p><a title="django.db.models.FilePathField" class="reference internal" href="#django.db.models.FilePathField"><tt class="xref docutils literal"><span class="pre">FilePathField</span></tt></a> インスタンスは <tt class="docutils literal"><span class="pre">varchar(100)</span></tt> カラムをデータベース
+に作成します。他のフィールドと同様、 <a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> 引数を使っ
+て最大長を変更できます。</p>
+</div>
+<div class="section" id="s-floatfield">
+<h3><tt class="docutils literal"><span class="pre">FloatField</span></tt><a class="headerlink" href="#floatfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.FloatField">
+<!--[django.db.models.FloatField]-->class <tt class="descname">FloatField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.FloatField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました.</span> </div>
+<p>浮動小数点数です。Python の <tt class="docutils literal"><span class="pre">float</span></tt> 型インスタンスで表現されます。</p>
+<p>admin では、 <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> (一行の入力フィールド) で表現されます。</p>
+<p><strong>NOTE:</strong> Django 1.0 から、 <tt class="docutils literal"><span class="pre">FloatField</span></tt> の仕様が変更されています。
+以前の仕様は、 <a class="reference external" href="http://www.djangoproject.com/documentation/0.96/model-api/#floatfield">Django 0.96 のドキュメント</a> を参照してください。</p>
+</div>
+<div class="section" id="s-imagefield">
+<h3><tt class="docutils literal"><span class="pre">ImageField</span></tt><a class="headerlink" href="#imagefield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.ImageField">
+<!--[django.db.models.ImageField]-->class <tt class="descname">ImageField</tt>(<em>upload_to=None</em><span class="optional">[</span>, <em>height_field=None</em>, <em>width_field=None</em>, <em>max_length=100</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.ImageField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.FileField" class="reference internal" href="#django.db.models.FileField"><tt class="xref docutils literal"><span class="pre">FileField</span></tt></a> に似ていますが、アップロードされたオブジェクトが有効なイ
+メージかどうか検証します。二つのオプション引数があります:</p>
+<dl class="attribute">
+<dt id="django.db.models.ImageField.height_field">
+<!--[django.db.models.ImageField.height_field]--><tt class="descclassname">ImageField.</tt><tt class="descname">height_field</tt><a class="headerlink" href="#django.db.models.ImageField.height_field" title="Permalink to this definition">¶</a></dt>
+<dd>モデルインスタンスを保存する際に画像の高さを自動的に入れたいモデルフィー
+ルドの名前です。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.ImageField.width_field">
+<!--[django.db.models.ImageField.width_field]--><tt class="descclassname">ImageField.</tt><tt class="descname">width_field</tt><a class="headerlink" href="#django.db.models.ImageField.width_field" title="Permalink to this definition">¶</a></dt>
+<dd>モデルインスタンスを保存する際に画像の幅を自動的に入れたいモデルフィー
+ルドの名前です。</dd></dl>
+
+<p><a title="django.db.models.FileField" class="reference internal" href="#django.db.models.FileField"><tt class="xref docutils literal"><span class="pre">FileField</span></tt></a> で使える特殊属性の他に、 <a title="django.db.models.ImageField" class="reference internal" href="#django.db.models.ImageField"><tt class="xref docutils literal"><span class="pre">ImageField</span></tt></a> で
+<tt class="xref docutils literal"><span class="pre">File.height</span></tt> および <tt class="xref docutils literal"><span class="pre">File.width</span></tt> を使えます。
+<a class="reference external" href="../../topics/files.html#topics-files"><em>ファイルの管理</em></a> を参照してください。</p>
+<p><a class="reference external" href="http://www.pythonware.com/products/pil/">Python Imaging Library</a> が必要です。</p>
+<div class="versionadded">
+<span class="title">Django 1.0 で新たに登場しました:</span> <tt class="docutils literal"><span class="pre">max_length</span></tt> 引数が追加されました。</div>
+<p><a title="django.db.models.ImageField" class="reference internal" href="#django.db.models.ImageField"><tt class="xref docutils literal"><span class="pre">ImageField</span></tt></a> インスタンスは <tt class="docutils literal"><span class="pre">varchar(100)</span></tt> カラムをデータベースに
+作成します。他のフィールドと同様、 <a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> 引数を使っ
+て最大長を変更できます。</p>
+</div>
+<div class="section" id="s-integerfield">
+<h3><tt class="docutils literal"><span class="pre">IntegerField</span></tt><a class="headerlink" href="#integerfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.IntegerField">
+<!--[django.db.models.IntegerField]-->class <tt class="descname">IntegerField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.IntegerField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>整数です。 admin では、 <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> (一行の入力フィールド) で表
+現されます。</p>
+</div>
+<div class="section" id="s-ipaddressfield">
+<h3><tt class="docutils literal"><span class="pre">IPAddressField</span></tt><a class="headerlink" href="#ipaddressfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.IPAddressField">
+<!--[django.db.models.IPAddressField]-->class <tt class="descname">IPAddressField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.IPAddressField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>IP アドレスを 文字列形式で表したもの (例: &quot;192.0.2.30&quot;) です。admin では、
+<tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> (一行の入力フィールド) で表現されます。</p>
+</div>
+<div class="section" id="s-nullbooleanfield">
+<h3><tt class="docutils literal"><span class="pre">NullBooleanField</span></tt><a class="headerlink" href="#nullbooleanfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.NullBooleanField">
+<!--[django.db.models.NullBooleanField]-->class <tt class="descname">NullBooleanField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.NullBooleanField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.BooleanField" class="reference internal" href="#django.db.models.BooleanField"><tt class="xref docutils literal"><span class="pre">BooleanField</span></tt></a> と同じですが、 <tt class="docutils literal"><span class="pre">NULL</span></tt> を選択肢に使えます。
+<tt class="docutils literal"><span class="pre">null=True</span></tt> の <a title="django.db.models.BooleanField" class="reference internal" href="#django.db.models.BooleanField"><tt class="xref docutils literal"><span class="pre">BooleanField</span></tt></a> の代わりに使って下さい。 admin では、
+「不明」 (&quot;Unknown&quot;) 「はい」 (&quot;Yes&quot;)、「いいえ」 (&quot;No&quot;) の選択肢をもつ
+<tt class="docutils literal"><span class="pre">&lt;select&gt;</span></tt> ボックスで表現されます。</p>
+</div>
+<div class="section" id="s-positiveintegerfield">
+<h3><tt class="docutils literal"><span class="pre">PositiveIntegerField</span></tt><a class="headerlink" href="#positiveintegerfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.PositiveIntegerField">
+<!--[django.db.models.PositiveIntegerField]-->class <tt class="descname">PositiveIntegerField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.PositiveIntegerField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.IntegerField" class="reference internal" href="#django.db.models.IntegerField"><tt class="xref docutils literal"><span class="pre">IntegerField</span></tt></a> と同じですが、正の数でなければなりません。</p>
+</div>
+<div class="section" id="s-positivesmallintegerfield">
+<h3><tt class="docutils literal"><span class="pre">PositiveSmallIntegerField</span></tt><a class="headerlink" href="#positivesmallintegerfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.PositiveSmallIntegerField">
+<!--[django.db.models.PositiveSmallIntegerField]-->class <tt class="descname">PositiveSmallIntegerField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.PositiveSmallIntegerField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.PositiveIntegerField" class="reference internal" href="#django.db.models.PositiveIntegerField"><tt class="xref docutils literal"><span class="pre">PositiveIntegerField</span></tt></a> と同じですが、ある範囲以下 (データベース依存
+です)の値しか使えません。</p>
+</div>
+<div class="section" id="s-slugfield">
+<h3><tt class="docutils literal"><span class="pre">SlugField</span></tt><a class="headerlink" href="#slugfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.SlugField">
+<!--[django.db.models.SlugField]-->class <tt class="descname">SlugField</tt>(<span class="optional">[</span><em>max_length=50</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.SlugField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>「 <a class="reference external" href="../../glossary.html#term-12"><em class="xref">スラグ</em></a> (<a class="reference external" href="../../glossary.html#term-slug"><em class="xref">slug</em></a>)」は新聞業界の用語で、内容を示す短いラベル
+です。スラグは文字、数字、アンダースコア、ハイフンだけからなります。スラグ
+はよく URL に使われます。</p>
+<p><a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> と同様、 <a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> を指定できます。
+指定しなかった場合、Django はデフォルト値の 50 を使います。</p>
+<p><tt class="xref docutils literal"><span class="pre">Field.db_index</span></tt> を <tt class="xref docutils literal"><span class="pre">True</span></tt> に設定します。</p>
+</div>
+<div class="section" id="s-smallintegerfield">
+<h3><tt class="docutils literal"><span class="pre">SmallIntegerField</span></tt><a class="headerlink" href="#smallintegerfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.SmallIntegerField">
+<!--[django.db.models.SmallIntegerField]-->class <tt class="descname">SmallIntegerField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.SmallIntegerField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.IntegerField" class="reference internal" href="#django.db.models.IntegerField"><tt class="xref docutils literal"><span class="pre">IntegerField</span></tt></a> と同様ですが、ある (データベース依存の) 範囲の値しか
+使えません。</p>
+</div>
+<div class="section" id="s-textfield">
+<h3><tt class="docutils literal"><span class="pre">TextField</span></tt><a class="headerlink" href="#textfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.TextField">
+<!--[django.db.models.TextField]-->class <tt class="descname">TextField</tt>(<span class="optional">[</span><em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.TextField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>長いテキストのためのフィールドです。admin では、 <tt class="docutils literal"><span class="pre">&lt;textarea&gt;</span></tt> (複数行の入
+力フィールド) で表現されます。</p>
+<div class="admonition-mysql admonition">
+<p class="first admonition-title">MySQL ユーザへの注意</p>
+<p class="last">MySQLdb 1.2.2 でこのフィールドを使っていて、コレーションを (デフォルト
+設定 <em>でない</em>) <tt class="docutils literal"><span class="pre">utf8_bin</span></tt> に設定していると、いろいろと問題を引き起こ
+します。詳しくは <a class="reference external" href="../databases.html#mysql-collation"><em>MySQL データベースに関する注意</em></a> を参照してください。</p>
+</div>
+</div>
+<div class="section" id="s-timefield">
+<h3><tt class="docutils literal"><span class="pre">TimeField</span></tt><a class="headerlink" href="#timefield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.TimeField">
+<!--[django.db.models.TimeField]-->class <tt class="descname">TimeField</tt>(<span class="optional">[</span><em>auto_now=False</em>, <em>auto_now_add=False</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.TimeField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>時刻です。 <a title="django.db.models.DateField" class="reference internal" href="#django.db.models.DateField"><tt class="xref docutils literal"><span class="pre">DateField</span></tt></a> や <a title="django.db.models.DateTimeField" class="reference internal" href="#django.db.models.DateTimeField"><tt class="xref docutils literal"><span class="pre">DateTimeField</span></tt></a> と同じく、自動的に
+値を埋めるためのオプションを使えます。admin では、JavaScript のショートカッ
+トがついた <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> で表現されます。</p>
+</div>
+<div class="section" id="s-urlfield">
+<h3><tt class="docutils literal"><span class="pre">URLField</span></tt><a class="headerlink" href="#urlfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.URLField">
+<!--[django.db.models.URLField]-->class <tt class="descname">URLField</tt>(<span class="optional">[</span><em>verify_exists=True</em>, <em>max_length=200</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.URLField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>URL を表すための <a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> です。引数を一つとります:</p>
+<dl class="attribute">
+<dt id="django.db.models.URLField.verify_exists">
+<!--[django.db.models.URLField.verify_exists]--><tt class="descclassname">URLField.</tt><tt class="descname">verify_exists</tt><a class="headerlink" href="#django.db.models.URLField.verify_exists" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="xref docutils literal"><span class="pre">True</span></tt> (デフォルト値です) にすると、指定された URL が実在する (URL は
+実際にロードでき、かつ 404 応答を返さない) かどうか検証します。</dd></dl>
+
+<p>admin では、 <tt class="docutils literal"><span class="pre">&lt;input</span> <span class="pre">type=&quot;text&quot;&gt;</span></tt> (一行の入力フィールド) で表現されます。</p>
+<p><a title="django.db.models.CharField" class="reference internal" href="#django.db.models.CharField"><tt class="xref docutils literal"><span class="pre">CharField</span></tt></a> の他のサブクラスと同じく、 <a title="django.db.models.URLField" class="reference internal" href="#django.db.models.URLField"><tt class="xref docutils literal"><span class="pre">URLField</span></tt></a> にはオプショ
+ンの引数として、フィールドの最大長 (文字数) を表す
+<a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> を指定できます。
+<a title="django.db.models.CharField.max_length" class="reference internal" href="#django.db.models.CharField.max_length"><tt class="xref docutils literal"><span class="pre">max_length</span></tt></a> を指定しないときのデフォルトの値は 200 です。</p>
+</div>
+<div class="section" id="s-xmlfield">
+<h3><tt class="docutils literal"><span class="pre">XMLField</span></tt><a class="headerlink" href="#xmlfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.XMLField">
+<!--[django.db.models.XMLField]-->class <tt class="descname">XMLField</tt>(<em>schema_path=None</em><span class="optional">[</span>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.XMLField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><a title="django.db.models.TextField" class="reference internal" href="#django.db.models.TextField"><tt class="xref docutils literal"><span class="pre">TextField</span></tt></a> と同様ですが、指定されたスキーマに従って、値が有効な XML であ
+るか検証します。必須の引数を一つとります:</p>
+<dl class="attribute">
+<dt id="django.db.models.schema_path">
+<!--[django.db.models.schema_path]--><tt class="descname">schema_path</tt><a class="headerlink" href="#django.db.models.schema_path" title="Permalink to this definition">¶</a></dt>
+<dd>検証に使う <a class="reference external" href="http://www.relaxng.org/">RelaxNG</a> スキーマを指すファイルシステム上のパス名です。</dd></dl>
+
+</div>
+</div>
+<div class="section" id="s-module-django.db.models.fields.related">
+<span id="s-relationship-fields"></span><h2>リレーションフィールド<a class="headerlink" href="#module-django.db.models.fields.related" title="Permalink to this headline">¶</a></h2>
+<p>Django は、リレーションを表現するためのフィールドも定義しています。</p>
+<div class="section" id="s-foreignkey">
+<span id="s-ref-foreignkey"></span><h3><tt class="docutils literal"><span class="pre">ForeignKey</span></tt><a class="headerlink" href="#foreignkey" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.ForeignKey">
+<!--[django.db.models.ForeignKey]-->class <tt class="descname">ForeignKey</tt>(<em>othermodel</em><span class="optional">[</span>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.ForeignKey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>多対一のリレーションです。必須の固定引数として、リレーションを張るモデルの
+クラスをとります。</p>
+<p id="recursive-relationships">再帰的なリレーションを張る、つまり自分自身への多対一のリレーションを張る場
+合には、 <tt class="docutils literal"><span class="pre">models.ForeignKey('self')</span></tt> を使います。</p>
+<p id="lazy-relationships">未定義のモデルへのリレーションを作成したい場合、モデルオブジェクトではなく
+モデルの名前も使えます:</p>
+<pre>class Car(models.Model):
+    manufacturer = models.ForeignKey('Manufacturer')
+    # ...
+
+class Manufacturer(models.Model):
+    # ...</pre>
+<p>とはいえ、この指定方法を使えるのは、対象のモデルが同じ <tt class="docutils literal"><span class="pre">models.py</span></tt> ファイ
+ル内で定義されている場合だけです。他のアプリケーションで定義されているモデ
+ルや、どこかから import してきたモデルに対しては、文字列による指定はできま
+せん。</p>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました:</span> 他のアプリケーションで定義されているモデルを参照する場合には、アプリケー
+ションラベルを入れなければならなくなりました。</div>
+<p>他のアプリケーションで定義されているモデルを参照したければ、アプリケーショ
+ンラベルを明示的に指定せねばなりません。例えば、上の例の <tt class="docutils literal"><span class="pre">Manufacturer</span></tt>
+モデルが、 <tt class="docutils literal"><span class="pre">production</span></tt> という別のアプリケーションで定義されているのなら、
+以下のように書かねばなりません:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Car</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">manufacturer</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;production.Manufacturer&#39;</span><span class="p">)</span>
+</pre></div>
+<p>舞台裏では、 Django はフィールド名に <tt class="docutils literal"><span class="pre">&quot;_id&quot;</span></tt> をつけた名前でデータベースの
+カラム名を生成します。上の例では、 <tt class="docutils literal"><span class="pre">Car</span></tt> モデルのデータベーステーブルには
+<tt class="docutils literal"><span class="pre">manufacturer_id</span></tt> カラムが入ります (このカラム名は <tt class="docutils literal"><span class="pre">db_column</span></tt> を明示的
+に指定して変更できます。詳しくは <tt class="xref docutils literal"><span class="pre">db_column</span></tt> を参照してくださ
+い) 。とはいえ、カスタムのSQL 文を発行するのでないかぎり、データベースのカ
+ラム名をコードで直接扱う必要はありません。</p>
+<p id="foreign-key-arguments"><a title="django.db.models.ForeignKey" class="reference internal" href="#django.db.models.ForeignKey"><tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt></a> は、他にもいくつかオプションの引数をとります。これらの
+引数を使うと、リレーションの細かい動作を定義できます。</p>
+<dl class="attribute">
+<dt id="django.db.models.ForeignKey.limit_choices_to">
+<!--[django.db.models.ForeignKey.limit_choices_to]--><tt class="descclassname">ForeignKey.</tt><tt class="descname">limit_choices_to</tt><a class="headerlink" href="#django.db.models.ForeignKey.limit_choices_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>データベースの照合オプション (<a class="reference external" href="../../topics/db/queries.html#topics-db-queries"><em>クエリを生成する</em></a> 参照) と値を対応
+づけた辞書で、 admin で選択肢を表示するときに、表示するオブジェクトを絞
+り込むために使えます。 Python の <tt class="docutils literal"><span class="pre">datetime</span></tt> モジュールと組み合わせれ
+ば、表示するオブジェクトを日付に基づいて制限できます。例えば:</p>
+<div class="highlight"><pre><span class="n">limit_choices_to</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;pub_date__lte&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">}</span>
+</pre></div>
+<p>のようにすると、 <tt class="docutils literal"><span class="pre">pub_date</span></tt> が現在の日時より前のオブジェクトだけを選
+べます。</p>
+<p>辞書の代りに <tt class="xref docutils literal"><span class="pre">Q</span></tt> オブジェクト (<tt class="xref docutils literal"><span class="pre">get_sql()</span></tt>
+メソッドを備えたオブジェクト) も指定でき、より複雑なクエリを実現できま
+す。</p>
+<p><tt class="docutils literal"><span class="pre">limit_choices_to</span></tt> は、 admin でリレーション先のオブジェクトを表示す
+るときに使われるインラインフォームセットには影響を及ぼしません。</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.ForeignKey.related_name">
+<!--[django.db.models.ForeignKey.related_name]--><tt class="descclassname">ForeignKey.</tt><tt class="descname">related_name</tt><a class="headerlink" href="#django.db.models.ForeignKey.related_name" title="Permalink to this definition">¶</a></dt>
+<dd>リレーション先のオブジェクトから逆参照するときに使われる名前です。
+詳しくは <a class="reference external" href="../../topics/db/queries.html#backwards-related-objects"><em>related objects documentation</em></a>
+を参照してください。 <a class="reference external" href="../../topics/db/models.html#abstract-related-name"><em>抽象ベースクラス</em></a> で
+リレーションを定義する場合、この値を設定せねばなりません。また、抽象ベー
+スクラスで定義する場合には、 <a class="reference external" href="../../topics/db/models.html#abstract-related-name"><em>特殊な表記法</em></a>
+を使えます。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.ForeignKey.to_field">
+<!--[django.db.models.ForeignKey.to_field]--><tt class="descclassname">ForeignKey.</tt><tt class="descname">to_field</tt><a class="headerlink" href="#django.db.models.ForeignKey.to_field" title="Permalink to this definition">¶</a></dt>
+<dd>リレーション先のオブジェクトの、リレーションを張る対象のフィールド名で
+す。デフォルトでは、リレーション先のオブジェクトの主キーを使います。</dd></dl>
+
+</div>
+<div class="section" id="s-manytomanyfield">
+<span id="s-ref-manytomany"></span><h3><tt class="docutils literal"><span class="pre">ManyToManyField</span></tt><a class="headerlink" href="#manytomanyfield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.ManyToManyField">
+<!--[django.db.models.ManyToManyField]-->class <tt class="descname">ManyToManyField</tt>(<em>othermodel</em><span class="optional">[</span>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.ManyToManyField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>多対多のリレーションです。必須の固定引数として、リレーション先のモデルを表
+すクラスをとります。 <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> の引数は、 <a class="reference internal" href="#recursive-relationships"><em>再帰的リレーショ
+ン</em></a> や <a class="reference internal" href="#lazy-relationships"><em>遅延型のリレーション定義</em></a> に関するオプションを含め、  <a title="django.db.models.ForeignKey" class="reference internal" href="#django.db.models.ForeignKey"><tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt></a> と
+全く同じです。</p>
+<p>背後では、 Django は中間の結合テーブル (join table) を生成して、多対多のリ
+レーションを表現します。デフォルトの設定では、テーブル名は結合対象の二つの
+テーブル名をつないで作ります。データベースによっては (例えば 32 文字といっ
+た) テーブル名の長さ制限があるので、テーブル名が 32 文字を越える場合には、
+長さを自動的に切り詰めて、一意な名前を付けます。そのため、
+<tt class="docutils literal"><span class="pre">author_books_9cdf4</span></tt> のような名前のテーブルが生成されることがあります。こ
+れは仕様通りの動作です。結合テーブルの名前は、
+<a title="django.db.models.ManyToManyField.db_table" class="reference internal" href="#django.db.models.ManyToManyField.db_table"><tt class="xref docutils literal"><span class="pre">db_table</span></tt></a> オプションで手動指定できます。</p>
+<p id="manytomany-arguments"><a title="django.db.models.ManyToManyField" class="reference internal" href="#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> は、他にもいくつかオプションの引数をとります。これ
+らの引数を使うと、リレーションの細かい動作を定義できます。</p>
+<dl class="attribute">
+<dt id="django.db.models.ManyToManyField.related_name">
+<!--[django.db.models.ManyToManyField.related_name]--><tt class="descclassname">ManyToManyField.</tt><tt class="descname">related_name</tt><a class="headerlink" href="#django.db.models.ManyToManyField.related_name" title="Permalink to this definition">¶</a></dt>
+<dd><a title="django.db.models.ForeignKey.related_name" class="reference internal" href="#django.db.models.ForeignKey.related_name"><tt class="xref docutils literal"><span class="pre">ForeignKey.related_name</span></tt></a> と同じです。</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.ManyToManyFields.limit_choices_to">
+<!--[django.db.models.ManyToManyFields.limit_choices_to]--><tt class="descclassname">ManyToManyFields.</tt><tt class="descname">limit_choices_to</tt><a class="headerlink" href="#django.db.models.ManyToManyFields.limit_choices_to" title="Permalink to this definition">¶</a></dt>
+<dd><p><a title="django.db.models.ForeignKey.limit_choices_to" class="reference internal" href="#django.db.models.ForeignKey.limit_choices_to"><tt class="xref docutils literal"><span class="pre">ForeignKey.limit_choices_to</span></tt></a> と同じです。</p>
+<p><tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> を中間テーブル (internmediate table) と一緒に使うと、
+<tt class="docutils literal"><span class="pre">limit_choices_to</span></tt> の効果はなくなります。</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.ManyToManyFields.symmetrical">
+<!--[django.db.models.ManyToManyFields.symmetrical]--><tt class="descclassname">ManyToManyFields.</tt><tt class="descname">symmetrical</tt><a class="headerlink" href="#django.db.models.ManyToManyFields.symmetrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>自分自身への <tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt> を定義すると
+きにのみ使います。以下のようなモデルを考えます:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">friends</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s">&quot;self&quot;</span><span class="p">)</span>
+</pre></div>
+<p>Django がこのモデルを処理する際、自分自身に対する
+<a title="django.db.models.ManyToManyField" class="reference internal" href="#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> が定義されていることを認識して、 <tt class="docutils literal"><span class="pre">Person</span></tt> ク
+ラスに <tt class="docutils literal"><span class="pre">person_set</span></tt> 属性を追加しないようにします。その代り、
+<a title="django.db.models.ManyToManyField" class="reference internal" href="#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> を対称的 (symmetrical) であるとみなします。す
+なわち、私があなたの友達なら、あなたは私の友達である、というようにです。</p>
+<p><tt class="docutils literal"><span class="pre">self</span></tt> に対する多対多の関係に対称性を望まない場合は、
+<tt class="xref docutils literal"><span class="pre">symmetrical</span></tt> を <tt class="xref docutils literal"><span class="pre">False</span></tt> にしてください。これ
+により、 Django に逆参照用のデスクリプタを追加させて、
+<a title="django.db.models.ManyToManyField" class="reference internal" href="#django.db.models.ManyToManyField"><tt class="xref docutils literal"><span class="pre">ManyToManyField</span></tt></a> を非対称にできます。</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="django.db.models.ManyToManyField.db_table">
+<!--[django.db.models.ManyToManyField.db_table]--><tt class="descclassname">ManyToManyField.</tt><tt class="descname">db_table</tt><a class="headerlink" href="#django.db.models.ManyToManyField.db_table" title="Permalink to this definition">¶</a></dt>
+<dd>多対多のリレーション情報を保存するために作成されるテーブルの名前です。
+名前を指定しなければ、Django はデフォルトの名前を使います。デフォルトの
+名前は、結合する二つのテーブルの名前に基づいて決められます。</dd></dl>
+
+</div>
+<div class="section" id="s-onetoonefield">
+<span id="s-ref-onetoone"></span><h3><tt class="docutils literal"><span class="pre">OneToOneField</span></tt><a class="headerlink" href="#onetoonefield" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="django.db.models.OneToOneField">
+<!--[django.db.models.OneToOneField]-->class <tt class="descname">OneToOneField</tt>(<em>othermodel</em><span class="optional">[</span>, <em>parent_link=False</em>, <em>**options</em><span class="optional">]</span>)<a class="headerlink" href="#django.db.models.OneToOneField" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>一対一のリレーションです。一対一のリレーションは、概念的には
+<tt class="xref docutils literal"><span class="pre">unique=True</span></tt> であるような <a title="django.db.models.ForeignKey" class="reference internal" href="#django.db.models.ForeignKey"><tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt></a> に似て
+いますが、リレーションの「逆」を辿ったときに、単一のオブジェクトを直接返す
+点が違います。</p>
+<p>最も <tt class="docutils literal"><span class="pre">OneToOneField</span></tt> が便利な局面は、他のモデルを何らかの形で拡張するとき
+のモデルの主キーとして使う場合です。例えば、 <a class="reference external" href="../../topics/db/models.html#multi-table-inheritance"><em>マルチテーブル継承</em></a>
+は、一対一のリレーションを子のモデルから親のモデルに自動的に張ることで実現
+しています。</p>
+<p>必須の固定引数として、リレーション先のモデルを表すクラスをとります。
+引数は、 <a class="reference internal" href="#recursive-relationships"><em>再帰的リレーション</em></a> や <a class="reference internal" href="#lazy-relationships"><em>遅延
+型のリレーション定義</em></a> に関するオプションを含め、
+<a title="django.db.models.ForeignKey" class="reference internal" href="#django.db.models.ForeignKey"><tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt></a> と全く同じです。</p>
+<p id="onetoone-arguments"><tt class="docutils literal"><span class="pre">OneToOneField</span></tt> は、 <a title="django.db.models.ForeignKey" class="reference internal" href="#django.db.models.ForeignKey"><tt class="xref docutils literal"><span class="pre">ForeignKey</span></tt></a> で指定できる引数に加えて、以下の
+引数を指定できます:</p>
+<dl class="attribute">
+<dt id="django.db.models.OneToOneField.parent_link">
+<!--[django.db.models.OneToOneField.parent_link]--><tt class="descclassname">OneToOneField.</tt><tt class="descname">parent_link</tt><a class="headerlink" href="#django.db.models.OneToOneField.parent_link" title="Permalink to this definition">¶</a></dt>
+<dd>他のモデルを継承しているモデル中で <tt class="xref docutils literal"><span class="pre">True</span></tt> にすると、子のクラスのイン
+スタンスから親のクラスのインスタンスに向けたリンクのフィールドとして
+使います。通常は、サブクラス化によって暗黙のうちに <tt class="docutils literal"><span class="pre">OneToOneField</span></tt>
+が作成されます。</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">モデルフィールドリファレンス</a><ul>
+<li><a class="reference external" href="#id4">フィールドオプション</a><ul>
+<li><a class="reference external" href="#null"><tt class="docutils literal"><span class="pre">null</span></tt></a></li>
+<li><a class="reference external" href="#blank"><tt class="docutils literal"><span class="pre">blank</span></tt></a></li>
+<li><a class="reference external" href="#choices"><tt class="docutils literal"><span class="pre">choices</span></tt></a></li>
+<li><a class="reference external" href="#db-column"><tt class="docutils literal"><span class="pre">db_column</span></tt></a></li>
+<li><a class="reference external" href="#db-index"><tt class="docutils literal"><span class="pre">db_index</span></tt></a></li>
+<li><a class="reference external" href="#db-tablespace"><tt class="docutils literal"><span class="pre">db_tablespace</span></tt></a></li>
+<li><a class="reference external" href="#default"><tt class="docutils literal"><span class="pre">default</span></tt></a></li>
+<li><a class="reference external" href="#editable"><tt class="docutils literal"><span class="pre">editable</span></tt></a></li>
+<li><a class="reference external" href="#help-text"><tt class="docutils literal"><span class="pre">help_text</span></tt></a></li>
+<li><a class="reference external" href="#primary-key"><tt class="docutils literal"><span class="pre">primary_key</span></tt></a></li>
+<li><a class="reference external" href="#unique"><tt class="docutils literal"><span class="pre">unique</span></tt></a></li>
+<li><a class="reference external" href="#unique-for-date"><tt class="docutils literal"><span class="pre">unique_for_date</span></tt></a></li>
+<li><a class="reference external" href="#unique-for-month"><tt class="docutils literal"><span class="pre">unique_for_month</span></tt></a></li>
+<li><a class="reference external" href="#unique-for-year"><tt class="docutils literal"><span class="pre">unique_for_year</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#field-types">Field types</a><ul>
+<li><a class="reference external" href="#autofield"><tt class="docutils literal"><span class="pre">AutoField</span></tt></a></li>
+<li><a class="reference external" href="#booleanfield"><tt class="docutils literal"><span class="pre">BooleanField</span></tt></a></li>
+<li><a class="reference external" href="#charfield"><tt class="docutils literal"><span class="pre">CharField</span></tt></a></li>
+<li><a class="reference external" href="#commaseparatedintegerfield"><tt class="docutils literal"><span class="pre">CommaSeparatedIntegerField</span></tt></a></li>
+<li><a class="reference external" href="#datefield"><tt class="docutils literal"><span class="pre">DateField</span></tt></a></li>
+<li><a class="reference external" href="#datetimefield"><tt class="docutils literal"><span class="pre">DateTimeField</span></tt></a></li>
+<li><a class="reference external" href="#decimalfield"><tt class="docutils literal"><span class="pre">DecimalField</span></tt></a></li>
+<li><a class="reference external" href="#emailfield"><tt class="docutils literal"><span class="pre">EmailField</span></tt></a></li>
+<li><a class="reference external" href="#filefield"><tt class="docutils literal"><span class="pre">FileField</span></tt></a></li>
+<li><a class="reference external" href="#filepathfield"><tt class="docutils literal"><span class="pre">FilePathField</span></tt></a></li>
+<li><a class="reference external" href="#floatfield"><tt class="docutils literal"><span class="pre">FloatField</span></tt></a></li>
+<li><a class="reference external" href="#imagefield"><tt class="docutils literal"><span class="pre">ImageField</span></tt></a></li>
+<li><a class="reference external" href="#integerfield"><tt class="docutils literal"><span class="pre">IntegerField</span></tt></a></li>
+<li><a class="reference external" href="#ipaddressfield"><tt class="docutils literal"><span class="pre">IPAddressField</span></tt></a></li>
+<li><a class="reference external" href="#nullbooleanfield"><tt class="docutils literal"><span class="pre">NullBooleanField</span></tt></a></li>
+<li><a class="reference external" href="#positiveintegerfield"><tt class="docutils literal"><span class="pre">PositiveIntegerField</span></tt></a></li>
+<li><a class="reference external" href="#positivesmallintegerfield"><tt class="docutils literal"><span class="pre">PositiveSmallIntegerField</span></tt></a></li>
+<li><a class="reference external" href="#slugfield"><tt class="docutils literal"><span class="pre">SlugField</span></tt></a></li>
+<li><a class="reference external" href="#smallintegerfield"><tt class="docutils literal"><span class="pre">SmallIntegerField</span></tt></a></li>
+<li><a class="reference external" href="#textfield"><tt class="docutils literal"><span class="pre">TextField</span></tt></a></li>
+<li><a class="reference external" href="#timefield"><tt class="docutils literal"><span class="pre">TimeField</span></tt></a></li>
+<li><a class="reference external" href="#urlfield"><tt class="docutils literal"><span class="pre">URLField</span></tt></a></li>
+<li><a class="reference external" href="#xmlfield"><tt class="docutils literal"><span class="pre">XMLField</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#module-django.db.models.fields.related">リレーションフィールド</a><ul>
+<li><a class="reference external" href="#foreignkey"><tt class="docutils literal"><span class="pre">ForeignKey</span></tt></a></li>
+<li><a class="reference external" href="#manytomanyfield"><tt class="docutils literal"><span class="pre">ManyToManyField</span></tt></a></li>
+<li><a class="reference external" href="#onetoonefield"><tt class="docutils literal"><span class="pre">OneToOneField</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="index.html">モデル</a></li>
+    
+    
+      <li>次: <a href="relations.html">リレーションオブジェクトリファレンス</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="../index.html">API リファレンス</a>
+        
+          <ul><li><a href="index.html">モデル</a>
+        
+        <ul><li>モデルフィールドリファレンス</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/ref/models/fields.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="index.html" title="モデル">前へ</a> 
+     |
+    <a href="../index.html" title="API リファレンス" accesskey="U">上へ</a>
+   |
+    <a href="relations.html" title="リレーションオブジェクトリファレンス">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

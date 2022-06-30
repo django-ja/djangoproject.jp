@@ -3,22 +3,17 @@ djangoproject.jp
 
 https://djangoproject.jp/ のソースコード。
 
-* djangoproject.jp/: デプロイされるディレクトリーです
+* docs/: デプロイされるディレクトリー
 * miya/: miyadaiku 用のテンプレートなどがあります
 * static/: 静的ファイルやmiyadaikuで管理されない古いページがあります
 
 ## ビルド
 
-miyadaiku-build コマンドを利用してビルドします。
+miyadaiku を利用して docs 以下にビルドします。
 
 ```shell script
-$ miyadaiku-build miya
-$ cp -r static/* miya/outputs/
+$ make build
 ```
-
-### miyadaiku-build コマンドについて
-
-このコマンドを実行すると、対象ディレクトリの outputs/ 内にビルド結果が出力されます。
 
 #### Windows 環境の場合
 
@@ -30,9 +25,6 @@ UnicodeDecodeError: 'cp932' codec can't decode byte ...中略...: illegal multib
 
 ## デプロイ
 
-デプロイにはVercelが使われています。
-
-https://vercel.com/django-ja/djangoproject-jp/
-
-package.json にあるビルドコマンドが実行されて、Vercel上でHTMLが生成されホスティングされます。
+デプロイにはGitHub Pagesが使われます。
+docs 以下が公開されるので、ビルドしてmasterにコミットしてください。
 サイト自体はCloudFrontを通してホストされます。

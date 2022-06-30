@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django 1.0 beta 2 リリースノート &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="リリースノート" href="index.html" />
+    <link rel="next" title="Django 1.0 リリースノート" href="1.0.html" />
+    <link rel="prev" title="Django 1.0 beta 1 リリースノート" href="1.0-beta.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="1.0-beta.html" title="Django 1.0 beta 1 リリースノート">前へ</a> 
+     |
+    <a href="index.html" title="リリースノート" accesskey="U">上へ</a>
+   |
+    <a href="1.0.html" title="Django 1.0 リリースノート">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="releases-1.0-beta-2">
+            
+  
+  <div class="section" id="s-django-1-0-beta-2">
+<span id="s-releases-1-0-beta-2"></span><h1>Django 1.0 beta 2 リリースノート<a class="headerlink" href="#django-1-0-beta-2" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django 1.0 beta 2 にようこそ!</p>
+<p>このリリースは、来るべき Django 1.0 リリースにつながる 4 番目のプレビュー／
+開発者向けリリースです。1.0 のリリースは 9 月初頭を予定しています。このリリー
+スでは、主に Django のコードベースをテストしたい開発者や、 1.0 の最終リリー
+スに向けてバグ修正を手伝う開発者をターゲットにしています。</p>
+<p>従って、このリリースは実運用向きでは <em>ありません</em> 。くれぐれも実運用の目的
+では使わないでください。</p>
+<div class="section" id="s-id1">
+<h2>Django 1.0 beta 2 で新たに登場した機能<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>ここ数年、我々は Django の trunk ソースツリーでほぼずっと活発に開発を続け、
+0.96 リリース以降、大きな機能をいくつも投入してきました。 Django 1.0 alpha
+1 で新たに登場した機能は、 <a class="reference external" href="1.0-alpha-1.html#releases-1-0-alpha-1"><em>1.0 alpha 1 リリースノート</em></a> を参照してください。 Django 1.0 alpha 2 で新たに登
+場した機能は、 <a class="reference external" href="1.0-alpha-2.html#releases-1-0-alpha-2"><em>1.0 alpha 2 リリースノート</em></a> を
+参照してください。 Django 1.0 beta 1 で新たに登場した機能は、 <a class="reference external" href="1.0-alpha-2.html#releases-1-0-alpha-2"><em>1.0
+beta 1 リリースノート</em></a> を参照してください。</p>
+<p>このベータリリースでは、以下の主な機能を追加しました:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">django.contrib.comments</span></tt> のリファクタ</dt>
+<dd>Google Summer of Code プロジェクトの一環として、 Thejaswi Puthraya
+が Django にバンドルされているコメントシステムを大幅にリライト／リファ
+クタし、フレキシビリティとカスタマイズ性をすばらしく向上させました。
+<a class="reference external" href="../ref/contrib/comments/index.html#ref-contrib-comments-index"><em>詳細なドキュメント</em></a> と、以前のコメン
+トアプリケーションを使っていた人のための <a class="reference external" href="../ref/contrib/comments/upgrade.html#ref-contrib-comments-upgrade"><em>アップグレードガイド</em></a> も読めるようになりました。</dd>
+<dt>ドキュメントのリファクタ</dt>
+<dd>Django にバンドルされているオンラインドキュメントを大々的にリファクタし
+ました。新たなドキュメントでは、 <a class="reference external" href="http://sphinx.pocoo.org/">Sphinx</a> を使ってドキュメントをビルド
+し、トピックごとのインデクスやドキュメント内の相互参照を生成します。
+新しいドキュメントは <a class="reference external" href="online">オンライン</a> で参照できるほか、 Sphinx
+をインストールしていれば、 Django にバンドルされているファイルだけで
+HTML を自分で生成できます。</dd>
+</dl>
+<p>新しい機能にに加え、 Django チームは 1.0 リリースに向けてコードベースの整理
+に懸命に取り組んでいます。このベータリリースには、 1.0 に到達するための膨大
+な数の改善やバグフィクスが入っています。</p>
+<p>また、古い機能の撤廃作業の一環として、 Django の古いフォーム処理システムを
+除去しました。 <tt class="docutils literal"><span class="pre">django.oldforms</span></tt> はなくなり、 (自動マニピュレータなどの)
+様々な API フックも除去されました。フォームは <tt class="docutils literal"><span class="pre">django.forms</span></tt> の <a class="reference external" href="../topics/forms/index.html#topics-forms-index"><em>新
+しいフォーム処理システム</em></a> と完全に入れ替わりました。</p>
+</div>
+<div class="section" id="s-django-1-0">
+<h2>Django 1.0 のロードマップ<a class="headerlink" href="#django-1-0" title="Permalink to this headline">¶</a></h2>
+<p>この beta リリースの主要な目的の一つは、 Django 1.0 に実装する予定の機能
+のうち、まだ終っていないものや、最終リリースまでに修正しておかねばならない
+バグを見極めることです。この beta リリースの時点で、 1.0 に搭載する機能を
+最終的に「凍結」します。今後の機能追加リクエストは将来のリリースに持ち越し、
+開発活動をバグフィクスと安定性の向上だけに集中します。また、この時点で
+Django のコードベース内で翻訳対象にマークしている文字列全てをフリーズし、
+翻訳作業の貢献者が 1.0 の最終リリースにバンドルする翻訳ファイルをチェック
+して修正できるようにします。このリリースに続いて、ロンドンとオンラインで
+2008 年 8 月 30 日に開発スプリントを実施します。スプリントの目的は、
+<strong>2008 年 9 月 2 日</strong> 予定の 1.0 リリースに向けて、可能な限りバグを潰すこと
+にあります。また、 Django 1.0 の公式リリースパーティを、 9 月 6,7 にマウン
+テンビューで開催される DjangoCon で開催する予定です。</p>
+</div>
+<div class="section" id="s-id3">
+<h2>リリース作業で手伝えること<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>高い品質の 1.0 リリースを提供するために、皆さんの手助けが必要です。先にも述
+べたように、この beta リリースは実運用向けでは <em>ありません</em> 。安全なテスト
+環境で使ってみて、バグや問題を見付けたら Django の開発チームに報告してくだ
+さい。自分の発見した問題がすでに明らかでないか、 Django のチケットトラッカ
+を使って探してください:</p>
+<blockquote>
+<a class="reference external" href="http://code.djangoproject.com/timeline">http://code.djangoproject.com/timeline</a></blockquote>
+<p>発見した問題に対応するチケットが見付からなければ、新たなチケットをオープン
+してください。</p>
+<p>また、 1.0 リリースに向けての進捗を含め、 Django の開発に関する議論は、
+django-developers メーリングリスト:</p>
+<blockquote>
+<a class="reference external" href="http://groups.google.com/group/django-developers">http://groups.google.com/group/django-developers</a></blockquote>
+<p>と、IRC サーバ <tt class="docutils literal"><span class="pre">irc.freenode.net</span></tt> の <tt class="docutils literal"><span class="pre">#django-dev</span></tt> チャネルで常時行って
+います。 Django の開発を手伝いたいのなら、ぜひ参加して、議論に加わってくだ
+さい。</p>
+<p>Django プロジェクトへの貢献方法は、オンラインドキュメントにも記載しています:</p>
+<blockquote>
+<a class="reference external" href="../internals/contributing.html#internals-contributing"><em>contributing to Django</em></a></blockquote>
+<p>コードの開発、ドキュメントの作成、そしてチケットのトリアージや、誰かの提出
+したバグフィクスのテストなど、どんなレベルの貢献でも歓迎します。</p>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django 1.0 beta 2 リリースノート</a><ul>
+<li><a class="reference external" href="#id1">Django 1.0 beta 2 で新たに登場した機能</a></li>
+<li><a class="reference external" href="#django-1-0">Django 1.0 のロードマップ</a></li>
+<li><a class="reference external" href="#id3">リリース作業で手伝えること</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="1.0-beta.html">Django 1.0 beta 1 リリースノート</a></li>
+    
+    
+      <li>次: <a href="1.0.html">Django 1.0 リリースノート</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">リリースノート</a>
+        
+        <ul><li>Django 1.0 beta 2 リリースノート</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/releases/1.0-beta-2.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="1.0-beta.html" title="Django 1.0 beta 1 リリースノート">前へ</a> 
+     |
+    <a href="index.html" title="リリースノート" accesskey="U">上へ</a>
+   |
+    <a href="1.0.html" title="Django 1.0 リリースノート">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

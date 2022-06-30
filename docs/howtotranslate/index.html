@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="" />
+  <meta name="description" content="Transifex上での最新のDjangoドキュメント日本語翻訳の方法を紹介します。" />
+  <title>documentation / 翻訳への参加方法 / TransifexでのDjangoドキュメント翻訳の進め方 | djangoproject.jp</title>
+  <link rel="shortcut icon" href="/static/img/favicon.ico">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/fancybox/jquery.fancybox.css">
+<link rel="stylesheet" href="/static/css/flexslider.css">
+<link rel="stylesheet" href="/static/css/mezzanine.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/skins/default.css">
+  <script src="/static/mezzanine/js/jquery-1.7.1.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/bootstrap-extras.js"></script>
+<!--[if lt IE 9]>
+<script src="/static/js/html5shiv.js"></script>
+<script src="/static/js/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body id="body">
+  <div id="wrapper">
+    <header>
+      <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">djangoproject.jp</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+  <li
+    class=""
+    id="dropdown-menu-home"
+  >
+    <a href="/">Home</a>
+  </li>
+
+  <li
+    class="dropdown
+           "
+    id="about"
+  >
+    <a
+      href="/about/"
+      class="dropdown-toggle disabled"
+      data-toggle="dropdown"
+    >
+      About
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li
+        class=""
+        id="whouses"
+      >
+        <a href="/whouses/">利用実績</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  <li
+    class="dropdown
+           active"
+    id="https:--docs.djangoproject.com-ja-"
+  >
+    <a
+      href="https://docs.djangoproject.com/ja/"
+      class="dropdown-toggle disabled"
+      data-toggle="dropdown"
+    >
+      documentation
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li
+        class="active"
+        id="https:--docs.djangoproject.com-ja-"
+      >
+        <a href="https://docs.djangoproject.com/ja/">documentation</a>
+      </li>
+      <li
+        class="active"
+        id="translate"
+      >
+        <a href="/translate/">翻訳への参加方法</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  <li
+    class="dropdown
+           "
+    id="community"
+  >
+    <a
+      href="/community/"
+      class="dropdown-toggle disabled"
+      data-toggle="dropdown"
+    >
+      Community
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li
+        class=""
+        id="events"
+      >
+        <a href="/events/">Events</a>
+      </li>
+      
+    </ul>
+    
+  </li>
+  
+</ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+    </div>
+
+    <section id="inner-headline">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="breadcrumb">
+              <li id="breadcrumb-menu-home">
+  <a href="/">Home</a>
+</li>
+
+<li id="breadcrumb-menu-https:--docs.djangoproject.com-ja-">
+  <a href="https://docs.djangoproject.com/ja/">documentation</a>
+</li>
+
+<li id="breadcrumb-menu-translate">
+  <a href="/translate/">翻訳への参加方法</a>
+</li>
+
+<li id="breadcrumb-menu-howtotranslate" class="active">
+  TransifexでのDjangoドキュメント翻訳の進め方
+</li>
+
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="callaction">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="big-cta">
+              <div class="cta-text">
+                <h2>
+                  TransifexでのDjangoドキュメント翻訳の進め方
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="content">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 middle">
+            <h2 class="md_header_block" id="h_howtotranslate_index_html_ログインする">ログインする</h2>
+<p>事前に<a href="/howtojoin-transifex/">アカウント作成、チームへの参加</a>をし、作成したアカウントでログインしてください。</p>
+<h2 class="md_header_block" id="h_howtotranslate_index_html_翻訳したいリソースを開く">翻訳したいリソースを開く</h2>
+<p><a href="https://www.transifex.com/django/django-docs/dashboard/" rel="noopener" target="_blank">Transifexのdjango/django-docsプロジェクト</a>を開きます。</p>
+<p></p>
+<p><img height="499" src="/static/media/uploads/_thumbnails/ss_tr_1.png/ss_tr_1-800x499.png" width="800"/></p>
+<p></p>
+<p><strong>django-docs</strong>プロジェクトの画面から翻訳したい言語 <strong>Japanese</strong> を選択します。</p>
+<p>以下のように翻訳対象のリソース一覧画面が開きます。</p>
+<p></p>
+<p><img height="486" src="/static/media/uploads/_thumbnails/ss_tr_2.png/ss_tr_2-700x486.png" width="700"/></p>
+<p></p>
+<p>ここから翻訳したいリソースを選び、クリックします。それぞれはDjangoのドキュメントを大まかに分割したもので、例えば以下のようなページと対応しています。</p>
+<ul>
+<li>intro: チュートリアルなどの入門向けの内容 <a href="https://docs.djangoproject.com/en/3.1/intro/" rel="noopener" target="_blank">https://docs.djangoproject.com/en/3.1/intro/</a></li>
+<li>topics: 各機能の大まかな紹介、使い方 <a href="https://docs.djangoproject.com/en/3.1/topics/" rel="noopener" target="_blank">https://docs.djangoproject.com/en/3.1/topics/</a></li>
+<li>reference: APIリファレンス <a href="https://docs.djangoproject.com/en/3.1/ref/" rel="noopener" target="_blank">https://docs.djangoproject.com/en/3.1/ref/</a></li>
+</ul>
+<p>クリックするとポップアップが開くので<strong>Translate</strong>をクリックしてください。</p>
+<p>クリックできない場合、ユーザーが作成されていないか翻訳チームに参加できていません。参加リクエストを送信済みであれば、管理者に招待されるまでお待ちください。</p>
+<p></p>
+<p><img height="428" src="/static/media/uploads/_thumbnails/ss_tr_3.png/ss_tr_3-656x428.png" width="656"/></p>
+<p></p>
+<h2 class="md_header_block" id="h_howtotranslate_index_html_翻訳の進め方">翻訳の進め方</h2>
+<p>翻訳するリソースを決定すると、Transifexの翻訳画面が開きます。</p>
+<ul>
+<li>左側に翻訳対象の文と、翻訳語の文が一覧表示されます</li>
+<li>右側に翻訳文の入力欄が開きます</li>
+</ul>
+<p><img height="314" src="/static/media/uploads/_thumbnails/ss_tr_4.png/ss_tr_4-700x314.png" width="700"/></p>
+<p></p>
+<p>一覧から翻訳文の無い英文をクリックで選択し、翻訳文を入力します。</p>
+<p>入力できれば<strong> Save </strong>をクリックして保存できます。</p>
+<p></p>
+<p><img height="495" src="/static/media/uploads/_thumbnails/ss_tr_5.png/ss_tr_5-700x495.png" width="700"/></p>
+<p></p>
+<p>翻訳の流れは以上です。Transifexには他にも機械翻訳連携や用語集への単語追加などができますが、ここでは紹介しません。</p>
+<h2 class="md_header_block" id="h_howtotranslate_index_html_翻訳後のドキュメントはどこで見れるの_"><br/>翻訳後のドキュメントはどこで見れるの?</h2>
+<p>現状、Transifex上で進めている最新ドキュメントの翻訳は <a href="https://docs.djangoproject.com/ja/" rel="noopener" target="_blank">https://docs.djangoproject.com/ja/</a> で公開されています。</p>
+<p>翻訳は随時反映されます。反映状況は<a href="https://github.com/django/django-docs-translations/commits/stable/3.1.x/translations/ja/LC_MESSAGES" rel="noopener" target="_blank">django / django-docs-translations (stable/3.1.xブランチ)</a>のコミットログで確認できます。</p>
+
+          </div>
+
+          <div class="col-md-3 right">
+            <aside class="right-sidebar">
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+  <div class="container">
+
+    <div class="nav-footer">
+  <ul class="list-unstyled">
+    <li
+      class=""
+      id="footer-menu-about"
+    >
+      <a href="/about/">About</a>
+    </li>
+    <li
+      class=""
+      id="footer-menu-whouses"
+    >
+      <a href="/whouses/">利用実績</a>
+    </li>
+    
+  </ul>
+  <ul class="list-unstyled">
+    <li
+      class="active"
+      id="footer-menu-https:--docs.djangoproject.com-ja-"
+    >
+      <a href="https://docs.djangoproject.com/ja/">documentation</a>
+    </li>
+    <li
+      class="active"
+      id="footer-menu-translate"
+    >
+      <a href="/translate/">翻訳への参加方法</a>
+    </li>
+    
+  </ul>
+  <ul class="list-unstyled">
+    <li
+      class=""
+      id="footer-menu-community"
+    >
+      <a href="/community/">Community</a>
+    </li>
+    <li
+      class=""
+      id="footer-menu-events"
+    >
+      <a href="/events/">Events</a>
+    </li>
+    
+  </ul>
+  <ul class="list-unstyled">
+    <li
+      class=""
+      id="footer-menu--weblog-"
+    >
+      <a href="/weblog/">Blog</a>
+    </li>
+    
+  </ul>
+  
+</div>
+
+    <div id="sub-footer">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="copyright">
+            <p>
+            </p>
+            <p>
+              Django is a <a href="https://www.djangoproject.com/trademarks/" target="_blank" rel="noopener">registered trademark</a> of the Django Software Foundation.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <ul class="social-network">
+            <li><a title="" data-placement="top" href="https://twitter.com/django_ja" target="_blank" rel="noopener" data-original-title="Twitter"><i class="fa fa-twitter"></i></a></li>
+            <li><a title="" data-placement="top" href="https://groups.google.com/forum/#!forum/django-ja" target="_blank" rel="noopener" data-original-title="Google Group"><i class="fa fa-users"></i></a></li>
+            <li><a title="" data-placement="top" href="https://django.connpass.com/" target="_blank" rel="noopener" data-original-title="Connpass"><i class="fa fa-compass"></i></a></li>
+            <li><a title="" data-placement="top" href="https://github.com/django-ja/" target="_blank" rel="noopener" data-original-title="GitHub"><i class="fa fa-github"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+
+  <script src="/static/js/jquery.easing.1.3.js"></script>
+<script src="/static/js/jquery.fancybox.pack.js"></script>
+<script src="/static/js/jquery.fancybox-media.js"></script>
+<script src="/static/js/google-code-prettify/prettify.js"></script>
+<script src="/static/js/portfolio/jquery.quicksand.js"></script>
+<script src="/static/js/portfolio/setting.js"></script>
+<script src="/static/js/jquery.flexslider.js"></script>
+<script src="/static/js/animate.js"></script>
+<script src="/static/js/custom.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51972813-3', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

@@ -1,0 +1,1009 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>国際化 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="Django を使う" href="index.html" />
+    <link rel="next" title="ペジネータ (paginator)" href="pagination.html" />
+    <link rel="prev" title="電子メールの送信" href="email.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="email.html" title="電子メールの送信">前へ</a> 
+     |
+    <a href="index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="pagination.html" title="ペジネータ (paginator)">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="topics-i18n">
+            
+  
+  <div class="section" id="s-id1">
+<span id="s-topics-i18n"></span><h1>国際化<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Django はコードとテンプレートの双方で国際化をフルサポートしています。このド
+キュメントでは国際化の仕組みについて説明します。</p>
+<div class="section" id="s-id2">
+<h2>概要<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>国際化のゴールは、一つの Web アプリケーションが複数の言語でコンテンツや機能
+を提供できるようにすることにあります。</p>
+<p>Django 開発者は、最小限のフックを Python コードとテンプレートに埋め込むこと
+で国際化というゴールにたどり着けます。これらのフックは
+<strong>翻訳文字列 (translation string)</strong> と呼ばれています。翻訳文字列は Django
+に「このテキストについてエンドユーザの言語に合ったテキストがあるなら、テキ
+ストを翻訳して出力せよ」と指示します。</p>
+<p>Django はこれらのフックに注意して、ユーザの言語設定に合わせて Web アプリケー
+ションをオンザフライで翻訳します。</p>
+<p>Django が行っているのは、本質的には以下の二つの作業です:</p>
+<ul class="simple">
+<li>開発者やテンプレートの作者に、アプリケーションのどの部分を翻訳できるか
+指定させます。</li>
+<li>指定したフックを使って、特定のユーザの言語設定に従って Web アプリケー
+ションを翻訳します。</li>
+</ul>
+</div>
+<div class="section" id="s-id3">
+<span id="s-if-you-don-t-need-internationalization-in-your-app"></span><h2>国際化が必要ない場合<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Django の国際化フックはデフォルトで有効になっているので、フレームワークの一
+部で i18n がらみのわずかなオーバヘッドが生じています。国際化の機能を使いた
+くなければ、設定ファイルで <a class="reference external" href="../ref/settings.html#setting-USE_I18N"><tt class="xref docutils literal"><span class="pre">USE_I18N</span> <span class="pre">=</span> <span class="pre">False</span></tt></a> を設定し
+てください。 <a class="reference external" href="../ref/settings.html#setting-USE_I18N"><tt class="xref docutils literal"><span class="pre">USE_I18N</span></tt></a> を <tt class="xref docutils literal"><span class="pre">False</span></tt> に設定すると、 Django は国際
+化機構をロードしないよう最適化を行います。</p>
+<p>この場合、 <a class="reference external" href="../ref/settings.html#setting-TEMPLATE_CONTEXT_PROCESSORS"><tt class="xref docutils literal"><span class="pre">TEMPLATE_CONTEXT_PROCESSORS</span></tt></a> からも
+<tt class="docutils literal"><span class="pre">'django.core.context_processors.i18n'</span></tt> を外すことになるでしょう。</p>
+</div>
+<div class="section" id="s-id4">
+<span id="s-if-you-do-need-internationalization-three-steps"></span><h2>国際化が必要な場合: 3 つのステップ<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>翻訳対象文字列を Python コードやテンプレートに埋め込みます。</li>
+<li>サポートしたい言語について、翻訳対象文字列に対応する翻訳を行います。</li>
+<li>Django の設定でロケールミドルウェアを有効化します。</li>
+</ol>
+<div class="admonition-behind-the-scenes admonition">
+<p class="first admonition-title">舞台裏では</p>
+<p class="last">Django の翻訳機構は、 Python に付属の <tt class="docutils literal"><span class="pre">gettext</span></tt> モジュールを使ってい
+ます。</p>
+</div>
+</div>
+<div class="section" id="s-id5">
+<span id="s-how-to-specify-translation-strings"></span><h2>1. 翻訳文字列の指定方法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>翻訳文字列 (translation string) は、「このテキストを翻訳対象にする」という
+指定を行います。翻訳文字列は Python コードにもテンプレートにも現れます。翻
+訳可能な文字列をマークしておくのは作者の役割であり、翻訳システムはマークさ
+れた文字列しか翻訳対象にしません。</p>
+<div class="section" id="s-python">
+<span id="s-in-python-code"></span><h3>Python コード内での指定<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="s-id6">
+<span id="s-standard-translation"></span><h4>標準的な翻訳<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>翻訳対象文字列を関数 <tt class="docutils literal"><span class="pre">ugettext()</span></tt> で指定します。タイプ数を減らすため、
+<tt class="docutils literal"><span class="pre">ugettext()</span></tt> を <tt class="docutils literal"><span class="pre">_</span></tt> という別名で import するのが慣習的なやり方です。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Python の標準ライブラリ <tt class="docutils literal"><span class="pre">gettext</span></tt> は、グローバルの名前空間に <tt class="docutils literal"><span class="pre">_()</span></tt>
+という名前で <tt class="docutils literal"><span class="pre">gettext()</span></tt> をインストールします。 Django ではこの方法に
+従っていませんが、それは以下の理由からです:</p>
+<ol class="last arabic simple">
+<li>国際化文字セット (Unicode) のサポート下では、 <tt class="docutils literal"><span class="pre">gettext()</span></tt> よりも
+<tt class="docutils literal"><span class="pre">ugettext()</span></tt> の方が便利だからです。また、ファイルによっては
+<tt class="docutils literal"><span class="pre">ugettext_lazy()</span></tt> をデフォルトの翻訳用メソッドに使った方がよい
+場合もあります。グローバル名前空間に <tt class="docutils literal"><span class="pre">_()</span></tt> がなければ、開発者に
+場合に応じて適切な翻訳用メソッドを選ぶ自由を与えられます。</li>
+<li>アンダースコア文字は、 Python の対話シェルや doctest で書かれたテ
+スト中では「直前の式の値」を表します。そのため、グローバル名前空間
+に <tt class="docutils literal"><span class="pre">_()</span></tt> をインストールすると、干渉して問題を引き起こします。
+<tt class="docutils literal"><span class="pre">ugettext()</span></tt> を <tt class="docutils literal"><span class="pre">_()</span></tt> という名前で明示的に  import すれば、こ
+の問題を回避できます。</li>
+</ol>
+</div>
+<p>下の例では、 <tt class="docutils literal"><span class="pre">&quot;Welcome</span> <span class="pre">to</span> <span class="pre">my</span> <span class="pre">site.&quot;</span></tt> というテキストを翻訳文字列としてマー
+クします:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext</span> <span class="k">as</span> <span class="n">_</span>
+
+<span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Welcome to my site.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+<p>もちろん、 <tt class="docutils literal"><span class="pre">ugettext()</span></tt> に別名を付けなくても使えます。従って、下の例は上
+の例と全く同じになります:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext</span>
+<span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">ugettext</span><span class="p">(</span><span class="s">&quot;Welcome to my site.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+<p>翻訳は計算済みの値に対して行われます。従って、下の例も上の 2 例と同じになり
+ます:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Welcome&#39;</span><span class="p">,</span> <span class="s">&#39;to&#39;</span><span class="p">,</span> <span class="s">&#39;my&#39;</span><span class="p">,</span> <span class="s">&#39;site.&#39;</span><span class="p">]</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+<p>翻訳は変数に対しても使えます。従って、下の例もまた、上の例と同じになります:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">sentence</span> <span class="o">=</span> <span class="s">&#39;Welcome to my site.&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+<p>(上の 2 つの例のように変数や計算済みの値を使う場合、 Django の翻訳文字列検
+出ユーティリティ <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> はこれらの文字列を検出で
+きないので注意しておきましょう。詳しくは後の <tt class="docutils literal"><span class="pre">makemessages</span></tt> の節で説明し
+ます。)</p>
+<p><tt class="docutils literal"><span class="pre">_()</span></tt> や <tt class="docutils literal"><span class="pre">ugettext()</span></tt> に渡す文字列には、 Pyton の標準の名前付き補完構文
+によるプレースホルダを使えます。例えば:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;Today is </span><span class="si">%(month)s</span><span class="s">, </span><span class="si">%s</span><span class="s">(day)s.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s">&#39;month&#39;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s">&#39;day&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+<p>このテクニックを使うと、言語ごとの翻訳でプレースホルダを並べ変えできるよう
+になり、例えば、英語の翻訳文が <tt class="docutils literal"><span class="pre">&quot;Today</span> <span class="pre">is</span> <span class="pre">Nobember,</span> <span class="pre">26.&quot;</span></tt> であるのに対し
+て、スペイン語では <tt class="docutils literal"><span class="pre">&quot;Hoy</span> <span class="pre">es</span> <span class="pre">26</span> <span class="pre">de</span> <span class="pre">Noviembre.&quot;</span></tt> であるように、プレースホル
+ダの位置を翻訳文の前後で移動できます。</p>
+<p>この理由から、引数が複数ある場合には、固定引数を使った補完 (<tt class="docutils literal"><span class="pre">%s</span></tt> や
+<tt class="docutils literal"><span class="pre">%d</span></tt>) ではなく、名前付きの補完 (<tt class="docutils literal"><span class="pre">%(day)s</span></tt>) を使ってください。固定引数
+による補完を使った場合、プレースホルダの順番によってうまく翻訳できない場合
+があります。</p>
+</div>
+<div class="section" id="s-id7">
+<span id="s-marking-strings-as-no-op"></span><h4>すぐには翻訳しない文字列をマークする<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p>すぐには翻訳しない文字列のマークには
+<tt class="docutils literal"><span class="pre">django.utils.translation.ugettext_noop()</span></tt> を使って下さい。マークした文字
+列は後で変数として使われるときに翻訳されます。</p>
+<p>この関数は、ソース言語の中に定数として文字列を置いておきたい場合に使います。
+というのも、定数は、例えばデータベース中の文字列のように、システムやユーザ
+間で共通な値である一方で、ユーザにメッセージとして提示する最後の段階で翻訳
+せねばならない場合があるからです。</p>
+</div>
+<div class="section" id="s-id8">
+<span id="s-lazy-translations"></span><h4>翻訳を遅延させる<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p>文字列の翻訳を遅延 (lazy) させるには、
+<tt class="docutils literal"><span class="pre">django.utils.translation.ugettext_lazy()</span></tt> を使います。翻訳を遅延させると、
+<tt class="docutils literal"><span class="pre">ugettext_lazy()</span></tt> を呼び出すまで翻訳文字列の値にアクセスしません。</p>
+<p>例えば、モデルの <tt class="docutils literal"><span class="pre">help_text</span></tt> を翻訳する場合に以下のようにします:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span>
+
+<span class="k">class</span> <span class="nc">MyThing</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">help_text</span><span class="o">=</span><span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">&#39;This is the help text&#39;</span><span class="p">))</span>
+</pre></div>
+<p>この例では、  <tt class="docutils literal"><span class="pre">ugettext_lazy()</span></tt> は実際の翻訳文字列ではなく、文字列への遅延
+参照 (lazy reference) を保存します。翻訳自体は文字列をコンテキストで使った
+時、例えば admin サイトでテンプレートをレンダリングしたときに初めて実行され
+ます。</p>
+<p><tt class="docutils literal"><span class="pre">ugettext_lazy</span></tt> という名前が冗長で嫌なら、以下のようにして <tt class="docutils literal"><span class="pre">_</span></tt> (アンダー
+スコア) にエイリアスできます:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+
+<span class="k">class</span> <span class="nc">MyThing</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;This is the help text&#39;</span><span class="p">))</span>
+</pre></div>
+<p><a class="reference external" href="db/models.html#topics-db-models"><em>Django モデル</em></a> の中では、常に遅延翻訳を使うように
+してください。フィールド名やテーブル名に翻訳をつけておくのも良いアイデアで
+す。とはいえ、これは <tt class="docutils literal"><span class="pre">Meta</span></tt> クラスで明示的に <tt class="docutils literal"><span class="pre">verbose_name</span></tt> や
+<tt class="docutils literal"><span class="pre">verbose_name_plural</span></tt> オプションを指定するという作業です:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+
+<span class="k">class</span> <span class="nc">MyThing</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">),</span> <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;This is the help text&#39;</span><span class="p">))</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;my thing&#39;</span><span class="p">)</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;mythings&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="s-id9">
+<span id="s-pluralization"></span><h4>複数形化<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>複数形のメッセージを指定するには <tt class="docutils literal"><span class="pre">django.utils.translation.ungettext()</span></tt> を
+使います。例えば:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ungettext</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="n">ungettext</span><span class="p">(</span><span class="s">&#39;there is </span><span class="si">%(count)d</span><span class="s"> object&#39;</span><span class="p">,</span> <span class="s">&#39;there are </span><span class="si">%(count)d</span><span class="s"> objects&#39;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span>
+        <span class="s">&#39;count&#39;</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">ungettext</span></tt> は、単数形の翻訳文字列、複数形の翻訳文字列、そしてオブジェクト
+の数 (翻訳言語に <tt class="docutils literal"><span class="pre">count</span></tt> という変数で渡されます) という 3 つの引数をとり
+ます。</p>
+</div>
+</div>
+<div class="section" id="s-id10">
+<span id="s-in-template-code"></span><h3>テンプレート内での翻訳<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="templates.html#topics-templates"><em>Django テンプレート</em></a> 中の翻訳は、二つのテンプレー
+トタグを使ってPython コードとは少し違った方法で行います。テンプレートで翻訳
+用のタグを使えるようにするには、テンプレートの上の方に <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">load</span> <span class="pre">i18n</span> <span class="pre">%}</span></tt>
+を入れておきます。</p>
+<p>テンプレートタグ <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">trans</span> <span class="pre">%}</span></tt> は定数の文字列 (シングルクオートまたはダブ
+ルクオートで囲まれた文字列) や変数を翻訳します:</p>
+<div class="highlight"><pre><span class="nt">&lt;title&gt;</span><span class="cp">{%</span> <span class="k">trans</span> <span class="s2">&quot;This is the title.&quot;</span> <span class="cp">%}</span><span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;title&gt;</span><span class="cp">{%</span> <span class="k">trans</span> <span class="nv">myvar</span> <span class="cp">%}</span><span class="nt">&lt;/title&gt;</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">noop</span></tt> オプションを指定すると、値の参照は行われますが、翻訳はしません。
+<tt class="docutils literal"><span class="pre">noop</span></tt> は、将来翻訳が必要なコンテンツを「スタブ」するのに便利です。</p>
+<blockquote>
+&lt;title&gt;{% trans &quot;myvar&quot; noop %}&lt;/title&gt;</blockquote>
+<p><tt class="docutils literal"><span class="pre">{%</span> <span class="pre">trans</span> <span class="pre">%}</span></tt> の中では定数文字列とテンプレート変数を同時に扱えません。翻
+訳中で変数 (プレースホルダ) を使いたい場合には、以下の例のように
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">blocktrans</span> <span class="pre">%}</span></tt> を使います:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">blocktrans</span> <span class="cp">%}</span>This string will have <span class="cp">{{</span> <span class="nv">value</span> <span class="cp">}}</span> inside.<span class="cp">{%</span> <span class="k">endblocktrans</span> <span class="cp">%}</span>
+</pre></div>
+<p>テンプレート式を翻訳したい場合、すなわちテンプレートフィルタの出力を翻訳し
+たい場合には、式をローカルな変数にバインドして、翻訳ブロック中で使えるよう
+にせねばなりません:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">blocktrans</span> <span class="k">with</span> <span class="nv">value</span><span class="o">|</span><span class="nf">filter</span> <span class="k">as</span> <span class="nv">myvar</span> <span class="cp">%}</span>
+This will have <span class="cp">{{</span> <span class="nv">myvar</span> <span class="cp">}}</span> inside.
+<span class="cp">{%</span> <span class="k">endblocktrans</span> <span class="cp">%}</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">blocktrans</span></tt> タグの中で複数個の式を束縛したい場合には、 <tt class="docutils literal"><span class="pre">and</span></tt> を使って
+分割します:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">blocktrans</span> <span class="k">with</span> <span class="nv">book</span><span class="o">|</span><span class="nf">title</span> <span class="k">as</span> <span class="nv">book_t</span> <span class="k">and</span> <span class="nv">author</span><span class="o">|</span><span class="nf">title</span> <span class="k">as</span> <span class="nv">author_t</span> <span class="cp">%}</span>
+This is <span class="cp">{{</span> <span class="nv">book_t</span> <span class="cp">}}</span> by <span class="cp">{{</span> <span class="nv">author_t</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endblocktrans</span> <span class="cp">%}</span>
+</pre></div>
+<p>複数形化するには、 <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">blocktrans</span> <span class="pre">%}</span></tt> と <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">endblocktrans</span> <span class="pre">%}</span></tt> の間に
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">plural</span> <span class="pre">%}</span></tt> タグで単数形と複数形の両方の形式を記述します:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">blocktrans</span> <span class="nv">count</span> <span class="nv">list</span><span class="o">|</span><span class="nf">length</span> <span class="k">as</span> <span class="nv">counter</span> <span class="cp">%}</span>
+There is only one <span class="cp">{{</span> <span class="nv">name</span> <span class="cp">}}</span> object.
+<span class="cp">{%</span> <span class="k">plural</span> <span class="cp">%}</span>
+There are <span class="cp">{{</span> <span class="nv">counter</span> <span class="cp">}}</span> <span class="cp">{{</span> <span class="nv">name</span> <span class="cp">}}</span> objects.
+<span class="cp">{%</span> <span class="k">endblocktrans</span> <span class="cp">%}</span>
+</pre></div>
+<p>内部的には、ブロックおよびインラインの翻訳は全て適切な <tt class="docutils literal"><span class="pre">ugettext</span></tt> /
+<tt class="docutils literal"><span class="pre">ungettext</span></tt> 呼び出しを行います。</p>
+<p><tt class="docutils literal"><span class="pre">RequestContext</span></tt> は 3 つの翻訳処理固有の変数にアクセスできます:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> は各言語の言語コードと (現在有効なロケールを使って翻訳
+した) 言語名からなるタプルでできた言語のリストです。</li>
+<li><tt class="docutils literal"><span class="pre">LANGUAGE_CODE</span></tt> は現在のユーザ設定言語で、文字列です。例: <tt class="docutils literal"><span class="pre">en-us</span></tt>
+(後述の &quot;言語設定の検出メカニズム&quot; を参照してください)。</li>
+<li><tt class="docutils literal"><span class="pre">LANGUAGE_BIDI</span></tt> は現在の言語の表記方向 (direction) です。 <tt class="xref docutils literal"><span class="pre">True</span></tt>
+ならば、ヘブライ語やアラビア語のように右から左に記述する言語を示し、
+<tt class="xref docutils literal"><span class="pre">False</span></tt> なら英語、フランス語、ドイツ語のように左から右に記述する言
+語を指します。</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">RequestContext</span></tt> 拡張を使わなければ、以下の 3 つのタグを使って値を取得でき
+ます:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">get_current_language</span> <span class="k">as</span> <span class="nv">LANGUAGE_CODE</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">get_available_languages</span> <span class="k">as</span> <span class="nv">LANGUAGES</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">get_current_language_bidi</span> <span class="k">as</span> <span class="nv">LANGUAGE_BIDI</span> <span class="cp">%}</span>
+</pre></div>
+<p>これらのタグを使うには <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">load</span> <span class="pre">i18n</span> <span class="pre">%}</span></tt> が必要です。</p>
+<p>翻訳フックは定数文字列を使うテンプレートブロック全てでも利用できます。
+<tt class="docutils literal"><span class="pre">_()</span></tt> 構文を使って翻訳文字列を指定してください。例えば:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">some_special_tag</span> <span class="kp">_</span><span class="o">(</span><span class="s2">&quot;Page not found&quot;</span><span class="o">)</span> <span class="nv">value</span><span class="o">|</span><span class="nf">yesno</span><span class="o">:</span><span class="kp">_</span><span class="o">(</span><span class="s2">&quot;yes,no&quot;</span><span class="o">)</span> <span class="cp">%}</span>
+</pre></div>
+<p>このばあい、タグとフィルタの両方は翻訳済みの文字列を扱うことになるので、翻
+訳の有無について気を配る必要がなくなります。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">上の例では、翻訳インフラストラクチャには文字列 <tt class="docutils literal"><span class="pre">&quot;yes,no&quot;</span></tt> が渡されま
+す。 <tt class="docutils literal"><span class="pre">&quot;yes&quot;</span></tt> と <tt class="docutils literal"><span class="pre">&quot;no&quot;</span></tt> の別々の文字列が渡されるわけではありません。
+フィルタが引数の文字列を正しく分割できるように、翻訳済みの文字列にはカ
+ンマが入っていなければなりません。例えば、ドイツ語の翻訳は、 (カンマを
+そのまま残して) <tt class="docutils literal"><span class="pre">&quot;yes,no&quot;</span></tt> を <tt class="docutils literal"><span class="pre">&quot;ja,nein&quot;</span></tt> に翻訳せねばなりません。</p>
+</div>
+</div>
+<div class="section" id="s-id11">
+<span id="s-working-with-lazy-translation-objects"></span><h3>遅延翻訳オブジェクトを操作する<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>モデルやユーティリティ関数では、 <tt class="docutils literal"><span class="pre">ugettext_lazy()</span></tt> や
+<tt class="docutils literal"><span class="pre">ungettext_lazy()</span></tt> を使って文字列をマークすることがよくあります。こうして
+マークした文字列をコードの他の部分で扱うときには、マークしてできた遅延翻訳
+オブジェクトをうっかり文字列に変換してしまわないよう気を付けてください。遅
+延翻訳オブジェクトの変換は (ロケールの影響下に入るように) できるだけ遅くせ
+ねばならないからです。遅延翻訳オブジェクトの変換を遅らせるために、以下の二
+つのヘルパ関数があります。</p>
+<div class="section" id="s-string-concat">
+<span id="s-joining-strings-string-concat"></span><h4>文字列の結合: string_concat()<a class="headerlink" href="#string-concat" title="Permalink to this headline">¶</a></h4>
+<p>標準の Python 文字列型の join メソッド (<tt class="docutils literal"><span class="pre">''.join([...])</span></tt>) は、
+遅延翻訳オブジェクトの入ったリストをうまく扱えません。その代わり、
+<tt class="docutils literal"><span class="pre">django.utils.translation.string_concat()</span></tt> を使ってください。このメソッド
+は、全ての内容を結合し、 <em>かつ</em> 文字列中に値が取り込まれるまで実際に変換を
+行わないような遅延オブジェクトを生成して返します。例えば:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">string_concat</span>
+<span class="o">...</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">u&#39;John Lennon&#39;</span><span class="p">)</span>
+<span class="n">instrument</span> <span class="o">=</span> <span class="n">ugettext_lazy</span><span class="p">(</span><span class="s">u&#39;guitar&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">string_concat</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;: &#39;</span><span class="p">,</span> <span class="n">instrument</span><span class="p">])</span>
+</pre></div>
+<p>上のケースでは、 <tt class="docutils literal"><span class="pre">result</span></tt> 中の遅延翻訳オブジェクトは、 <tt class="docutils literal"><span class="pre">result</span></tt> 自体を
+文字列中で使った場合 (テンプレートのレンダリング時など) にしか文字列に変換
+されません。</p>
+</div>
+<div class="section" id="s-allow-lazy">
+<span id="s-the-allow-lazy-decorator"></span><h4>allow_lazy() デコレータ<a class="headerlink" href="#allow-lazy" title="Permalink to this headline">¶</a></h4>
+<p>Django はたくさんのユーティリティ関数を (とりわけ <tt class="docutils literal"><span class="pre">django.utils</span></tt> パッケー
+ジで) 提供しています。これらの関数の多くは文字列を第一引数にとり、文字列に
+対して何らかの処理を行います。関数はテンプレートフィルタ内で使われたり、他
+のコードで直接呼び出されたりしています。</p>
+<p>同様の関数を自分で作成し、翻訳文字列を扱おうとした場合、第一引数が遅延翻訳
+オブジェクトの場合に問題に直面することでしょう。この関数はビューの外側 (つ
+まり、現在のスレッドのロケール設定が的確でないかもしれない場所) で使われる
+かもしれないので、関数内で遅延翻訳オブジェクトを文字列に変換したくないはず
+だからです。</p>
+<p>こうした場合のために、 <tt class="docutils literal"><span class="pre">django.utils.functional.allow_lazy()</span></tt> デコレータ
+を使ってください。このデコレータで関数をラップすると、関数の第一引数に遅延
+翻訳オブジェクトを渡した場合、関数の評価を文字列に変換する瞬間まで遅延させ
+られます。</p>
+<p>例を示しましょう:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.utils.functional</span> <span class="kn">import</span> <span class="n">allow_lazy</span>
+
+<span class="k">def</span> <span class="nf">fancy_utility_function</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+    <span class="c"># Do some conversion on string &#39;s&#39;</span>
+    <span class="o">...</span>
+<span class="n">fancy_utility_function</span> <span class="o">=</span> <span class="n">allow_lazy</span><span class="p">(</span><span class="n">fancy_utility_function</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">allow_lazy()</span></tt> デコレータは関数名に加えて追加の引数 (<tt class="docutils literal"><span class="pre">*args</span></tt>) をとりま
+す。この引数には、デコレーション対象の関数の戻り値の型 (複数可) を指定しま
+す。通常は、 <tt class="docutils literal"><span class="pre">unicode</span></tt> だけを入れておき、関数が必ず Unicode 文字列を返す
+ようにしておけばよいでしょう。</p>
+<p>このデコレータを使えば、適切な文字列を入力として受け取る関数を書いておき、
+後で遅延翻訳オブジェクトのサポートを追加できます。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-id13">
+<span id="s-id12"></span><span id="s-how-to-create-language-files"></span><h2>2. 言語ファイルの作成<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>文字列に翻訳用のタグをつけたら、今度は翻訳文自体を書く (または手に入れる)
+必要があります。ここでは翻訳文を書く方法について示します。</p>
+<div class="admonition- admonition">
+<p class="first admonition-title">ロケールの制約</p>
+<p class="last">Django は、 Django 本体に対する翻訳カタログのない言語への地域化をサポー
+トしていません。ある言語向けの自作のカタログを提供しても、 Django 本体
+にその言語のサポートがなければ、カタログは無視されます。自作のアプリケー
+ションに特定の言語のロケールをサポートさせたいのなら、まずは Django の
+コア部分に対する最小限の翻訳カタログを作成する必要があるでしょう。また、
+その場合、翻訳されたメッセージ (自作のアプリケーション内のカタログ) と
+英語のメッセージ (Django 自体の不完全なカタログ) が入り混じった表示になっ
+てしまうでしょう。くわしくは
+<a class="reference internal" href="#locale-middleware-notes"><em>LocaleMiddleware の注意事項</em></a> を参照して
+ください。</p>
+</div>
+<div class="section" id="s-id14">
+<span id="s-message-files"></span><h3>メッセージファイル<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p>最初のステップは、新たに追加する言語用の <strong>メッセージファイル</strong> の作成です。
+メッセージファイルは平文テキストファイルで、言語ごとに作成され、翻訳文字列
+全てと、言語ごとの対応する表現が収められています。メッセージファイルの拡張
+子は <tt class="docutils literal"><span class="pre">.po</span></tt> です。</p>
+<p>Django には <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> というツールが付属しています。
+このツールはメッセージファイルの作成や維持を自動化します。</p>
+<div class="admonition-django admonition">
+<p class="first admonition-title">ベテラン Django ユーザへの注意</p>
+<p class="last">以前からある <tt class="docutils literal"><span class="pre">bin/make-messages.py</span></tt> ツールの機能は、 Django の操作に
+一貫性をもたせるために、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> に移動しまし
+た。</p>
+</div>
+<p>メッセージファイルの作成や更新を行うには、以下のようにコマンドを実行します:</p>
+<pre>django-admin.py makemessages -l de</pre>
+<p>ここで、 <tt class="docutils literal"><span class="pre">de</span></tt> は作成したいメッセージファイルの言語コードです。言語コード
+はロケール表示の形式にします。例えば、ブラジル系ポルトガル語の場合には
+<tt class="docutils literal"><span class="pre">pt_BR</span></tt> で、オーストリアドイツは <tt class="docutils literal"><span class="pre">de_AT</span></tt> です。</p>
+<p>スクリプトは以下の 3 種類の場所のいずれかで実行します:</p>
+<ul class="simple">
+<li>Django プロジェクトのルートディレクトリ。</li>
+<li>Django アプリケーションのルートディレクトリ。</li>
+<li><tt class="docutils literal"><span class="pre">django</span></tt> のルートディレクトリ (Subversion からチェックアウトしたと
+きのルートではなく、 <tt class="docutils literal"><span class="pre">$PYTHONPATH</span></tt> にリンクされているか、
+<tt class="docutils literal"><span class="pre">$PYTHONPATH</span></tt> 上のどこかにあるディレクトリです)。この場所で実行する
+のは、 Django 自体の翻訳カタログを生成するときだけです。
+<a class="reference external" href="../internals/contributing.html#contributing-translations"><em>翻訳の提出と維持</em></a> を参照してください。</li>
+</ul>
+<p>スクリプトはプロジェクトのソースツリーやアプリケーションのソースツリーを走
+査して、翻訳用にマークされた全ての文字列を取り出します。スクリプトは
+<tt class="docutils literal"><span class="pre">/locale/LANG/LC_MESSAGES</span></tt> 下にメッセージファイルを作成 (もしくは更新) し
+ます。 <tt class="docutils literal"><span class="pre">de</span></tt> の例では、ファイルは <tt class="docutils literal"><span class="pre">/locale/de/LC_MESSAGES/django.po</span></tt> で
+す。</p>
+<p>デフォルトの設定では、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> は拡張子 <tt class="docutils literal"><span class="pre">.html</span></tt>
+のファイルも検索します。デフォルトの設定をオーバライドしたければ、
+<tt class="docutils literal"><span class="pre">--extension</span></tt> または <tt class="docutils literal"><span class="pre">-e</span></tt> オプションを使って、拡張子を指定してください:</p>
+<pre>django-admin.py makemessages -l de -e txt</pre>
+<p>複数の拡張子を扱いたいのなら、カンマで区切るか、 <tt class="docutils literal"><span class="pre">-e</span></tt> や <tt class="docutils literal"><span class="pre">--extension</span></tt>
+を複数回指定します:</p>
+<pre>django-admin.py makemessages -l=de -e=html,txt -e xml</pre>
+<p><a class="reference internal" href="#creating-javascript-translation-catalogs">JavaScript の翻訳カタログ</a> を生成したいのなら、 <tt class="docutils literal"><span class="pre">-e</span> <span class="pre">js</span></tt> <strong>ではなく</strong>
+'djangojs' ドメインを使ってください。</p>
+<div class="admonition-gettext admonition">
+<p class="first admonition-title">gettext がなかったら?</p>
+<p class="last"><tt class="docutils literal"><span class="pre">gettext</span></tt> ユーティリティをインストールしていない場合、
+<tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> は空のファイルを作成します。その場合、
+<tt class="docutils literal"><span class="pre">gettext</span></tt> ユーティリティをインストールするか、英語用の空のメッセージ
+ファイル (<tt class="docutils literal"><span class="pre">locale/en/LC_MESSAGES/django.po</span></tt>) をコピーして使って下さい。</p>
+</div>
+<div class="admonition-windows admonition">
+<p class="first admonition-title">Windows で動かしたいのですが?</p>
+<p class="last">Windows を使っていて、 <tt class="docutils literal"><span class="pre">django-admin</span> <span class="pre">compilemessages</span></tt> を動作させるため
+に GNU gettext ユーティリティをインストールたいのなら、
+<a class="reference internal" href="#gettext-on-windows">gettext on Windows</a> を参照してください。</p>
+</div>
+<p><tt class="docutils literal"><span class="pre">.po</span></tt> ファイルは素直な形式で書かれています。 <tt class="docutils literal"><span class="pre">.po</span></tt> ファイルには翻訳メン
+テナのコンタクト情報のようなわずかなメタデータが入っています。それ以外の大
+部分は <strong>メッセージ</strong> のリストです。メッセージは翻訳文字列と特定の言語用の
+実際の翻訳テキストです。</p>
+<p>例えば、 Django アプリケーションに <tt class="docutils literal"><span class="pre">&quot;Welcome</span> <span class="pre">to</span> <span class="pre">my</span> <span class="pre">site.&quot;</span></tt> というテキスト
+の翻訳文字列が以下のように入っていたとします:</p>
+<div class="highlight"><pre><span class="n">_</span><span class="p">(</span><span class="s">&quot;Welcome to my site.&quot;</span><span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> を実行すると、以下のようなコード断片を含む
+<tt class="docutils literal"><span class="pre">.po</span></tt> ファイルを作成するはずです:</p>
+<pre>#: path/to/python/module.py:23
+msgid "Welcome to my site."
+msgstr ""</pre>
+<p>上の内容を簡単に説明しましょう:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">msgid</span></tt> は翻訳文字列で、ソースコードに書かれていたものです。変更し
+てはなりません。</li>
+<li><tt class="docutils literal"><span class="pre">msgstr</span></tt> には各言語の翻訳を入れます。最初は空になっており、変更する
+のはユーザの責任です。翻訳文字列の周りにクオートを忘れないように注意
+してください。</li>
+<li>便宜上、各メッセージには該当する翻訳文字列のあったファイル名と行番号
+が <tt class="docutils literal"><span class="pre">msgid</span></tt> 行の上の <tt class="docutils literal"><span class="pre">#</span></tt> ではじまる行に入っています。</li>
+</ul>
+<p>長いメッセージは特別なケースとして扱います。 <tt class="docutils literal"><span class="pre">msgstr</span></tt> (または <tt class="docutils literal"><span class="pre">msgid</span></tt>)
+の直後の文字列が空文字列の場合、コンテンツ自体はその次の複数行にわたって書
+かれているものとみなします。これらの文字列は直接結合されるので、文字列の中
+間では末尾にスペースを忘れないようにしましょう。さもないと、空白なしで文字
+列がくっついてしまいますよ!</p>
+<div class="admonition- admonition">
+<p class="first admonition-title">文字コードセットに注意</p>
+<p class="last">PO ファイルをテキストエディタで作成するときには、文字コードセット
+の行 (<tt class="docutils literal"><span class="pre">&quot;CHARSET&quot;</span></tt> を探して下さい) をまず編集して、これから編集に使う
+文字セットにしてください。 <tt class="docutils literal"><span class="pre">gettext</span></tt> ツールの内部動作の仕組み上、また、
+Django のコア部分やアプリケーションで非 ASCII のソース文字列を扱えるよ
+うにするために、 PO ファイルのエンコーディングは必ず UTF-8 にしてくださ
+い。</p>
+</div>
+<p>全てのソースコードとテンプレートを新たな翻訳文字列でためし、 <strong>全ての</strong> 言
+語用にメッセージファイルを更新するには、以下のようにします:</p>
+<pre>django-admin.py makemessages -a</pre>
+</div>
+<div class="section" id="s-id15">
+<span id="s-compiling-message-files"></span><h3>メッセージファイルのコンパイル<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>メッセージファイルを作成して、変更し終えたら <tt class="docutils literal"><span class="pre">gettext</span></tt> を使ってメッセージ
+ファイルをより効率的な形式にコンパイルします。作業は
+<tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> ユーティリティで行いましょう。</p>
+<p>このツールは全ての <tt class="docutils literal"><span class="pre">.po</span></tt> ファイルをコンパイルして <tt class="docutils literal"><span class="pre">.mo</span></tt> ファイルを作成
+します。 <tt class="docutils literal"><span class="pre">.mo</span></tt> ファイルはバイナリファイルで、 <tt class="docutils literal"><span class="pre">gettext</span></tt> で使うために最
+適化されています。 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> を実行したのと同じディ
+レクトリで、以下のように <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">compilemessages</span></tt> を実行してくだ
+さい:</p>
+<pre>django-admin.py compilemessages</pre>
+<p>これで終わりです。もう翻訳を使えるようになっているはずです。</p>
+<div class="admonition-django admonition">
+<p class="first admonition-title">ベテラン Django ユーザへの注意</p>
+<p class="last">以前からある <tt class="docutils literal"><span class="pre">bin/compile-messages.py</span></tt> ツールの機能は、 Django の操作
+に一貫性をもたせるために、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">compilemessages</span></tt> に移動し
+ました。</p>
+</div>
+<div class="admonition-windows admonition">
+<p class="first admonition-title">Windows で動かしたいのですが?</p>
+<p class="last">Windows を使っていて、 <tt class="docutils literal"><span class="pre">django-admin</span> <span class="pre">compilemessages</span></tt> を動作させるため
+に GNU gettext ユーティリティをインストールたいのなら、
+<a class="reference internal" href="#gettext-on-windows">gettext on Windows</a> を参照してください。</p>
+</div>
+</div>
+</div>
+<div class="section" id="s-id16">
+<span id="s-how-django-discovers-language-preference"></span><h2>3. 言語設定の検出メカニズム<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<p>翻訳の準備を完了した、あるいは Django 付属の翻訳を使いたいだけなら、あとは
+アプリケーションで翻訳を有効にするだけです。</p>
+<p>背後では、 Django はユーザの使用言語を決めるモデルを備えています。このモデ
+ルは柔軟で、インストール全体、あるいは特定のユーザ、またはその両方に対して
+使用言語を決定できます。</p>
+<p>インストール全体での使用言語を設定するには、 <a class="reference external" href="../ref/settings.html#setting-LANGUAGE_CODE"><tt class="xref docutils literal"><span class="pre">LANGUAGE_CODE</span></tt></a> を設
+定します。 Django この設定をデフォルトの翻訳言語、すなわち他の適切な翻訳が
+ない場合に試みる言語に設定します。</p>
+<p>Django をネイティブの言語で動かしたいだけで、かつ自分の言語に対する言語ファ
+イルをすでに準備しているのなら、 <tt class="docutils literal"><span class="pre">LANGUAGE_CODE</span></tt> を設定するだけで済みます。</p>
+<p>個々のユーザが自分の使いたい言語を選択できるようにするには
+<tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> を使ってください。 <tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> は、リクエスト
+に埋め込まれたデータに基づいた言語の選択を可能にし、ユーザごとにコンテンツ
+をカスタマイズします。</p>
+<p><tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> を使うには、 <tt class="docutils literal"><span class="pre">MIDDLEWARE_CLASSES</span></tt> 設定に
+<tt class="docutils literal"><span class="pre">'django.middleware.locale.LocaleMiddleware'</span></tt> を追加します。ミドルウェア
+の順番は重要で、以下のガイドラインに従って下さい:</p>
+<ul class="simple">
+<li>まず、インストール済みのミドルウェアの先頭にくるようにしてください。</li>
+<li><tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> はセッションを使うので、 <tt class="docutils literal"><span class="pre">SessionMiddleware</span></tt>
+の後ろに配置してください。</li>
+<li><tt class="docutils literal"><span class="pre">CacheMiddleware</span></tt> を使っているなら、その後ろに <tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt>
+を配置してください。</li>
+</ul>
+<p>例えば、 <tt class="docutils literal"><span class="pre">MIDDLEWARE_CLASSES</span></tt> は以下のようになります:</p>
+<div class="highlight"><pre><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+   <span class="s">&#39;django.contrib.sessions.middleware.SessionMiddleware&#39;</span><span class="p">,</span>
+   <span class="s">&#39;django.middleware.locale.LocaleMiddleware&#39;</span><span class="p">,</span>
+   <span class="s">&#39;django.middleware.common.CommonMiddleware&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+<p>(ミドルウェアの詳細は <a class="reference external" href="http/middleware.html#topics-http-middleware"><em>ミドルウェアのドキュメント</em></a>
+を参照してください。)</p>
+<p><tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> はユーザの言語設定を以下のようなアルゴリズムで決定しよ
+うと試みます:</p>
+<ul>
+<li><p class="first">まず、現在のユーザのセッションに <tt class="docutils literal"><span class="pre">django_language</span></tt> キーがないか探し
+ます。</p>
+</li>
+<li><p class="first">なければ、クッキーを探します。</p>
+<div class="versionchanged">
+<span class="title">Django 1.0 で変更されました.</span> </div>
+<p>バージョン 0.96 以前の Djangoでは、クッキーの名前は
+<tt class="docutils literal"><span class="pre">django_language</span></tt> にハードコードされていました。 1.0 では、クッキー
+の名前を <tt class="xref docutils literal"><span class="pre">LANGUAGE_COOKIE</span></tt> で設定します。(クッキーのデフォル
+ト名は <tt class="docutils literal"><span class="pre">django_language</span></tt> です。)</p>
+</li>
+<li><p class="first">なければ、 <tt class="docutils literal"><span class="pre">Accept-Language</span></tt> HTTP ヘッダを探します。このヘッダはブ
+ラウザから送信され、サーバに対して順位つきで言語設定を知らせてきます。
+Djang はこの設定を順に調べ、利用可能な翻訳のある言語を探します。</p>
+</li>
+<li><p class="first">なければ、グローバルに設定された <tt class="docutils literal"><span class="pre">LANGUAGE_CODE</span></tt> の設定を使います。</p>
+</li>
+</ul>
+<p id="locale-middleware-notes">注意:</p>
+<ul>
+<li><p class="first">上記のどのステップでも、言語設定は標準の言語名表記法に従った文字列で
+書かれているものと想定しています。例えば、ブラジル系ポルトガル語は
+<tt class="docutils literal"><span class="pre">pt-br</span></tt> です。</p>
+</li>
+<li><p class="first">基本言語 (base language) が指定されていて、副言語 (sublanguage) が指
+定されていない場合、 Django は基本言語の設定を優先します。例えば、ユー
+ザが <tt class="docutils literal"><span class="pre">de-at</span></tt> (オーストリアドイツ語) を指定しているのに対して、
+Django 側には <tt class="docutils literal"><span class="pre">de</span></tt> のしかない場合、 Django は <tt class="docutils literal"><span class="pre">de</span></tt> を使います。</p>
+</li>
+<li><p class="first"><a class="reference external" href="../ref/settings.html#setting-LANGUAGES"><tt class="xref docutils literal"><span class="pre">LANGUAGES</span></tt></a> 設定にリストアップした言語しか選択できません。
+(全ての言語に対する翻訳を提供できないなどの理由で) 言語選択を指定の言
+語のサブセットに制限したい場合には、 <tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> を設定します。例え
+ば:</p>
+<div class="highlight"><pre><span class="n">LANGUAGES</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="p">(</span><span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;German&#39;</span><span class="p">)),</span>
+  <span class="p">(</span><span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;English&#39;</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+<p>この例では、自動生成されるメニューで利用可能な言語をドイツ語:de と
+英語:en (および de-ch や en-us のような副言語) に制限しています。</p>
+</li>
+<li><p class="first">上の項で説明したように、カスタムの <tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> 設定を行った場合、そ
+の言語を翻訳対象文字列に含めても構いません。ただし、
+<tt class="docutils literal"><span class="pre">django.utils.translation</span></tt> の <tt class="docutils literal"><span class="pre">ugettext()</span></tt> ではなく、「ダミーの」
+<tt class="docutils literal"><span class="pre">ugettext()</span></tt> でマークしてください。循環 import を防ぐため、 <em>決して</em>
+設定ファイル中で <tt class="docutils literal"><span class="pre">django.utils.translation</span></tt> を import しないでくだ
+さい。</p>
+<p>カスタム <tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> のマークアップは「ダミーの」 <tt class="docutils literal"><span class="pre">ugettext()</span></tt> 関
+数で解決します。以下に設定ファイルでの記述例を示します:</p>
+<div class="highlight"><pre><span class="n">ugettext</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span>
+
+<span class="n">LANGUAGES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="n">ugettext</span><span class="p">(</span><span class="s">&#39;German&#39;</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="n">ugettext</span><span class="p">(</span><span class="s">&#39;English&#39;</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+<p>このように設定しておいても、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> は翻訳
+文字列を検出して翻訳対象としてマークします。ただし、実行時の翻訳はお
+こなわれません。したがって、実行時には <tt class="docutils literal"><span class="pre">LANGUAGES</span></tt> を使うコードを
+<em>本当の</em> <tt class="docutils literal"><span class="pre">ugettext()</span></tt> でラップしておかねばなりません。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> で選択できるのは、 Django が基本的な部分の翻訳を
+提供している言語だけです。 Django のソースツリーの翻訳セットに入って
+いない言語の翻訳を提供したければ、まずその言語むけの基本部分の翻訳を
+提供する必要があります。例えば、Django はテクニカルメッセージ ID
+(technical message ID) を使って日付や時刻のフォーマットを解釈するので、
+システムを正しく動作させるには少なくともこうした部分の翻訳が必要にな
+ります。</p>
+<p>作業を始めるには、まず英語用の <tt class="docutils literal"><span class="pre">.po</span></tt> ファイルをコピーするとよいでしょ
+う。少なくともテクニカルメッセージだけは翻訳します。バリデーション時
+のメッセージもやっておくとよいでしょう。</p>
+<p>テクニカルメッセージ ID は簡単に区別できます。メッセージ ID は全て大
+文字でできているからです。このメッセージ ID は他のメッセージと同じよ
+うに翻訳してよいものではなく、ローカルの正しい形式を指定せねばなりま
+せん。例えば、 <tt class="docutils literal"><span class="pre">DATETIME_FORMAT</span></tt> (あるいは <tt class="docutils literal"><span class="pre">DATE_FORMAT</span></tt> や
+<tt class="docutils literal"><span class="pre">TIME_FORMAT</span></tt>) の場合、自分の言語における正しいフォーマット文字列を
+指定せねばなりません。フォーマットは <tt class="docutils literal"><span class="pre">now</span></tt> テンプレートタグで使われ
+ているフォーマット文字列と同じ文法に従います。</p>
+</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> がユーザ設定を検出すると、その設定に
+<a title="django.http.HttpRequest" class="reference external" href="../ref/request-response.html#django.http.HttpRequest"><tt class="xref docutils literal"><span class="pre">HttpRequest</span></tt></a> の <tt class="docutils literal"><span class="pre">request.LANGUAGE_CODE</span></tt> でアクセスで
+きます。この値はビューコードで自由に読みだしてかまいません。以下に一例を挙
+げます:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">hello_world</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">LANGUAGE_CODE</span> <span class="o">==</span> <span class="s">&#39;de-at&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&quot;You prefer to read Austrian German.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&quot;You prefer to read another language.&quot;</span><span class="p">)</span>
+</pre></div>
+<p>静的な (ミドルウェアを使わない) 翻訳では、言語設定は
+<tt class="docutils literal"><span class="pre">settings.LANGUAGE_CODE</span></tt> の値になり、動的な (ミドルウェアを使った) 翻訳で
+は、言語設定は <tt class="docutils literal"><span class="pre">request.LANGUAGE_CODE</span></tt> の値になるので注意してください。</p>
+</div>
+<div class="section" id="s-id21">
+<span id="s-using-translations-in-your-own-projects"></span><span id="s-translations-in-your-own-projects"></span><h2>自作のプロジェクトで翻訳を使う<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<p>Django は以下のアルゴリズムに従って翻訳を探します:</p>
+<ul class="simple">
+<li>まず、現在呼び出されているビューの入っているアプリケーションディレク
+トリ下に <tt class="docutils literal"><span class="pre">locale</span></tt> ディレクトリを探します。現在選択されている言語に
+対応する翻訳があれば、その翻訳をインストールします。</li>
+<li>次に、プロジェクトディレクトリ下に <tt class="docutils literal"><span class="pre">locale</span></tt> ディレクトリを探します。
+翻訳があれば、その翻訳をインストールします。</li>
+<li>最後に、 <tt class="docutils literal"><span class="pre">django/conf/locale</span></tt> にある Django 付属の翻訳をチェックし
+ます。</li>
+</ul>
+<p>こうすることで、独自の翻訳の入ったアプリケーションを書いたり、基本の翻訳の
+内容をプロジェクトパスに置いた翻訳でオーバライドしたりできます。また、複数
+の小さなアプリケーションで大きめのプロジェクトを構築するときに、全ての翻訳
+を一つのプロジェクト単位のメッセージファイルにまとめておけます。どういう方
+法をとるかはユーザ次第です。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference external" href="settings.html#settings-without-django-settings-module"><em>DJANGO_SETTINGS_MODULE を使わない設定方法</em></a> に示したように、
+<tt class="xref docutils literal"><span class="pre">DJANGO_SETTINGS_MODULE</span></tt> を使わずに手動で設定を行った場合、プ
+ロジェクトディレクトリ内の <tt class="docutils literal"><span class="pre">locale</span></tt> ディレクトリはチェックされません。
+これは Django がプロジェクトディレクトリの場所を調べる術を持たないから
+です (Django は通常、設定ファイルのある場所を基準に <tt class="docutils literal"><span class="pre">locale</span></tt> ディレク
+トリの場所を調べますが、手動で設定を行うと設定ファイルが存在しなくなっ
+てしまうからです)。</p>
+</div>
+<p>メッセージファイルリポジトリも同じような構成になっています:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">$APPPATH/locale/&lt;language&gt;/LC_MESSAGES/django.(po|mo)</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">$PROJECTPATH/locale/&lt;language&gt;/LC_MESSAGES/django.(po|mo)</span></tt></li>
+<li>設定ファイルの <tt class="docutils literal"><span class="pre">LOCALE_PATHS</span></tt> に指定されている全てのパスを指定順に
+検索して <tt class="docutils literal"><span class="pre">&lt;language&gt;/LC_MESSAGES/django.(po|mo)</span></tt> を探します。</li>
+<li><tt class="docutils literal"><span class="pre">$PYTHONPATH/django/conf/locale/&lt;language&gt;/LC_MESSAGES/django.(po|mo)</span></tt></li>
+</ul>
+<p>メッセージファイルの作成には、 Django メッセージファイルと同じ
+<tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> ツールを使って下さい。ツールの実行は正しい
+場所、すなわち <tt class="docutils literal"><span class="pre">conf/locale</span></tt> (ソースツリーの場合) か、あるいは <tt class="docutils literal"><span class="pre">locale</span></tt>
+(アプリケーションメッセージやプロジェクトメッセージの場合) ディレクトリのあ
+るディレクトリで行わねばなりません。また、 <tt class="docutils literal"><span class="pre">gettext</span></tt> の使うバイナリ形式の
+<tt class="docutils literal"><span class="pre">django.mo</span></tt> ファイルを生成するには <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">compilemessages</span></tt> を
+使います。</p>
+<p><tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">compilemessages</span> <span class="pre">--settings=path.to.settings</span></tt> を実行すれ
+ば、コンパイラに <tt class="docutils literal"><span class="pre">LOCALE_PATHS</span></tt> に設定された全てのディレクトリを処理させ
+られます。</p>
+<p>アプリケーションメッセージファイルを発見するメカニズムはやや複雑で、
+<tt class="docutils literal"><span class="pre">LocaleMiddleware</span></tt> が必要になります。従って、このミドルウェアを使わない場
+合、 Django メッセージファイルとプロジェクトメッセージファイルだけが処理さ
+れます。</p>
+<p>最後に、翻訳ファイルをどのように構成するかしっかりと考えておくように勧めま
+す。自分の作ったアプリケーションを他のユーザに配ったり、他のプロジェクトで
+利用したりするなら、アプリケーション固有の翻訳が必要になるでしょう。しかし、
+アプリケーション固有のメッセージやプロジェクトごとの翻訳は
+<tt class="docutils literal"><span class="pre">makemessages</span></tt> にまつわる困った問題を引き起こすことがあります:
+<tt class="docutils literal"><span class="pre">makemessages</span></tt> は現在のパス以下の全てのディレクトリを検索してしまうので、
+すでにアプリケーションメッセージファイルに入っているメッセージ ID が、プロ
+ジェクトのメッセージファイルに入ってしまうことがあるのです。</p>
+<p>この問題の最も簡単な解決法は、プロジェクトを直接的に構築しない (なおかつ独
+自の翻訳を備えている) アプリケーションをプロジェクトツリーの外に配置してお
+くというものです。こうすれば、プロジェクトレベルで
+<tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">make-messages</span></tt> を実行しても、自分のプロジェクトに明に関
+係する部分の文字列だけを翻訳し、別個に配布されたアプリケーションの文字列を
+対象にしなくなります。</p>
+</div>
+<div class="section" id="s-set-language">
+<span id="s-the-set-language-redirect-view"></span><h2><tt class="docutils literal"><span class="pre">set_language</span></tt> リダイレクトビュー<a class="headerlink" href="#set-language" title="Permalink to this headline">¶</a></h2>
+<p>利便性のために、 Django には <tt class="docutils literal"><span class="pre">django.views.i18n.set_language</span></tt> ビューが定
+義されています。このビューはユーザの言語プリファレンスを設定して、遷移前の
+ページにリダイレクトします。</p>
+<p>このビューを有効にするには、以下の行を URLconf に追加します:</p>
+<div class="highlight"><pre><span class="p">(</span><span class="s">r&#39;^i18n/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;django.conf.urls.i18n&#39;</span><span class="p">)),</span>
+</pre></div>
+<p>(この例では <tt class="docutils literal"><span class="pre">/i18n/setlang/</span></tt> でビューを使えるようにします)</p>
+<p>ビューは、リクエストに <tt class="docutils literal"><span class="pre">language</span></tt> が設定された状態で、  <tt class="docutils literal"><span class="pre">POST</span></tt> メソッド
+で呼び出すようになっています。セッションのサポートが有効であれば、ビューは
+ユーザのセッションに選択した言語を保存します。セッションのサポートがなけれ
+ば、言語設定を <tt class="docutils literal"><span class="pre">django_language`</span></tt> クッキーに保存します。
+(開発版の Django を使っているなら、クッキーの名前は <tt class="docutils literal"><span class="pre">LANGUAGE_COOKIE_NAME</span></tt>
+設定で変更できます。)</p>
+<p>選択された言語に設定した後、 Django は以下のアルゴリズムに従ってリダイレク
+トを行います:</p>
+<ul class="simple">
+<li>Django は <tt class="docutils literal"><span class="pre">POST</span></tt> データから <tt class="docutils literal"><span class="pre">next</span></tt> パラメタを探します。</li>
+<li><tt class="docutils literal"><span class="pre">next</span></tt> がないか、空の値なら、 <tt class="docutils literal"><span class="pre">Referer</span></tt> ヘッダを使って遷移元を決
+定しようとします。</li>
+<li><tt class="docutils literal"><span class="pre">Referer</span></tt> の値も空の場合、例えばユーザのブラウザがリファラの送信を
+抑制している場合には、フォールバックとして、ユーザは <tt class="docutils literal"><span class="pre">/</span></tt> (サイトの
+ルート URL) にリダイレクトします。</li>
+</ul>
+<p>以下に HTML テンプレートのコード例を示します:</p>
+<div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/i18n/setlang/&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;next&quot;</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">value=</span><span class="s">&quot;/next/page/&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;select</span> <span class="na">name=</span><span class="s">&quot;language&quot;</span><span class="nt">&gt;</span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">lang</span> <span class="k">in</span> <span class="nv">LANGUAGES</span> <span class="cp">%}</span>
+<span class="nt">&lt;option</span> <span class="na">value=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">lang.0</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">{{</span> <span class="nv">lang.1</span> <span class="cp">}}</span><span class="nt">&lt;/option&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="nt">&lt;/select&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Go&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="s-id22">
+<span id="s-translations-and-javascript"></span><h2>翻訳と JavaScript<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<p>JavaScript に翻訳を追加しようとすると、いくつかの問題に直面します:</p>
+<ul class="simple">
+<li>JavaScript コードには <tt class="docutils literal"><span class="pre">gettext</span></tt> 実装へのアクセス手段がありません。</li>
+<li>JavaScript コードには .po や .mo ファイルへのアクセス手段がありません。
+というのも、これらのファイルはサーバに置かれているからです。</li>
+<li>JavaScript の翻訳カタログはできるだけ小さくしておかねばなりません。</li>
+</ul>
+<p>Django では、これらの問題に対する解決策を組み込みで提供しています。この解決
+策は翻訳を JavaScript に渡して、 <tt class="docutils literal"><span class="pre">gettext</span></tt> などを JavaScript コード内で呼
+び出せるようにします。</p>
+<div class="section" id="s-javascript-catalog">
+<span id="s-the-javascript-catalog-view"></span><h3><tt class="docutils literal"><span class="pre">javascript_catalog</span></tt> ビュー<a class="headerlink" href="#javascript-catalog" title="Permalink to this headline">¶</a></h3>
+<p>前述の問題に対する解決策は、 <tt class="docutils literal"><span class="pre">javascript_catalog</span></tt> ビューにあります。この
+ビューは <tt class="docutils literal"><span class="pre">gettext</span></tt> インタフェースをまねた関数の入った JavaScript コードと、
+翻訳文字列のアレイを送信します。翻訳文字列のアレイは <tt class="docutils literal"><span class="pre">info_dict</span></tt> や URL
+の指定に従ってアプリケーションやプロジェクト、Django コア部分から取り出され
+ます。</p>
+<p>例えば以下のようにフックをかけたとしましょう:</p>
+<div class="highlight"><pre><span class="n">js_info_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;packages&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;your.app.package&#39;</span><span class="p">,),</span>
+<span class="p">}</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">r&#39;^jsi18n/$&#39;</span><span class="p">,</span> <span class="s">&#39;django.views.i18n.javascript_catalog&#39;</span><span class="p">,</span> <span class="n">js_info_dict</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">packages</span></tt> のタプルに入っている各文字列は Python のドット区切りのパッケー
+ジ表記 (<tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> で使われている書式と同じ) で、 <tt class="docutils literal"><span class="pre">locale</span></tt> ディレ
+クトリの入っているパッケージにします。複数のパッケージを指定した場合、全て
+のカタログが一つのカタログに統合されます。この仕様は、複数のアプリケーショ
+ンの文字列を扱うような JavaScript で便利です。</p>
+<p>URL パターンにパッケージ名を入れておけば、ビューを動的にできます:</p>
+<div class="highlight"><pre><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">r&#39;^jsi18n/(?P&lt;packages&gt;\S+?)/$&#39;</span><span class="p">,</span> <span class="s">&#39;django.views.i18n.javascript_catalog&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+<p>こうしておいて、パッケージ名を '+' で区切ったパッケージ名リストとして指定で
+きます。これは、複数のアプリケーションからのコードを使っていて、変更が頻繁
+に起きている場合、巨大なカタログファイルを毎回プルしなくてすむので便利です。
+セキュリティ上の理由から、パッケージ名リストに指定できるのは、
+<tt class="docutils literal"><span class="pre">django.conf</span></tt> か <tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> 設定に入っているアプリケーションだけ
+です。</p>
+</div>
+<div class="section" id="s-id23">
+<span id="s-using-the-javascript-translation-catalog"></span><h3>JavaScript 翻訳カタログを使う<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<p>カタログを使うには、単に以下のようにして動的に生成されたスクリプトをプルし
+ます:</p>
+<pre>&lt;script type="text/javascript" src="/path/to/jsi18n/"&gt;&lt;/script&gt;</pre>
+<p>これはまさに admin がサーバから翻訳を取り出しているのと同じ方法です。カタロ
+グをロードしたら、JavaScript から標準的な <tt class="docutils literal"><span class="pre">gettext</span></tt> インタフェースを使っ
+てアクセスできるようになります:</p>
+<div class="highlight"><pre><span class="n">document</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gettext</span><span class="p">(</span><span class="s">&#39;this is to be translated&#39;</span><span class="p">));</span>
+</pre></div>
+<p><tt class="docutils literal"><span class="pre">ngettext</span></tt> インタフェースもあります:</p>
+<pre>var object_cnt = 1 // or 0, or 2, or 3, ...
+s = ngettext('literal for the singular case',
+        'literal for the plural case', object_cnt);</pre>
+<p>文字列補完を行う関数もあります:</p>
+<pre>function interpolate(fmt, obj, named);</pre>
+<p><tt class="docutils literal"><span class="pre">interpolate</span></tt> 関数は、固定引数による補完と名前付き補完の両方をサポートし
+ています。従って、上のコードは以下のようにも書けます:</p>
+<div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">interpolate</span><span class="p">(</span><span class="n">ungettext</span><span class="p">(</span><span class="s">&#39;this is </span><span class="si">%s</span><span class="s"> object&#39;</span><span class="p">,</span> <span class="s">&#39;this are </span><span class="si">%s</span><span class="s"> objects&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">[</span><span class="mi">11</span><span class="p">]);</span>
+</pre></div>
+<p>補完の構文は Python から借りたもので、固定引数と名前つきの文字列補完をサポー
+トしています:</p>
+<ul>
+<li><p class="first">固定引数型の補完: <tt class="docutils literal"><span class="pre">obj</span></tt> には JavaScript の Array オブジェクトが入り
+ます。 <tt class="docutils literal"><span class="pre">interpolate</span></tt> は Array の各要素を使って、 <tt class="docutils literal"><span class="pre">fmt</span></tt> 内のプレー
+スホルダを順番に置換してゆきます。例えば:</p>
+<pre>fmts = ngettext('There is %s object. Remaining: %s',
+        'There are %s objects. Remaining: %s', 11);
+s = interpolate(fmts, [11, 20]);
+// s is 'There are 11 objects. Remaining: 20'</pre>
+</li>
+<li><p class="first">名前つき補完: このモードは、オプションの <tt class="docutils literal"><span class="pre">named</span></tt> パラメタに
+<tt class="docutils literal"><span class="pre">true</span></tt> を指定して選択します。 <tt class="docutils literal"><span class="pre">obj</span></tt> には JavaScript のオブジェク
+トか、連想配列が入ります。例えば:</p>
+<pre>d = {
+    count: 10
+    total: 50
+};
+
+fmts = ngettext('Total: %(total)s, there is %(count)s object',
+'there are %(count)s of a total of %(total)s objects', d.count);
+s = interpolate(fmts, d, true);</pre>
+</li>
+</ul>
+<p>とはいえ、この文字列補完を派手に使わない方がよいでしょう: 補完機能は
+JavaScript で動いており、中では何度も正規表現置換を行っています。この処理は
+Python の文字列補完ほど高速ではないので、本当に必要な場合 (例えば
+<tt class="docutils literal"><span class="pre">ngettext</span></tt> を使って適切な複数形表現を実現したい場合) だけにしてください。</p>
+</div>
+<div class="section" id="s-id24">
+<span id="s-creating-javascript-translation-catalogs"></span><h3>JavaScript の翻訳カタログを作成する<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p>JavaScript の翻訳カタログの作成と更新方法、他の Django の翻訳カタログの場合
+と同じで、 <tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">makemessages</span></tt> ツールを使います。ただし、
+<tt class="docutils literal"><span class="pre">-d</span> <span class="pre">djangojs</span></tt> パラメタを指定してください。例えば:</p>
+<pre>django-admin.py makemessages -d djangojs -l de</pre>
+<p>上の例では、ドイツ語向けの JavaScript の翻訳カタログを作成または更新してい
+ます。翻訳カタログを更新したら、通常の Django 翻訳カタログと同じように、
+<tt class="docutils literal"><span class="pre">django-admin.py</span> <span class="pre">compilemessages</span></tt> を実行してください。</p>
+</div>
+</div>
+<div class="section" id="s-id25">
+<span id="s-specialties-of-django-translation"></span><h2>Django 翻訳の特徴<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">gettext</span></tt> について詳しければ、 Django の翻訳機能には以下のような特徴があ
+ることに気づくでしょう:</p>
+<ul class="simple">
+<li>文字列ドメインは <tt class="docutils literal"><span class="pre">django</span></tt> または <tt class="docutils literal"><span class="pre">djangojs</span></tt> です。この文字列ドメ
+インは、共通のメッセージファイルライブラリ (通常は
+<tt class="docutils literal"><span class="pre">/usr/share/locale/</span></tt> にあります) にデータを保存している他のプログラ
+ムと Django のデータを区別するためです。 <tt class="docutils literal"><span class="pre">django</span></tt> ドメインは、
+Python とテンプレート翻訳文字列に使われ、グローバルな翻訳カタログ上に
+読み込まれます。 <tt class="docutils literal"><span class="pre">djangojs</span></tt> は JavaScript だけで使うために、可能な
+かぎり小さくして分けてあります。</li>
+<li>Django は <tt class="docutils literal"><span class="pre">xgettext</span></tt> を単体では使いません。 Django では、
+<tt class="docutils literal"><span class="pre">xgettext</span></tt> や <tt class="docutils literal"><span class="pre">msgfmt</span></tt> を Python ラッパ越しに使います。これは便宜
+上の理由によります。</li>
+</ul>
+</div>
+<div class="section" id="s-windows-gettext">
+<span id="s-gettext-on-windows"></span><h2>Windows で <tt class="docutils literal"><span class="pre">gettext</span></tt> を使う<a class="headerlink" href="#windows-gettext" title="Permalink to this headline">¶</a></h2>
+<p>この節の操作が必要なのは、 メッセージ ID を抜き出したり、メッセージファイル
+を (<tt class="docutils literal"><span class="pre">.po</span></tt> に) コンパイルしたいときだけです。翻訳の作業自体はファイルを編
+集するだけですが、メッセージファイルを自分で作成したい場合や、変更したメッ
+セージファイルをテストしたりコンパイルしたい場合には、以下のようにして
+<tt class="docutils literal"><span class="pre">gettext</span></tt> ユーティリティを入れる必要があります:</p>
+<ul class="simple">
+<li>以下の ZIP ファイルを <a class="reference external" href="http://sourceforge.net/projects/gettext">http://sourceforge.net/projects/gettext</a>
+から取得します:<ul>
+<li><tt class="docutils literal"><span class="pre">gettext-runtime-X.bin.woe32.zip</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">gettext-tools-X.bin.woe32.zip</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">libiconv-X.bin.woe32.zip</span></tt></li>
+</ul>
+</li>
+<li>ダウンロードしたファイルを同じフォルダ (例えば
+<tt class="docutils literal"><span class="pre">C:\ProgramFiles\gettext-utils</span></tt>) に展開します。</li>
+<li>システム環境変数の PATH を変更します:<ul>
+<li><tt class="docutils literal"><span class="pre">コントロールパネル</span> <span class="pre">&gt;</span> <span class="pre">システム</span> <span class="pre">&gt;</span> <span class="pre">高度な設定</span> <span class="pre">&gt;</span> <span class="pre">環境変数</span></tt> の順に辿
+ります。</li>
+<li><tt class="docutils literal"><span class="pre">システム環境変数</span></tt> リストで、 <tt class="docutils literal"><span class="pre">Path</span></tt> を選び、 <tt class="docutils literal"><span class="pre">編集</span></tt> を押しま
+す。</li>
+<li><tt class="docutils literal"><span class="pre">変数値</span></tt> フィールドの値の末尾に
+<tt class="docutils literal"><span class="pre">;C:\Program</span> <span class="pre">Files\gettext-utils\bin</span></tt> を追加します。</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">国際化</a><ul>
+<li><a class="reference external" href="#id2">概要</a></li>
+<li><a class="reference external" href="#id3">国際化が必要ない場合</a></li>
+<li><a class="reference external" href="#id4">国際化が必要な場合: 3 つのステップ</a></li>
+<li><a class="reference external" href="#id5">1. 翻訳文字列の指定方法</a><ul>
+<li><a class="reference external" href="#python">Python コード内での指定</a><ul>
+<li><a class="reference external" href="#id6">標準的な翻訳</a></li>
+<li><a class="reference external" href="#id7">すぐには翻訳しない文字列をマークする</a></li>
+<li><a class="reference external" href="#id8">翻訳を遅延させる</a></li>
+<li><a class="reference external" href="#id9">複数形化</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id10">テンプレート内での翻訳</a></li>
+<li><a class="reference external" href="#id11">遅延翻訳オブジェクトを操作する</a><ul>
+<li><a class="reference external" href="#string-concat">文字列の結合: string_concat()</a></li>
+<li><a class="reference external" href="#allow-lazy">allow_lazy() デコレータ</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference external" href="#id13">2. 言語ファイルの作成</a><ul>
+<li><a class="reference external" href="#id14">メッセージファイル</a></li>
+<li><a class="reference external" href="#id15">メッセージファイルのコンパイル</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id16">3. 言語設定の検出メカニズム</a></li>
+<li><a class="reference external" href="#id21">自作のプロジェクトで翻訳を使う</a></li>
+<li><a class="reference external" href="#set-language"><tt class="docutils literal"><span class="pre">set_language</span></tt> リダイレクトビュー</a></li>
+<li><a class="reference external" href="#id22">翻訳と JavaScript</a><ul>
+<li><a class="reference external" href="#javascript-catalog"><tt class="docutils literal"><span class="pre">javascript_catalog</span></tt> ビュー</a></li>
+<li><a class="reference external" href="#id23">JavaScript 翻訳カタログを使う</a></li>
+<li><a class="reference external" href="#id24">JavaScript の翻訳カタログを作成する</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id25">Django 翻訳の特徴</a></li>
+<li><a class="reference external" href="#windows-gettext">Windows で <tt class="docutils literal"><span class="pre">gettext</span></tt> を使う</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="email.html">電子メールの送信</a></li>
+    
+    
+      <li>次: <a href="pagination.html">ペジネータ (paginator)</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">Django を使う</a>
+        
+        <ul><li>国際化</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/topics/i18n.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="email.html" title="電子メールの送信">前へ</a> 
+     |
+    <a href="index.html" title="Django を使う" accesskey="U">上へ</a>
+   |
+    <a href="pagination.html" title="ペジネータ (paginator)">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

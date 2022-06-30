@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django の設計思想 &mdash; Django v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+          URL_ROOT:    '../',
+          VERSION:     '1.0',
+          COLLAPSE_MODINDEX: false,
+          FILE_SUFFIX: '.html'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="contents" title="Global table of contents" href="../contents.html" />
+    <link rel="index" title="Global index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Django v1.0 documentation" href="../index.html" />
+    <link rel="up" title="ドキュメントのドキュメント、その他" href="index.html" />
+    <link rel="next" title="サードパーティによる Django ディストリビューション" href="distributions.html" />
+    <link rel="prev" title="API の安定性" href="api-stability.html" />
+  </head>
+  <body>
+  <div id="outdated-warning" class="doc-floating-warning" style="position: relative;">
+    このドキュメントの Django のバージョンにはセキュリティ上の脆弱性があるため、すでにサポートが終了されています。新しいバージョンにアップグレードしてください！<a href="https://docs.djangoproject.com/ja/">最新の Django のバージョンのドキュメントはこちら</a>
+  </div>
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../index.html">Django v1.0 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">ホーム</a>  |
+        <a title="Table of contents" href="../contents.html">目次</a>  |
+        <a title="Global index" href="../genindex.html">索引</a>  |
+        <a title="Search" href="../modindex.html">モジュール一覧</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="api-stability.html" title="API の安定性">前へ</a> 
+     |
+    <a href="index.html" title="ドキュメントのドキュメント、その他" accesskey="U">上へ</a>
+   |
+    <a href="distributions.html" title="サードパーティによる Django ディストリビューション">次へ</a> &raquo;</div>
+    </div>
+    
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="misc-design-philosophies">
+            
+  
+  <div class="section" id="s-django">
+<span id="s-misc-design-philosophies"></span><h1>Django の設計思想<a class="headerlink" href="#django" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">revision-up-to:</th><td class="field-body">8961 (1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>このドキュメントでは、 Django の開発者たちがフレームワークの構築に取り入れ
+ている根本的な設計思想についていくつか解説します。それによって、 Django の
+これまでの経緯に説明を与えつつ、将来への指針にしたいと思います。</p>
+<div class="section" id="s-id1">
+<span id="s-overall"></span><h2>全体的な設計思想<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-id3">
+<span id="s-id2"></span><span id="s-loose-coupling"></span><h3>ルースカップリング<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Django のスタックが目指す基本的なゴールは
+<a class="reference external" href="http://c2.com/cgi/wiki?CouplingAndCohesion">ルースカップリングとタイトコヒージョン</a> の実現にあります。
+フレームワークの様々なレイヤは、本当に必要な場合を除き、お互いの事情を
+知らなくてもよいという考え方です。</p>
+<p>例えば、テンプレートシステムは Web リクエストがどのようなものか関知せず、
+データベースレイヤはデータをどう表示するかに関知せず、ビューシステムはプロ
+グラマがどんなテンプレートシステムを使うかに関知しません。</p>
+<p>利便性のため、 Django には全てのスタックがついてきますが、スタックの各部分
+は可能な限り互いに独立になっています。</p>
+</div>
+<div class="section" id="s-id6">
+<span id="s-id5"></span><span id="s-less-code"></span><h3>コード量の低減<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>Django アプリケーションのコードは可能なかぎり少なくし、冗長な決まり文句を排
+除します。 Django では、イントロスペクションのような Python の動的な決定機
+能を積極的に活用します。</p>
+</div>
+<div class="section" id="s-id8">
+<span id="s-id7"></span><span id="s-quick-development"></span><h3>迅速な開発<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>21 世紀の Web フレームワークのポイントは、Web 開発の単調でのろくさい部分を
+高速化することにあります。 Django は Web 開発を信じられないくらいに迅速化し
+ます。</p>
+</div>
+<div class="section" id="s-dry-don-t-repeat-yourself">
+<span id="s-don-t-repeat-yourself-dry"></span><span id="s-dry"></span><h3>DRY (Don&#8217;t repeat yourself) 則<a class="headerlink" href="#dry-don-t-repeat-yourself" title="Permalink to this headline">¶</a></h3>
+<p id="index-3">個別のコンセプトやデータは、一つの、ただ一つの場所に置かねばなりません。冗
+長は悪、正規化は善です。</p>
+<p>こうした理由から、フレームワークは可能な限り小さくせねばなりません。</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://c2.com/cgi/wiki?DontRepeatYourself">Portland Pattern Repository の DRY に関する議論</a></p>
+</div>
+</div>
+<div class="section" id="s-id11">
+<span id="s-id10"></span><span id="s-explicit-is-better-than-implicit"></span><h3>暗示的より明示的に<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://www.python.jp/Zope/articles/misc/zen">Python のコア原理</a> の一つでもあるこの思想により、 Django は「黒魔術的」で
+あってはなりません。どうしても必要な理由がないかぎり魔術的な処理を取り入れ
+てはなりません。魔術的な処理を取り入れる価値があるのは、他の方法では実現し
+得ない多大な利便性が生まれ、かつその機能の使い方を学ぼうとする開発者が混乱
+しないような形で実装できる場合だけです。</p>
+</div>
+<div class="section" id="s-id12">
+<span id="s-consistency"></span><h3>一貫性<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>フレームワークは全ての水準で一貫性を保たねばなりません。この一貫性は低水準
+(Python のコーディングスタイル) から高水準 (Djangoの「使用感:experience」)
+にいたる全てにあてはまります。</p>
+</div>
+</div>
+<div class="section" id="s-id13">
+<span id="s-models"></span><h2>モデル<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-id14">
+<h3>暗示的より明示的に<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<p>データの挙動をフィールド名だけから決定してはなりません。さもなければ必要以
+上にシステムを熟知せねばならず、エラーのもとになります。
+その代り、データの挙動はキーワード引数や、場合によってはフィールドのタイプ
+に基づいて決定します。</p>
+</div>
+<div class="section" id="s-id15">
+<span id="s-include-all-relevant-domain-logic"></span><h3>関連領域のロジックは全てまとめる<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>モデルは「オブジェクト」としての様々な側面をカプセル化し、いわゆる
+Martin Fowler の <a class="reference external" href="http://www.martinfowler.com/eaaCatalog/activeRecord.html">アクティブレコード</a> デザインパターンに従わねばなりません。</p>
+<p>そのため、モデルの表現するデータや、モデル自身の情報 (人間可読な名前、デフォ
+ルトの整列順など) は、モデルクラスで定義されています。あるモデルを理解する
+のに必要な情報は、全てモデルの <em>中に</em> 入っているのです。</p>
+</div>
+</div>
+<div class="section" id="s-api">
+<span id="s-database-api"></span><h2>データベース API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>データベース API の主要な目的を示します:</p>
+<div class="section" id="s-sql">
+<span id="s-sql-efficiency"></span><h3>SQL の効率を考慮<a class="headerlink" href="#sql" title="Permalink to this headline">¶</a></h3>
+<p>SQL 文の実行は可能な限り少なくし、内部的に最適化せねばなりません。</p>
+<p>データの保存をフレームワークに背後で暗黙のうちに行わせず、開発者に
+<tt class="docutils literal"><span class="pre">save()</span></tt> を明示的に呼び出させるのはこのためです。</p>
+<p>また、 <tt class="docutils literal"><span class="pre">QuerySet</span></tt> の <tt class="docutils literal"><span class="pre">select_related()</span></tt> メソッドが存在するのもこのため
+です。 <tt class="docutils literal"><span class="pre">select_related</span></tt> は「関連する全てのオブジェクト」を select すると
+いう、よくあるケースに対してパフォーマンス向上をもたらします。</p>
+</div>
+<div class="section" id="s-id17">
+<span id="s-terse-powerful-syntax"></span><h3>むだのない強力な構文<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>データベース API は、高機能かつ表現性に富み、可能な限り小さな構文でなければ
+なりません。 API は他のモジュールやヘルパオブジェクトに依存してはなりません。</p>
+<p>join は必要に応じて舞台裏で自動的に行われねばなりません。</p>
+<p>システム全体にわたって、各オブジェクトは自分とリレーションにあるオブジェク
+トにアクセスできねばなりません。リレーションの追跡は双方向に行われねばなり
+ません。</p>
+</div>
+<div class="section" id="s-id18">
+<span id="s-option-to-drop-into-raw-sql-easily-when-needed"></span><h3>必要なら生の SQL も簡単に使えるように<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>データベース API の設計では、ショートカットとして便利でありながらも、必ずし
+も全ての機能に手がとどかなくてもよいということを理解していなければなりませ
+ん。フレームワークは SQL 文全体、あるいは <tt class="docutils literal"><span class="pre">WHERE</span></tt> 節だけのカスタムの SQL
+を簡単に書けるようにせねばなりません。</p>
+</div>
+</div>
+<div class="section" id="s-url">
+<span id="s-url-design"></span><h2>URL の設計<a class="headerlink" href="#url" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-id19">
+<h3>ルースカップリング<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p>Django アプリケーションでは、 URL を特定の Python コードとカップリングして
+はなりません。 URL と Python 関数名の関連づけは、間違っており、美しくありま
+せん。</p>
+<p>同様に、 Django の URL システムは同じアプリケーションを異なるコンテキストで
+使えねばなりません。例えば、あるサイトで記事 (story) にアクセスするのに
+<tt class="docutils literal"><span class="pre">/stories/</span></tt> を使っていたとしても、別のところで <tt class="docutils literal"><span class="pre">/news/</span></tt> という URL で記
+事にアクセスできねばなりません。</p>
+</div>
+<div class="section" id="s-id20">
+<span id="s-infinite-flexibility"></span><h3>無限の柔軟性<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<p>URL には可能な限り柔軟性をもたせねばなりません。考えられるいかなる URL 設計
+も使えねばなりません。</p>
+</div>
+<div class="section" id="s-id21">
+<span id="s-encourage-best-practices"></span><h3>王道を進みやすく<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<p>フレームワークはすっきりとした URL 設計を (汚い設計よりも) 簡単におこなえね
+ばなりません。</p>
+<p>Web ページの URL にファイル拡張子を使うのは避けねばなりません。</p>
+<p>URL にカンマを入れる Vignette スタイルは厳しく禁じねばなりません。</p>
+</div>
+<div class="section" id="s-id23">
+<span id="s-id22"></span><span id="s-definitive-urls"></span><h3>URL ははっきりと<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<p id="index-4">技術的には、 <tt class="docutils literal"><span class="pre">foo.com/bar</span></tt> と <tt class="docutils literal"><span class="pre">foo.com/bar/</span></tt> は別個の URL であり、検索
+エンジンロボット (や Web トラフィック解析ツール) はこれらのページを別々のも
+のとして扱わねばなりません。 Django は URL を「正規化」して、検索エンジンロ
+ボットを混乱させないようにせねばなりません。</p>
+<p>これは <a class="reference external" href="../ref/settings.html#setting-APPEND_SLASH"><tt class="xref docutils literal"><span class="pre">APPEND_SLASH</span></tt></a> 設定の根底にある考えです。</p>
+</div>
+</div>
+<div class="section" id="s-id24">
+<span id="s-template-system"></span><h2>テンプレートシステム<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-id25">
+<span id="s-separate-logic-from-presentation"></span><span id="s-separation-of-logic-and-presentation"></span><h3>プレゼンテーションとロジックの分離<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<p>私達は、テンプレートシステムはプレゼンテーションとプレゼンテーション関係の
+ロジックを制御するためのツールであり、それ以上のものではないと考えています。
+その本分をこえた機能をテンプレートシステムに求めるべきではありません。</p>
+<p>何もかもテンプレートに押し込みたかったのなら、今ごろ PHP を使っていたでしょ
+う。かつてそうしていましたが、今はやめ、そこから学んだのです。</p>
+</div>
+<div class="section" id="s-id26">
+<span id="s-discourage-redundancy"></span><h3>冗長さを防ぐ<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<p>大多数の動的な Web サイトでは、ヘッダやフッタ、ナビゲーションバーといった部
+分のデザインをサイト全体で共通にしています。 Django テンプレートシステムは、
+こうしたサイトの構成要素を一箇所に保存しやすくし、コードの複製を無くさねば
+なりません。</p>
+<p>これは <a class="reference external" href="../topics/templates.html#template-inheritance"><em>テンプレートの継承</em></a> の根底にある考え方で
+す。</p>
+</div>
+<div class="section" id="s-html">
+<span id="s-be-decoupled-from-html"></span><h3>HTML に縛られない<a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h3>
+<p>HTML だけを出力するようにテンプレートシステムを設計すべきではありません。
+他のテキストベース形式や単なる平文テキストの生成もうまく実現できねばなりま
+せん。</p>
+</div>
+<div class="section" id="s-xml">
+<span id="s-xml-should-not-be-used-for-template-languages"></span><h3>XML をテンプレート言語に使わない<a class="headerlink" href="#xml" title="Permalink to this headline">¶</a></h3>
+<p id="index-5">テンプレートのパージングに XML エンジンを使うと、テンプレート編集における
+人為エラーという新たな問題に直面します。それに、テンプレート処理に受け入れ
+がたいオーバヘッドを被ることになります。</p>
+</div>
+<div class="section" id="s-id27">
+<span id="s-assume-designer-competence"></span><h3>ページデザイナの有能さを前提にする<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<p>必ずしも Dreamweaver のような WYSIWYG エディタでうまく表示できるように
+テンプレートシステムを設計する必要はありません。そのような要求は制限が
+厳しすぎ、本来あるべきすっきりした構文を実現できなくなります。 Django では
+直接 HTML を編集する作業に慣れたテンプレート作者を想定しています。</p>
+</div>
+<div class="section" id="s-id28">
+<span id="s-treat-whitespace-obviously"></span><h3>空白の扱いはわかりやすく<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<p>テンプレートシステムは魔法的な空白の処理を行ってはなりません。テンプレート
+に空白をいれた場合、システムは空白部分を普通のテキストと同じように扱う、
+すなわちそのまま表示せねばなりません。逆に、テンプレートタグにない空白を
+表示すべきでもありません。</p>
+</div>
+<div class="section" id="s-id29">
+<span id="s-don-t-invent-a-programming-language"></span><h3>プログラミング言語を作り直さない<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<p>テンプレートシステムでは、以下の機能を意図的に使えないようにしています:</p>
+<ul class="simple">
+<li>変数の代入</li>
+<li>高度なロジック</li>
+</ul>
+<p>テンプレートシステムが目的とするのは新たなプログラミング言語の発明では
+ありません。目的は、分岐やループといった、プレゼンテーションまわりの判定で
+必須のプログラム機能の提供だけです。</p>
+<p>Django テンプレートシステムでは、最もテンプレートを良く書くのは
+<em>プログラマ</em> ではなく <em>デザイナ</em> とみなしており、 Python の知識を前提には
+していません。</p>
+</div>
+<div class="section" id="s-id30">
+<span id="s-safety-and-security"></span><h3>安全性とセキュリティ<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<p>テンプレートシステムは、使い始めの時点で、外部コマンドの実行やデータベース
+レコードの削除といった悪意あるコードを取り込めないようになっていなければなり
+ません。</p>
+<p>これは、テンプレートシステムが任意の Python コードにアクセスできるように
+してはならないもう一つの理由でもあります。</p>
+</div>
+<div class="section" id="s-id31">
+<span id="s-extensibility"></span><h3>拡張性<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<p>テンプレートシステムは、高度なテンプレート作者によるテクノロジの拡張に配慮
+せねばなりません。</p>
+<p>これはカスタムテンプレートタグやフィルタの根底にある哲学です。</p>
+</div>
+</div>
+<div class="section" id="s-id32">
+<span id="s-views"></span><h2>ビュー<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-id33">
+<span id="s-simplicity"></span><h3>簡潔性<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<p>ビューは Python の関数として可能な限りシンプルに書きます。開発者は関数でで
+きることを実現するために、クラスのインスタンスを生成する必要はありません。</p>
+</div>
+<div class="section" id="s-id34">
+<span id="s-use-request-objects"></span><h3>リクエストオブジェクトの利用<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<p>ビューはリクエストオブジェクトにアクセスします。リクエストオブジェクトとは、
+現在のリクエストに関するメタデータを入れるオブジェクトです。ビューはこのオ
+ブジェクトをグローバル変数経由でアクセスするのではなく、引数として直接受け
+取るようにすべきです。それにより、「偽の」リクエストオブジェクトを渡してビュー
+を簡単かつクリーンにテストできるようになります。</p>
+</div>
+<div class="section" id="s-id35">
+<h3>ルースカップリング<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<p>ビューは開発者がどのテンプレートシステムを使うか関知すべきではなく、使って
+いるテンプレートシステムがいくつかすら関知すべきではありません。</p>
+</div>
+<div class="section" id="s-get-post">
+<span id="s-designate-between-get-and-post"></span><h3>GET と POST の使い分け<a class="headerlink" href="#get-post" title="Permalink to this headline">¶</a></h3>
+<p>GET と POST は全く違います。開発者はこれらを明示的に使い分けねばなりません。
+フレームワークはデータの GET と POST を容易に判別できねばなりません。</p>
+</div>
+</div>
+</div>
+
+
+          </div>         
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>Table Of Contents</h3>
+            <ul>
+<li><a class="reference external" href="">Django の設計思想</a><ul>
+<li><a class="reference external" href="#id1">全体的な設計思想</a><ul>
+<li><a class="reference external" href="#id3">ルースカップリング</a></li>
+<li><a class="reference external" href="#id6">コード量の低減</a></li>
+<li><a class="reference external" href="#id8">迅速な開発</a></li>
+<li><a class="reference external" href="#dry-don-t-repeat-yourself">DRY (Don&#8217;t repeat yourself) 則</a></li>
+<li><a class="reference external" href="#id11">暗示的より明示的に</a></li>
+<li><a class="reference external" href="#id12">一貫性</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id13">モデル</a><ul>
+<li><a class="reference external" href="#id14">暗示的より明示的に</a></li>
+<li><a class="reference external" href="#id15">関連領域のロジックは全てまとめる</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#api">データベース API</a><ul>
+<li><a class="reference external" href="#sql">SQL の効率を考慮</a></li>
+<li><a class="reference external" href="#id17">むだのない強力な構文</a></li>
+<li><a class="reference external" href="#id18">必要なら生の SQL も簡単に使えるように</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#url">URL の設計</a><ul>
+<li><a class="reference external" href="#id19">ルースカップリング</a></li>
+<li><a class="reference external" href="#id20">無限の柔軟性</a></li>
+<li><a class="reference external" href="#id21">王道を進みやすく</a></li>
+<li><a class="reference external" href="#id23">URL ははっきりと</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id24">テンプレートシステム</a><ul>
+<li><a class="reference external" href="#id25">プレゼンテーションとロジックの分離</a></li>
+<li><a class="reference external" href="#id26">冗長さを防ぐ</a></li>
+<li><a class="reference external" href="#html">HTML に縛られない</a></li>
+<li><a class="reference external" href="#xml">XML をテンプレート言語に使わない</a></li>
+<li><a class="reference external" href="#id27">ページデザイナの有能さを前提にする</a></li>
+<li><a class="reference external" href="#id28">空白の扱いはわかりやすく</a></li>
+<li><a class="reference external" href="#id29">プログラミング言語を作り直さない</a></li>
+<li><a class="reference external" href="#id30">安全性とセキュリティ</a></li>
+<li><a class="reference external" href="#id31">拡張性</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#id32">ビュー</a><ul>
+<li><a class="reference external" href="#id33">簡潔性</a></li>
+<li><a class="reference external" href="#id34">リクエストオブジェクトの利用</a></li>
+<li><a class="reference external" href="#id35">ルースカップリング</a></li>
+<li><a class="reference external" href="#get-post">GET と POST の使い分け</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>前後のページ</h3>
+  <ul>
+    
+      <li>前: <a href="api-stability.html">API の安定性</a></li>
+    
+    
+      <li>次: <a href="distributions.html">サードパーティによる Django ディストリビューション</a></li>
+    
+  </ul>
+  <h3>現在のページ:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">Django v1.0 documentation</a>
+        
+          <ul><li><a href="index.html">ドキュメントのドキュメント、その他</a>
+        
+        <ul><li>Django の設計思想</li></ul>
+        </li></ul>
+      </li>
+  </ul>  
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/misc/design-philosophies.txt">Show Source</a></li>
+            </ul>
+            <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Aug 31, 2012</p>
+          </div> 
+        
+      
+    </div>
+    
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="api-stability.html" title="API の安定性">前へ</a> 
+     |
+    <a href="index.html" title="ドキュメントのドキュメント、その他" accesskey="U">上へ</a>
+   |
+    <a href="distributions.html" title="サードパーティによる Django ディストリビューション">次へ</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
